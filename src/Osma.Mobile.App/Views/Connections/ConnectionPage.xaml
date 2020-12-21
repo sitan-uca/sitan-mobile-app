@@ -89,7 +89,7 @@
                                 Grid.Column="2"
                                 Source="more_icon.png"
                                 Style="{StaticResource IconButtonStyle}"
-                               Clicked="ToggleModalTapped"
+                                
                             />
                             
                             <Label

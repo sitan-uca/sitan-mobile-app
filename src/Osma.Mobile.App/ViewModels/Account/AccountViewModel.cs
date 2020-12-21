@@ -10,6 +10,7 @@ using Osma.Mobile.App.Views.Legal;
 
 namespace Osma.Mobile.App.ViewModels.Account
 {
+    //TODO the image resources in the android package are missing. Populate them 
     public class AccountViewModel : ABaseViewModel
     {
         public AccountViewModel(
@@ -40,6 +41,7 @@ namespace Osma.Mobile.App.ViewModels.Account
             await DialogService.AlertAsync("Navigate to authentication");
         }
 
+        //TODO: this method crashes the app. Fix it
         public async Task NavigateToLegalPage()
         {
             var legalPage = new LegalPage();

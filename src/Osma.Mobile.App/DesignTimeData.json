@@ -58,6 +58,9 @@
     "ConnectionImageUrl": "https://pbs.twimg.com/profile_images/899211256480940032/8XD4jxu1_400x400.jpg",
     "MyDid": "myldsjfhkasdjfasd",
     "TheirDid": "theirsksdjfndsjkanfsdaf",
+    "RefreshingTransactions": false,
+    "RefreshTransactionsCommand": "",
+    "DeleteConnectionCommand": "",
     "Transactions":  [
       {
         "Type": "Actionable",
@@ -125,6 +128,6 @@
   },
   "Views\\Account\\AccountPage.xaml":  {
     "FullName":  "Jamie Doe",
-    "AvatarUrl": "http://i.pravatar.cc/100",
+    "AvatarUrl": "http://i.pravatar.cc/100"
   }
 }

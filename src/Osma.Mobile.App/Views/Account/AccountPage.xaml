@@ -15,24 +15,24 @@
         <StackLayout>
             <TableView HasUnevenRows="true" Intent="Menu">
                 <TableSection>
-                        <components:DetailedCell
-                            Title="{Binding FullName}"
-                            ImageURL="{Binding AvatarUrl}"
-                        />
-                    </TableSection>
-                     <TableSection>
-                        <account:AccountMenuButtonView
-                            Title="Backup Your App"
-                            Subtitle="Create a backup in case anything happens"
-                            Image="save_icon.png"
-                            TappedCommand="{Binding NavigateToBackupCommand}"
-                        />
-                        <account:AccountMenuButtonView
-                            Title="Authentication"
-                            Subtitle="Because it's private"
-                            Image="security_icon.png"
-                            TappedCommand="{Binding NavigateToAuthenticationCommand}"
-                        />
+                    <components:DetailedCell
+                        Title="{Binding FullName}"
+                        ImageURL="{Binding AvatarUrl}"
+                    />
+                </TableSection>
+                <TableSection>
+                    <account:AccountMenuButtonView
+                        Title="Backup Your App"
+                        Subtitle="Create a backup in case anything happens"
+                        Image="save_icon.png"
+                        TappedCommand="{Binding NavigateToBackupCommand}"
+                    />
+                    <account:AccountMenuButtonView
+                        Title="Authentication"
+                        Subtitle="Because it's private"
+                        Image="security_icon.png"
+                        TappedCommand="{Binding NavigateToAuthenticationCommand}"
+                    />
                     <account:AccountMenuButtonView
                         Title="Legal"
                          Subtitle="All the cool tech we're using"
@@ -46,8 +46,8 @@
                         TappedCommand="{Binding NavigateToDebugCommand}"
                         NumberOfTapsRequired="8"
                     />
-                    </TableSection>
-                </TableView>
-            </StackLayout>
+                </TableSection>
+            </TableView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

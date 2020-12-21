@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Android;
@@ -14,7 +14,7 @@ using Xamarin.Forms;
 namespace Osma.Mobile.App.Droid
 {
     [Activity(Label = "Osma", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public partial/*GORILLA*/class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
         {
@@ -36,17 +36,28 @@ namespace Osma.Mobile.App.Droid
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             ZXing.Mobile.MobileBarcodeScanner.Initialize(Application);
 
+#if GORILLA
+            LoadApplication(UXDivers.Gorilla.Droid.Player.CreateApplication(
+                this,
+                new UXDivers.Gorilla.Config("Good Gorilla")
+                    .RegisterAssemblyFromType<Converters.InverseBooleanConverter>()
+                    .RegisterAssemblyFromType<FFImageLoading.Transformations.CircleTransformation>()
+                    .RegisterAssemblyFromType<FFImageLoading.Forms.CachedImage>()
+                ));
+#else
+
             // Initializing User Dialogs
             // Android requires that we set content root.
             var host = App.BuildHost(typeof(PlatformModule).Assembly)
                 .UseContentRoot(System.Environment.GetFolderPath(
-                    System.Environment.SpecialFolder.Personal)).Build();
+                    System.Environment.SpecialFolder.Personal)).Build();     
+
+            LoadApplication(host.Services.GetRequiredService<App>());
+#endif
 
             //Loading dependent libindy
             JavaSystem.LoadLibrary("c++_shared");
             JavaSystem.LoadLibrary("indy");
-
-            LoadApplication(host.Services.GetRequiredService<App>());
 
             CheckAndRequestRequiredPermissions();
         }
