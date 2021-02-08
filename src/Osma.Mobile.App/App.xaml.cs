@@ -62,7 +62,7 @@ namespace Osma.Mobile.App
                     services.AddAriesFramework(builder => builder.RegisterEdgeAgent(
                         options: options =>
                         {
-                            options.EndpointUri = "http://localhost:5000";
+                            options.EndpointUri = "https://mediatoragentwin.azurewebsites.net";
 
                             options.WalletConfiguration.StorageConfiguration =
                                 new WalletConfiguration.WalletStorageConfiguration

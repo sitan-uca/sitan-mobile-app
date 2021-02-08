@@ -52,6 +52,11 @@ namespace Osma.Mobile.App.ViewModels.Connections
             ConnectionName = _record.Alias?.Name;
             ConnectionSubtitle = $"{_record.State:G}";
             ConnectionImageUrl = _record.Alias?.ImageUrl;
+
+            if (ConnectionImageUrl == null) 
+            {
+                ConnectionImageUrl = "https://iconsgalore.com/wp-content/uploads/2018/10/cell-phone-1-featured-2.png";
+            }
         }
 
         public override async Task InitializeAsync(object navigationData)

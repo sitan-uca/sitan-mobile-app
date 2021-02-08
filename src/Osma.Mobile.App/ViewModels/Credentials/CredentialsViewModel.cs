@@ -139,8 +139,6 @@ namespace Osma.Mobile.App.ViewModels.Credentials
 
         }
 
-
-
         #region Bindable Command
         public ICommand SelectCredentialCommand => new Command<CredentialViewModel>(async (credentials) =>
         {

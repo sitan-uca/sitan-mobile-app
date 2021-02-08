@@ -44,85 +44,88 @@
         <AbsoluteLayout
                 BackgroundColor="{StaticResource NavigationBarColor}">
             <StackLayout
-                Margin="0,64,0,0"
+                Margin="0,0,0,0"
                 AbsoluteLayout.LayoutBounds="0,0,1,1"
                 AbsoluteLayout.LayoutFlags="SizeProportional"
                 BackgroundColor="{StaticResource NavigationBarColor}"
             >
-                    <Grid
-                        IsClippedToBounds="false"
-                    >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="64"/>
-                                <RowDefinition Height="32" />
-                                <RowDefinition Height="32" />
+                <Grid
+                    IsClippedToBounds="false"
+                >
+                    <Grid.RowDefinitions>
+                        <!--<RowDefinition Height="32"/>-->
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="18" />
 
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="48" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="48" />
-                            </Grid.ColumnDefinitions>
-                            <ImageButton
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Source="back_icon.png"
-                                VerticalOptions="Start"
-                                Command="{Binding NavigateBackCommand}"
-                                Style="{StaticResource IconButtonStyle}"
-                            />
-                            <forms:CachedImage
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center"
-                                HeightRequest="48"
-                                WidthRequest="48"
-                                FadeAnimationEnabled="true"
-                                DownsampleUseDipUnits="true"
-                                Source="{ Binding ConnectionImageUrl }"
-                                Aspect="AspectFit"
-                            />
-                            <ImageButton
-                                VerticalOptions="Start"
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                Source="more_icon.png"
-                                Style="{StaticResource IconButtonStyle}"
-                                
-                            />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="48" />
+                    </Grid.ColumnDefinitions>
+                    <ImageButton
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.RowSpan="2"
+                        Source="back_icon.png"
+                        VerticalOptions="Center"
+                        Command="{Binding NavigateBackCommand}"
+                        Style="{StaticResource IconButtonStyle}"
+                    />
+                    <!--<forms:CachedImage
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        HeightRequest="48"
+                        WidthRequest="48"
+                        FadeAnimationEnabled="true"
+                        DownsampleUseDipUnits="true"
+                        Source="{ Binding ConnectionImageUrl }"
+                        Aspect="AspectFit"
+                    />-->
+                    <ImageButton
+                        VerticalOptions="Center"
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Grid.RowSpan="2"   
+                        Source="more_icon.png"
+                        Style="{StaticResource IconButtonStyle}"
+                        Clicked="ToggleModalTapped"
+                    />
                             
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="3"
-                                FontSize="Medium"
-                                TextColor="{StaticResource NavigationBarTextColor}"
-                                Text="{Binding ConnectionName}"
-                                FontAttributes="Bold"
-                                HorizontalTextAlignment="Center"
-                            />
-                            <Label
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="3"
-                                FontSize="Small"
-                                TextColor="{StaticResource NavigationBarTextColor}"
-                                Text="{ Binding ConnectionSubtitle }"
-                                HorizontalTextAlignment="Center"
-                            />
-                    </Grid>
-            <ListView
-                SelectionMode="None"
-                HasUnevenRows="true"
-                BackgroundColor="{StaticResource BasePageColor}"
-                ItemsSource="{Binding Transactions}"
-                IsRefreshing="{Binding RefreshingTransactions}"
-                IsPullToRefreshEnabled="True"
-                RefreshCommand="{Binding RefreshTransactionsCommand}"
-                ItemTemplate="{StaticResource connectionTransactionTemplateSelector}"
-                SeparatorVisibility="None"
-            />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="1"
+                        FontSize="Medium"
+                        TextColor="{StaticResource NavigationBarTextColor}"
+                        Text="{Binding ConnectionName}"
+                        FontAttributes="Bold"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="End"
+                    />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="1"
+                        FontSize="Small"
+                        TextColor="{StaticResource NavigationBarTextColor}"
+                        Text="{ Binding ConnectionSubtitle }"
+                        HorizontalTextAlignment="Center"
+                    />
+                </Grid>
+                <ListView
+                    SelectionMode="None"
+                    HasUnevenRows="true"
+                    BackgroundColor="{StaticResource BasePageColor}"
+                    ItemsSource="{Binding Transactions}"
+                    IsRefreshing="{Binding RefreshingTransactions}"
+                    IsPullToRefreshEnabled="True"
+                    RefreshCommand="{Binding RefreshTransactionsCommand}"
+                    ItemTemplate="{StaticResource connectionTransactionTemplateSelector}"
+                    SeparatorVisibility="None"
+                />
                 
             </StackLayout>
             <Frame
