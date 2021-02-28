@@ -1,17 +1,20 @@
 ﻿using System.Threading.Tasks;
 using Acr.UserDialogs;
+using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.ViewModels.Account;
 using Osma.Mobile.App.ViewModels.Connections;
 using Osma.Mobile.App.ViewModels.CreateInvitation;
 using Osma.Mobile.App.ViewModels.Credentials;
+using Osma.Mobile.App.ViewModels.PinAuth;
 using Osma.Mobile.App.ViewModels.Proofs;
 using ReactiveUI;
+using Xamarin.Essentials;
 
 namespace Osma.Mobile.App.ViewModels
 {
     public class MainViewModel : ABaseViewModel
-    {
+    {  
         public MainViewModel(
             IUserDialogs userDialogs,
             INavigationService navigationService,
@@ -25,7 +28,7 @@ namespace Osma.Mobile.App.ViewModels
             Credentials = credentialsViewModel;
             Account = accountViewModel;
             CreateInvitation = createInvitationViewModel;
-            ProofRequests = proofRequestsViewModel;
+            ProofRequests = proofRequestsViewModel;       
         }
 
         public override async Task InitializeAsync(object navigationData)
@@ -36,6 +39,8 @@ namespace Osma.Mobile.App.ViewModels
             await CreateInvitation.InitializeAsync(null);
             await ProofRequests.InitializeAsync(null);
             await base.InitializeAsync(navigationData);
+            if (Preferences.Get(AppConstant.PinAuthEnabled, false))
+                await NavigationService.NavigateToAsync<PinAuthViewModel>();
         }
 
         #region Bindable Properties

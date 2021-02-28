@@ -68,6 +68,8 @@ namespace Osma.Mobile.App.Utilities
                     return unpackedMessage.GetMessage<RequestPresentationMessage>();
                 case MessageTypes.IssueCredentialNames.OfferCredential:
                     return unpackedMessage.GetMessage<CredentialOfferMessage>();
+                //case MessageTypes.BasicMessageType:
+                //    return unpackedMessage.GetMessage<>();
             }
             return null;
         }

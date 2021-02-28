@@ -96,5 +96,50 @@ namespace Osma.Mobile.App.Views.Account
             AccountMenuButtonView view = (AccountMenuButtonView)bindable;
             view.TapGestureRecognizer.NumberOfTapsRequired = (Int32)newValue;
         }
+
+        public static readonly BindableProperty SwitchToggledEventProperty =
+            BindableProperty.Create("SwitchToggledEvent", typeof(EventHandler<ToggledEventArgs>), typeof(AccountMenuButtonView), null, propertyChanged: SwitchToggledEventPropertyChanged);
+
+        public EventHandler<ToggledEventArgs> SwitchToggledEvent
+        {
+            get { return (EventHandler<ToggledEventArgs>)GetValue(SwitchToggledEventProperty); }
+            set { SetValue(SwitchToggledEventProperty, value); }
+        }
+        
+        static void SwitchToggledEventPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            AccountMenuButtonView view = (AccountMenuButtonView)bindable;
+            view.SwitchToggle.Toggled += (EventHandler<ToggledEventArgs>)newValue;
+        }
+
+        public static readonly BindableProperty SwitchToggledProperty =
+            BindableProperty.Create("SwitchToggled", typeof(bool), typeof(AccountMenuButtonView), false, propertyChanged: SwitchToggledPropertyChanged);
+
+        public bool SwitchToggled
+        {
+            get { return (bool)GetValue(SwitchToggledProperty); }
+            set { SetValue(SwitchToggledProperty, value); }
+        }
+
+        static void SwitchToggledPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            AccountMenuButtonView view = (AccountMenuButtonView)bindable;
+            view.SwitchToggle.IsToggled = (bool)newValue;
+        }
+
+        public static readonly BindableProperty SwitchToggleVisibleProperty =
+            BindableProperty.Create("SwitchToggleVisible", typeof(bool), typeof(AccountMenuButtonView), false, propertyChanged: SwitchToggleVisiblePropertyChanged);
+
+        public bool SwitchToggleVisible
+        {
+            get { return (bool)GetValue(SwitchToggleVisibleProperty); }
+            set { SetValue(SwitchToggleVisibleProperty, value); }
+        }
+
+        static void SwitchToggleVisiblePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            AccountMenuButtonView view = (AccountMenuButtonView)bindable;
+            view.SwitchToggle.IsVisible = (bool)newValue;
+        }
     }
 }

@@ -44,6 +44,7 @@ namespace Osma.Mobile.App.ViewModels
                 await _provisioningService.ProvisionAsync();
                 Preferences.Set(AppConstant.LocalWalletProvisioned, true);
 
+
                 await NavigationService.NavigateToAsync<MainViewModel>();
             }
             catch(Exception e)

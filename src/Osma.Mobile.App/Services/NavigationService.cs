@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.Views;
+using Osma.Mobile.App.Views.PinAuth;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
@@ -133,7 +134,22 @@ namespace Osma.Mobile.App.Services
         public async Task NavigateBackAsync()
         {
             if (CurrentApplication.MainPage != null)
-                await CurrentApplication.MainPage.Navigation.PopAsync();
+                await CurrentApplication.MainPage.Navigation.PopAsync();   
+        }
+
+        public async Task ExitAppAsync()
+        {
+            //System.Diagnostics.Process.GetCurrentProcess().CloseMainWindow();
+            //CurrentApplication.Quit();
+
+            var mainPage = CurrentApplication.MainPage as Page;
+            int count = mainPage.Navigation.NavigationStack.Count;
+            for (int i = 0; i < count-1; i++)
+            {
+                mainPage.Navigation.RemovePage(
+                    mainPage.Navigation.NavigationStack[0]);
+            }
+            await mainPage.Navigation.PopAsync();
         }
 
         public async Task PopModalAsync() => await CurrentApplication.MainPage.Navigation.PopModalAsync();

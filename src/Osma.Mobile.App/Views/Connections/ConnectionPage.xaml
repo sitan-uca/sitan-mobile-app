@@ -4,7 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:views="clr-namespace:Osma.Mobile.App.Views.Connections;assembly=Osma.Mobile.App"
-    xmlns:converters="clr-namespace:Osma.Mobile.App.Converters;assembly=Osma.Mobile.App"
+    xmlns:converters="clr-namespace:Osma.Mobile.App.Converters;assembly=Osma.Mobile.App" 
+    xmlns:local="clr-namespace:Osma.Mobile.App.Utilities"
+    xmlns:components="clr-namespace:Osma.Mobile.App.Views.Components;assembly=Osma.Mobile.App"
     x:Class="Osma.Mobile.App.Views.Connections.ConnectionPage"
 >
     <ContentPage.Resources>
@@ -37,6 +39,7 @@
                 StatusTemplate="{StaticResource statusTemplate}"
                 ErrorTemplate="{StaticResource errorTemplate}"
             />
+            <local:ChatTemplateSelector x:Key="MessageTemplateSelector"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -126,7 +129,31 @@
                     ItemTemplate="{StaticResource connectionTransactionTemplateSelector}"
                     SeparatorVisibility="None"
                 />
-                
+                <Grid RowSpacing="0" 
+                        ColumnSpacing="0" BackgroundColor="{StaticResource BasePageColor}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="1" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--   OUR CHAT VIEWS HERE   -->
+                    <ListView Grid.Row="0" 
+                         ItemTemplate="{StaticResource MessageTemplateSelector}" 
+                         ItemsSource="{Binding Messages}" 
+                         Margin="0" 
+                         HasUnevenRows="True" 
+                         VerticalOptions="FillAndExpand" 
+                         SeparatorColor="Transparent"
+                         >
+                    </ListView>
+                    <BoxView HorizontalOptions="FillAndExpand"
+                         HeightRequest="1"
+                         BackgroundColor="LightGray"
+                         Grid.Row="1"/>
+                    
+                    <components:ChatInputBarView Grid.Row="2" Margin="0,0,10,0" />
+                </Grid>
+
             </StackLayout>
             <Frame
                 AbsoluteLayout.LayoutFlags="XProportional, WidthProportional, HeightProportional"

@@ -7,8 +7,12 @@ using System.Timers;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Features.BasicMessage;
+using Hyperledger.Aries.Features.TrustPing;
+using Hyperledger.Aries.Features.Discovery;
 using Hyperledger.Aries.Routing;
 using Hyperledger.Aries.Storage;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Osma.Mobile.App.Services;
@@ -29,6 +33,8 @@ using Osma.Mobile.App.Views.Proofs;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Osma.Mobile.App.ViewModels.PinAuth;
+using Osma.Mobile.App.Views.PinAuth;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Osma.Mobile.App
@@ -76,6 +82,7 @@ namespace Osma.Mobile.App
                                 };
                             options.WalletConfiguration.Id = "MobileWallet";
                             options.WalletCredentials.Key = "SecretWalletKey";
+                            options.AgentName = "Mobile Agent";
                             options.RevocationRegistryDirectory = Path.Combine(
                                 path1: FileSystem.AppDataDirectory,
                                 path2: ".indy_client",
@@ -88,9 +95,13 @@ namespace Osma.Mobile.App
                             //   bcovrin-test
                             options.PoolName = "sovrin-staging";
                         },
+
                         delayProvisioning: true));
 
                     services.AddSingleton<IPoolConfigurator, PoolConfigurator>();
+                    //services.AddSingleton<DefaultBasicMessageHandler>();
+                    //services.AddSingleton<DefaultTrustPingMessageHandler>();
+                    //services.AddSingleton<DefaultDiscoveryService>();
 
                     var containerBuilder = new ContainerBuilder();
                     containerBuilder.RegisterAssemblyModules(typeof(CoreModule).Assembly);
@@ -123,15 +134,18 @@ namespace Osma.Mobile.App
             _navigationService.AddPageViewModelBinding<ProofRequestViewModel, ProofRequestPage>();
             _navigationService.AddPageViewModelBinding<ProofRequestAttributeViewModel, ProofRequestAttributePage>();
 
+            _navigationService.AddPageViewModelBinding<PinAuthViewModel, PinAuthPage>();
+            _navigationService.AddPageViewModelBinding<CreatePinAuthViewModel, CreatePinAuthPage>();
+            _navigationService.AddPageViewModelBinding<ConfirmPinAuthViewModel, ConfirmPinAuthPage>();
+
             if (Preferences.Get(AppConstant.LocalWalletProvisioned, false))
             {
-                await _navigationService.NavigateToAsync<MainViewModel>();
+                 await _navigationService.NavigateToAsync<MainViewModel>();
             }
             else
             {
                 await _navigationService.NavigateToAsync<RegisterViewModel>();
             }
-
             timer.Enabled = true;
         }
 
@@ -145,7 +159,11 @@ namespace Osma.Mobile.App
                     try
                     {
                         var context = await Container.Resolve<IAgentProvider>().GetContextAsync();
-                        await Container.Resolve<IEdgeClientService>().FetchInboxAsync(context);
+                        var (processedCount, unprocessedItems) = await Container.Resolve<IEdgeClientService>().FetchInboxAsync(context);
+                        //Container.Resolve<AgentBase>().Handlers.Add();
+
+                        //var pr = context.SupportedMessages;
+                        //Console.WriteLine(pr);
                     }
                     catch (Exception ex)
                     {
@@ -154,12 +172,25 @@ namespace Osma.Mobile.App
                 });
             }
         }
+
+        private void checkTimeAndAuth()
+        {
+            if(Preferences.Get(AppConstant.PinAuthEnabled, false))
+            {
+                var _navigationService = Container.Resolve<INavigationService>();
+                _navigationService.NavigateToAsync<PinAuthViewModel>();
+            }
+        }
+
         protected override void OnSleep() =>
             // Stop timer when application goes to background
             timer.Enabled = false;
 
-        protected override void OnResume() =>
-            // Resume timer when application comes in foreground
+        protected override void OnResume()
+        // Resume timer when application comes in foreground
+        {
             timer.Enabled = true;
+            checkTimeAndAuth();
+        }
     }
 }
