@@ -2,16 +2,27 @@
 <ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Osma.Mobile.App.Views.Connections.OutgoingMsgViewCell">
-    <Frame BackgroundColor="Gray"
+    <Grid RowSpacing="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Frame BackgroundColor="Gray"
+            Grid.Row="1"
             Padding="10"
-            HasShadow="false"
-            Margin="80,10,10,10">
-        <Label Text="{Binding Text}"
+            Rotation="180"
+            FlowDirection="LeftToRight"
+            HasShadow="False"
+            Margin="10,0,80,10">
+            <Label Text="{Binding Text}"
                   TextColor="White"/>
-    </Frame>
-    <!--<ViewCell.View>
-      <StackLayout>
-          <Label Text="Hello Xamarin.Forms!" />
-      </StackLayout>
-  </ViewCell.View>-->
+        </Frame>
+        <Label 
+            Grid.Row="0" 
+            Rotation="180" 
+            FontSize="Small"
+            HorizontalTextAlignment="End"
+            Margin="10,10,0,5"
+            Text="{Binding CreatedAtUtc}" />
+    </Grid>
 </ViewCell>

@@ -35,6 +35,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Osma.Mobile.App.ViewModels.PinAuth;
 using Osma.Mobile.App.Views.PinAuth;
+using Osma.Mobile.App.Baksak;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Osma.Mobile.App
@@ -67,7 +68,7 @@ namespace Osma.Mobile.App
             XamarinHost.CreateDefaultBuilder<App>()
                 .ConfigureServices((_, services) =>
                 {
-                    services.AddAriesFramework(builder => builder.RegisterEdgeAgent(
+                    services.AddAriesFramework(builder => builder.RegisterEdgeAgent<CustomAgent>(
                         options: options =>
                         {
                             options.EndpointUri = "https://mediatoragentwin.azurewebsites.net";
@@ -99,9 +100,7 @@ namespace Osma.Mobile.App
                         delayProvisioning: true));
 
                     services.AddSingleton<IPoolConfigurator, PoolConfigurator>();
-                    //services.AddSingleton<DefaultBasicMessageHandler>();
-                    //services.AddSingleton<DefaultTrustPingMessageHandler>();
-                    //services.AddSingleton<DefaultDiscoveryService>();
+                    services.AddSingleton<IWalletRecordService, BaksakWalletRecordService>();
 
                     var containerBuilder = new ContainerBuilder();
                     containerBuilder.RegisterAssemblyModules(typeof(CoreModule).Assembly);
@@ -138,6 +137,8 @@ namespace Osma.Mobile.App
             _navigationService.AddPageViewModelBinding<CreatePinAuthViewModel, CreatePinAuthPage>();
             _navigationService.AddPageViewModelBinding<ConfirmPinAuthViewModel, ConfirmPinAuthPage>();
 
+            _navigationService.AddPageViewModelBinding<AcceptRequestViewModel, AcceptRequestPage>();
+
             if (Preferences.Get(AppConstant.LocalWalletProvisioned, false))
             {
                  await _navigationService.NavigateToAsync<MainViewModel>();
@@ -160,10 +161,12 @@ namespace Osma.Mobile.App
                     {
                         var context = await Container.Resolve<IAgentProvider>().GetContextAsync();
                         var (processedCount, unprocessedItems) = await Container.Resolve<IEdgeClientService>().FetchInboxAsync(context);
-                        //Container.Resolve<AgentBase>().Handlers.Add();
-
-                        //var pr = context.SupportedMessages;
-                        //Console.WriteLine(pr);
+                        
+                        foreach(var item in unprocessedItems)
+                        {
+                           
+                            Debug.WriteLine("Failed to Process: " + item.Data);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -173,7 +176,7 @@ namespace Osma.Mobile.App
             }
         }
 
-        private void checkTimeAndAuth()
+        private void pinAuthenticateIfEnabled()
         {
             if(Preferences.Get(AppConstant.PinAuthEnabled, false))
             {
@@ -190,7 +193,7 @@ namespace Osma.Mobile.App
         // Resume timer when application comes in foreground
         {
             timer.Enabled = true;
-            checkTimeAndAuth();
+            pinAuthenticateIfEnabled();
         }
     }
 }

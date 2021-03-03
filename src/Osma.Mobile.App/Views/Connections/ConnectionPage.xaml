@@ -140,18 +140,21 @@
                     <ListView Grid.Row="0" 
                          ItemTemplate="{StaticResource MessageTemplateSelector}" 
                          ItemsSource="{Binding Messages}" 
+                         ItemTapped="OnListTapped"
+                         x:Name="ChatList"
                          Margin="0" 
                          HasUnevenRows="True" 
                          VerticalOptions="FillAndExpand" 
                          SeparatorColor="Transparent"
-                         >
+                         Rotation="180"
+                         FlowDirection="RightToLeft" >
                     </ListView>
                     <BoxView HorizontalOptions="FillAndExpand"
                          HeightRequest="1"
                          BackgroundColor="LightGray"
                          Grid.Row="1"/>
                     
-                    <components:ChatInputBarView Grid.Row="2" Margin="0,0,10,0" />
+                    <components:ChatInputBarView x:Name="chatInput" Grid.Row="2" Margin="0,0,10,0" />
                 </Grid>
 
             </StackLayout>

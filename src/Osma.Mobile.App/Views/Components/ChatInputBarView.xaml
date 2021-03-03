@@ -31,10 +31,10 @@
                VerticalTextAlignment="Center">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer
-                      Command="{Binding SendMessageCommand}"
-                      />
-                <!--Tapped="Handle_Completed"-->
-                    
+                    Command="{Binding SendMessageCommand}"
+                    Tapped="Handle_Completed"
+                />
+
             </Label.GestureRecognizers>
         </Label>
     </Grid>

@@ -24,7 +24,7 @@ namespace Osma.Mobile.App.Views.Components
         }
         public void Handle_Completed(object sender, EventArgs e)
         {
-            (this.Parent.Parent.Parent.Parent.BindingContext as ConnectionViewModel).SendMessageCommand.Execute(null);
+            //(this.Parent.Parent.Parent.Parent.BindingContext as ConnectionViewModel).SendMessageCommand.Execute(null);
             chatTextInput.Focus();
         }
 

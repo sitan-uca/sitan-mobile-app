@@ -28,7 +28,9 @@ namespace Osma.Mobile.App.ViewModels
             Credentials = credentialsViewModel;
             Account = accountViewModel;
             CreateInvitation = createInvitationViewModel;
-            ProofRequests = proofRequestsViewModel;       
+            ProofRequests = proofRequestsViewModel;
+            //for prompting dialog on connection events
+            WalletEventService.Init(navigationService);
         }
 
         public override async Task InitializeAsync(object navigationData)

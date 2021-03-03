@@ -37,10 +37,10 @@ namespace Osma.Mobile.App.ViewModels.Connections
         private readonly IConnectionService _connectionService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IWalletRecordService _walletRecordSevice;
+        private IAgentContext _agentContext;
 
-        public ObservableCollection<ChatTemplateSelector.Message> Messages { get; set; } = new ObservableCollection<ChatTemplateSelector.Message>();
-        //public string TextToSend { get; set; }
-        //public ICommand OnSendCommand { get; set; }
+        public ObservableCollection<BasicMessageRecord> Messages { get; set; }
+        private List<BasicMessageRecord> m;
 
         public ConnectionViewModel(IUserDialogs userDialogs,
                                    INavigationService navigationService,
@@ -74,37 +74,44 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 ConnectionImageUrl = "https://iconsgalore.com/wp-content/uploads/2018/10/cell-phone-1-featured-2.png";
             }
 
-            Messages.Add(new ChatTemplateSelector.Message() { Text = "Hi" });
-            Messages.Add(new ChatTemplateSelector.Message() { Text = "How are you?" });
+            //Messages.Add(new ChatTemplateSelector.Message() { Text = "Hi" });
+            //Messages.Add(new ChatTemplateSelector.Message() { Text = "How are you?" });
+            Messages = new ObservableCollection<BasicMessageRecord>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public override async Task InitializeAsync(object navigationData)
         {
+            _agentContext = await _agentContextProvider.GetContextAsync();
             await RefreshTransactions();
+            await InitializeChat();
 
-           
-            
-
+            _eventAggregator.GetEventByType<ApplicationEvent>()
+                            .Where(_ => _.Type == ApplicationEventType.WalletRecordsMessageUpdated)
+                            .Subscribe(async _ => await InitializeChat());
 
             await base.InitializeAsync(navigationData);
         }
 
+        //TODO: Real time recieve messages
+        public async Task InitializeChat()
+        {
+            List<BasicMessageRecord> m = await _walletRecordSevice
+                .SearchAsync<BasicMessageRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId",_record.Id));
+            m.Sort((a, b) => Nullable.Compare(a.CreatedAtUtc, b.CreatedAtUtc));
+            m.Except(Messages, new MessageRecordComparator()).ToList().ForEach(x => Messages.Insert(0, x));
+        }
+
         public async Task RefreshTransactions()
         {
-            RefreshingTransactions = true;
-
-            var context = await _agentContextProvider.GetContextAsync();
-            //var inbox_message = new GetInboxItemsMessage();
-
-            var message = _discoveryService.CreateQuery(context, "*");
-            
+            RefreshingTransactions = true;          
+            var message = _discoveryService.CreateQuery(_agentContext, "*");           
             DiscoveryDiscloseMessage protocols = null;
 
             try
             {
-                var response = await _messageService.SendReceiveAsync(context.Wallet, message, _record) as UnpackedMessageContext;
+                var response = await _messageService.SendReceiveAsync(_agentContext.Wallet, message, _record) as UnpackedMessageContext;
                 protocols = response.GetMessage<DiscoveryDiscloseMessage>();
             }
             catch (Exception e)
@@ -154,7 +161,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
         public async Task PingConnectionAsync()
         {
             var dialog = UserDialogs.Instance.Loading("Pinging");
-            var context = await _agentContextProvider.GetContextAsync();
+            
             var message = new TrustPingMessage
             {
                 ResponseRequested = true
@@ -163,7 +170,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             bool success = false;
             try
             {
-                var response = await _messageService.SendReceiveAsync(context.Wallet, message, _record) as UnpackedMessageContext;
+                var response = await _messageService.SendReceiveAsync(_agentContext.Wallet, message, _record) as UnpackedMessageContext;
                 var trustPingResponse = response.GetMessage<TrustPingResponseMessage>();
                 success = true;
             }
@@ -196,8 +203,8 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             var dialog = DialogService.Loading("Deleting");
 
-            var context = await _agentContextProvider.GetContextAsync();
-            await _connectionService.DeleteAsync(context, _record.Id);
+            
+            await _connectionService.DeleteAsync(_agentContext, _record.Id);
 
             _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
 
@@ -216,7 +223,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             if (!string.IsNullOrEmpty(_textToSend))
             {
-                var context = await _agentContextProvider.GetContextAsync();
+                
                 var sentTime = DateTime.UtcNow;
                 var messageRecord = new BasicMessageRecord
                 {
@@ -233,13 +240,11 @@ namespace Osma.Mobile.App.ViewModels.Connections
                     Type = MessageTypes.BasicMessageType
                 };
 
-                await _walletRecordSevice.AddAsync(context.Wallet, messageRecord);
-                await _messageService.SendAsync(context.Wallet, message, _record);
+                await _walletRecordSevice.AddAsync(_agentContext.Wallet, messageRecord);
+                await _messageService.SendAsync(_agentContext.Wallet, message, _record);
                 
-                Messages.Add(new ChatTemplateSelector.Message() { Text = _textToSend, User = "Me" });
+                //Messages.Insert(0, messageRecord);
                 _textToSend = string.Empty;
-
-               
             }
         });
         #endregion
