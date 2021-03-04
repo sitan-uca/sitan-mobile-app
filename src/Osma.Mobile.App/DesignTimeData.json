@@ -61,12 +61,12 @@
     "RefreshingTransactions": false,
     "RefreshTransactionsCommand": "",
     "DeleteConnectionCommand": "",
-    "Transactions":  [
+    "Transactions": [
       {
         "Type": "Actionable",
-        "Datetime":  "05 May 2018 | 5:35pm",
-        "Title":  "Example actionable",
-        "Subtitle":  "Example Subtitle"
+        "Datetime": "05 May 2018 | 5:35pm",
+        "Title": "Example actionable",
+        "Subtitle": "Example Subtitle"
       },
       {
         "Type": "Status",
@@ -74,7 +74,10 @@
         "Title": "Example status",
         "Subtitle": "Example Subtitle"
       }
-    ]
+    ],
+    "Messages": "",
+    "TextToSend": "text to send",
+    "OnSendCommand": "command"
   },
   "Views\\Credentials\\CredentialPage.xaml": {
     "CredentialImageUrl": "https://pbs.twimg.com/profile_images/899211256480940032/8XD4jxu1_400x400.jpg",

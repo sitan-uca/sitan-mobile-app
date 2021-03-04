@@ -7,12 +7,19 @@ using ReactiveUI;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using Osma.Mobile.App.Views.Legal;
+using Osma.Mobile.App.ViewModels.PinAuth;
+using System;
+using System.Diagnostics;
+using Osma.Mobile.App.Views.PinAuth;
+using System.ComponentModel;
 
 namespace Osma.Mobile.App.ViewModels.Account
 {
     //TODO the image resources in the android package are missing. Populate them 
-    public class AccountViewModel : ABaseViewModel
+    public class AccountViewModel : ABaseViewModel, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public AccountViewModel(
             IUserDialogs userDialogs,
             INavigationService navigationService
@@ -28,8 +35,15 @@ namespace Osma.Mobile.App.ViewModels.Account
             _fullName = "Jamie Doe";
             _avatarUrl = "http://i.pravatar.cc/100";
 #endif
+
+            _authSwitchToggled = Preferences.Get(AppConstant.PinAuthEnabled, false);
         }
 
+        public override async Task InitializeAsync(object navigationData)
+        {
+            
+            await base.InitializeAsync(navigationData);
+        }
 
         public async Task NavigateToBackup()
         {
@@ -38,7 +52,11 @@ namespace Osma.Mobile.App.ViewModels.Account
 
         public async Task NavigateToAuthentication()
         {
-            await DialogService.AlertAsync("Navigate to authentication");
+            //await DialogService.AlertAsync("Navigate to authentication");
+            if (Preferences.Get(AppConstant.PinAuthEnabled, false))
+                await NavigationService.NavigateToAsync<PinAuthViewModel>(nameof(CreatePinAuthViewModel));
+            else
+                await NavigationService.NavigateToAsync<CreatePinAuthViewModel>();
         }
 
         //TODO: this method crashes the app. Fix it
@@ -63,6 +81,24 @@ namespace Osma.Mobile.App.ViewModels.Account
 
         public ICommand NavigateToDebugCommand => new Command(async () => await NavigateToDebug());
 
+        public ICommand NotifySwitchToggle => new Command(() => {
+            _authSwitchToggled = Preferences.Get(AppConstant.PinAuthEnabled, false);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AuthSwitchToggled"));
+        });
+
+        public EventHandler<ToggledEventArgs> ToggleAuthentication => async (sender, e) =>
+        {
+            if (e.Value)
+            {
+                //Debug.WriteLine("\n\nONONONON\n\n");
+                await NavigateToAuthentication();
+            }
+            else
+            {
+                //Debug.WriteLine("\n\nOFFOFFOFFOFFOFF\n\n");
+                await NavigationService.NavigateToAsync<PinAuthViewModel>(nameof(AccountViewModel));
+            }
+        };
         #endregion
 
         #region Bindable Properties
@@ -100,6 +136,17 @@ namespace Osma.Mobile.App.ViewModels.Account
         {
             get => _buildVersion;
             set => this.RaiseAndSetIfChanged(ref _buildVersion, value);
+        }
+
+        private bool _authSwitchToggled;
+        public bool AuthSwitchToggled
+        {
+            get => _authSwitchToggled;
+            set //this.RaiseAndSetIfChanged(ref _authSwitchToggled, value); 
+            {
+                this.RaiseAndSetIfChanged(ref _authSwitchToggled, value);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AuthSwitchToggled"));
+            }
         }
 
         #endregion

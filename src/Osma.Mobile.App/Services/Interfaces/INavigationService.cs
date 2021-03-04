@@ -40,5 +40,7 @@ namespace Osma.Mobile.App.Services.Interfaces
         void AddPageViewModelBinding<TVm, TP>();
 
         void AddPopupViewModelBinding<TVm, TV>();
+
+        Task ExitAppAsync();
     }
 }

@@ -16,5 +16,10 @@ namespace Osma.Mobile.App.Views.Connections
         {
             moreModal.IsVisible = !moreModal.IsVisible;
         }
+
+        public void OnListTapped(object sender, ItemTappedEventArgs e)
+        {
+            chatInput.UnFocusEntry();
+        }
     }
 }

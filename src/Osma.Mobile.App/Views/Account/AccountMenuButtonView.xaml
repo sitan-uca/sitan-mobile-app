@@ -16,6 +16,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
             <Grid.RowDefinitions>
@@ -46,6 +47,15 @@
                 Grid.Column="1"
                 FontSize="Small"
                 VerticalOptions="Center"
+            />
+            <Switch
+                x:Name="SwitchToggle"
+                Grid.Row="0"
+                Grid.Column="2"
+                Grid.RowSpan="2"
+                HeightRequest="32"
+                WidthRequest="32"
+                IsVisible="False"
             />
         </Grid>
     </ViewCell.View>

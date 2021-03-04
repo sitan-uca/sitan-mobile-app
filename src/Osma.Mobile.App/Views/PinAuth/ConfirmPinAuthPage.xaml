@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FormsPinView.Core;assembly=FormsPinView.Core"
+             x:Class="Osma.Mobile.App.Views.PinAuth.ConfirmPinAuthPage">
+    <ContentPage.Content>
+        <StackLayout
+            Orientation="Vertical"
+            VerticalOptions="CenterAndExpand"
+            Padding="0">
+            <Label
+                Text="Confirm your new PIN" 
+                HorizontalTextAlignment="Center"
+                TextColor="Black" />
+            <local:PinView
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand"
+                PinLength="6"
+                Validator="{Binding ConfirmAuthPin}"
+                SuccessCommand="{Binding OnSuccessCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -360,6 +360,9 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FormsPinView">
+      <Version>2.1.0-pre1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>3.1.0</Version>
     </PackageReference>

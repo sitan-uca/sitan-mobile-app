@@ -45,6 +45,10 @@ namespace Osma.Mobile.App
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(x => x.Namespace.Contains("Osma.Mobile.App.Views"))
                 .InstancePerDependency();
+
+            builder.RegisterType<Baksak.BaksakConnectionHandler>().AsSelf();
+
+            builder.RegisterType<Baksak.BaksakWalletRecordService>().AsSelf();
         }
     }
 }

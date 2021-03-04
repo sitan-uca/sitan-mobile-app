@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Osma.Mobile.App.Views.Connections.IncommingMsgViewCell">
+    <Grid RowSpacing="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Frame BackgroundColor="LightBlue"
+              Grid.Row="1"
+              Padding="10"
+              Rotation="180"
+              FlowDirection="LeftToRight"
+              HasShadow="false"
+              Margin="80,0,10,10">
+            <Label Text="{Binding Text}"/>
+        </Frame>
+        <Label 
+            Grid.Row="0" 
+            Rotation="180" 
+            FontSize="Small"
+            HorizontalTextAlignment="Start"
+            Margin="0,10,10,5"
+            Text="{Binding CreatedAtUtc}" />
+    </Grid>
+</ViewCell>

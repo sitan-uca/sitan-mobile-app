@@ -46,6 +46,7 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
                 var (invitation, _) = await _connectionService.CreateInvitationAsync(context, new InviteConfiguration
                 {
                     TheirAlias = new ConnectionAlias { Name = "Invitation" }
+                    
                 });
 
                 string barcodeValue = invitation.ServiceEndpoint + "?d_m=" + Uri.EscapeDataString(invitation.ToByteArray().ToBase64String());

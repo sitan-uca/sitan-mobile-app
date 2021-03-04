@@ -62,7 +62,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
             var context = await _agentContextProvider.GetContextAsync();
             var records = await _connectionService.ListAsync(context);
-
+            
             IList<ConnectionViewModel> connectionVms = new List<ConnectionViewModel>();
             foreach (var record in records)
             {

@@ -32,6 +32,9 @@
                         Subtitle="Because it's private"
                         Image="security_icon.png"
                         TappedCommand="{Binding NavigateToAuthenticationCommand}"
+                        SwitchToggledEvent="{Binding ToggleAuthentication}"
+                        SwitchToggled="{Binding AuthSwitchToggled}"
+                        SwitchToggleVisible="True"
                     />
                     <account:AccountMenuButtonView
                         Title="Legal"

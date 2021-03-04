@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Autofac;
 using FFImageLoading.Forms.Platform;
+using FormsPinView.iOS;
 using Foundation;
 using Microsoft.Extensions.DependencyInjection;
 using Osma.Mobile.App.Converters;
@@ -29,6 +30,8 @@ namespace Osma.Mobile.App.iOS
         {
             Rg.Plugins.Popup.Popup.Init();
             Xamarin.Forms.Forms.Init();
+
+            PinItemViewRenderer.Init();
 
             // Initializing FFImageLoading
             CachedImageRenderer.Init();

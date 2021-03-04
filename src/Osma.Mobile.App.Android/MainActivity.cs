@@ -6,6 +6,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using FFImageLoading.Forms.Platform;
+using FormsPinView.Droid;
 using Java.Lang;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +25,8 @@ namespace Osma.Mobile.App.Droid
             base.OnCreate(bundle);
 
             Forms.Init(this, bundle);
+
+            PinItemViewRenderer.Init();
 
             Acr.UserDialogs.UserDialogs.Init(this);
             // Initializing FFImageLoading

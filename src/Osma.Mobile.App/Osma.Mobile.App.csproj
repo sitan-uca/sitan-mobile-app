@@ -19,8 +19,14 @@
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="images\**" />
+    <EmbeddedResource Remove="images\**" />
+    <None Remove="images\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.1.0.442" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="FormsPinView" Version="2.1.0-pre1" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
@@ -37,10 +43,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="images\pict-mobile.png" />
     <EmbeddedResource Include="Resources\legal.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Views\Components\ChatInputBarView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Connections\AcceptInvitePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -57,6 +65,15 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MainPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PinAuth\ConfirmPinAuthPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PinAuth\CreatePinAuthPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\PinAuth\PinAuthPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Proofs\ProofRequestAttributePage.xaml">
@@ -78,12 +95,8 @@
     <Compile Remove="Views\Connections\ConnectionTransactionCell.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="images\pict-mobile.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Views\Credentials\" />
     <Folder Include="ViewModels\Credentials\" />
-    <Folder Include="Views\Components\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Osma.Mobile.App.Services\Osma.Mobile.App.Services.csproj" />
