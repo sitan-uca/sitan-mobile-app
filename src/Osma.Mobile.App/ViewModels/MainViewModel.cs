@@ -20,15 +20,16 @@ namespace Osma.Mobile.App.ViewModels
             INavigationService navigationService,
             ConnectionsViewModel connectionsViewModel,
             CredentialsViewModel credentialsViewModel,
-            AccountViewModel accountViewModel,
+            AccountViewModel accountViewModel,            
             CreateInvitationViewModel createInvitationViewModel,
-            ProofRequestsViewModel proofRequestsViewModel) : base(nameof(MainViewModel), userDialogs, navigationService)
+            ProofRequestsViewModel proofRequestsViewModel
+            ) : base(nameof(MainViewModel), userDialogs, navigationService)
         {
             Connections = connectionsViewModel;
             Credentials = credentialsViewModel;
             Account = accountViewModel;
             CreateInvitation = createInvitationViewModel;
-            ProofRequests = proofRequestsViewModel;
+            ProofRequests = proofRequestsViewModel;            
             //for prompting dialog on connection events
             WalletEventService.Init(navigationService);
         }
@@ -39,7 +40,7 @@ namespace Osma.Mobile.App.ViewModels
             await Credentials.InitializeAsync(null);
             await Account.InitializeAsync(null);
             await CreateInvitation.InitializeAsync(null);
-            await ProofRequests.InitializeAsync(null);
+            await ProofRequests.InitializeAsync(null);            
             await base.InitializeAsync(navigationData);
             if (Preferences.Get(AppConstant.PinAuthEnabled, false))
                 await NavigationService.NavigateToAsync<PinAuthViewModel>();

@@ -12,7 +12,7 @@
     xmlns:proofRequests="clr-namespace:Osma.Mobile.App.Views.Proofs;assembly=Osma.Mobile.App"
     Appearing="Appearing"
     CurrentPageChanged="CurrentPageChanged">
-    <connections:ConnectionsPage
+    <connections:ConnectionsPage        
         ios:NavigationPage.PrefersLargeTitles="true"
         BindingContext="{Binding Connections}"
         Icon="connection_icon.png" />

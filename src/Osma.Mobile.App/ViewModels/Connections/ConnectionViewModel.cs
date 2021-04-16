@@ -24,6 +24,13 @@ using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Routing;
 using System.Reactive.Linq;
 using Hyperledger.Aries.Models.Events;
+using Osma.Mobile.App.Protocols;
+using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Features.PresentProof;
+using Plugin.Connectivity;
+using Osma.Mobile.App.ViewModels.Credentials;
+using Osma.Mobile.App.Services;
+using Autofac;
 
 namespace Osma.Mobile.App.ViewModels.Connections
 {
@@ -37,10 +44,12 @@ namespace Osma.Mobile.App.ViewModels.Connections
         private readonly IConnectionService _connectionService;
         private readonly IEventAggregator _eventAggregator;
         private readonly IWalletRecordService _walletRecordSevice;
+        private readonly ILifetimeScope _scope;
         private IAgentContext _agentContext;
 
-        public ObservableCollection<BasicMessageRecord> Messages { get; set; }
-        private List<BasicMessageRecord> m;
+        public ObservableCollection<RecordBase> Messages { get; set; }
+        //private List<BasicMessageRecord> m;       
+
 
         public ConnectionViewModel(IUserDialogs userDialogs,
                                    INavigationService navigationService,
@@ -50,6 +59,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
                                    IConnectionService connectionService,
                                    IEventAggregator eventAggregator,
                                    IWalletRecordService walletRecordService,
+                                   ILifetimeScope scope,
                                    ConnectionRecord record) :
                                    base(nameof(ConnectionViewModel),
                                        userDialogs,
@@ -61,6 +71,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             _connectionService = connectionService;
             _eventAggregator = eventAggregator;
             _walletRecordSevice = walletRecordService;
+            _scope = scope;
 
             _record = record;
             MyDid = _record.MyDid;
@@ -69,22 +80,22 @@ namespace Osma.Mobile.App.ViewModels.Connections
             ConnectionSubtitle = $"{_record.State:G}";
             ConnectionImageUrl = _record.Alias?.ImageUrl;
 
-            if (ConnectionImageUrl == null) 
+            if (ConnectionImageUrl == null)
             {
                 ConnectionImageUrl = "https://iconsgalore.com/wp-content/uploads/2018/10/cell-phone-1-featured-2.png";
             }
 
             //Messages.Add(new ChatTemplateSelector.Message() { Text = "Hi" });
             //Messages.Add(new ChatTemplateSelector.Message() { Text = "How are you?" });
-            Messages = new ObservableCollection<BasicMessageRecord>();
+            Messages = new ObservableCollection<RecordBase>();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;    
 
         public override async Task InitializeAsync(object navigationData)
         {
-            _agentContext = await _agentContextProvider.GetContextAsync();
-            await RefreshTransactions();
+
+            //await RefreshTransactions();
             await InitializeChat();
 
             _eventAggregator.GetEventByType<ApplicationEvent>()
@@ -97,17 +108,40 @@ namespace Osma.Mobile.App.ViewModels.Connections
         //TODO: Real time recieve messages
         public async Task InitializeChat()
         {
-            List<BasicMessageRecord> m = await _walletRecordSevice
-                .SearchAsync<BasicMessageRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId",_record.Id));
-            m.Sort((a, b) => Nullable.Compare(a.CreatedAtUtc, b.CreatedAtUtc));
-            m.Except(Messages, new MessageRecordComparator()).ToList().ForEach(x => Messages.Insert(0, x));
+            _agentContext = await _agentContextProvider.GetContextAsync();
+            List<RecordBase> records = new List<RecordBase>();
+
+            List<BasicMessageRecord> msgs = await _walletRecordSevice
+                .SearchAsync<BasicMessageRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
+            List<CredentialRecord> credentials = await _walletRecordSevice
+                .SearchAsync<CredentialRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
+            List<ProofRecord> proofs = await _walletRecordSevice
+                .SearchAsync<ProofRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
+
+            records.AddRange(msgs);
+            records.AddRange(credentials);
+            records.AddRange(proofs);
+
+            records.Sort((a, b) => Nullable.Compare(a.CreatedAtUtc, b.CreatedAtUtc));
+            records.Except(Messages, new RecordComparator()).ToList().ForEach(x => Messages.Insert(0, x));
+
         }
 
         public async Task RefreshTransactions()
         {
-            RefreshingTransactions = true;          
-            var message = _discoveryService.CreateQuery(_agentContext, "*");           
+            RefreshingTransactions = true;
+
+            _agentContext = await _agentContextProvider.GetContextAsync();
+            var message = _discoveryService.CreateQuery(_agentContext, "*");
             DiscoveryDiscloseMessage protocols = null;
+
+            if (!CrossConnectivity.Current.IsConnected)
+            {
+                UserDialogs.Instance.Toast("Looks like you're missing internet connection!", new TimeSpan(3));
+                HasTransactions = false;
+                RefreshingTransactions = false;
+                return;
+            }
 
             try
             {
@@ -134,22 +168,37 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
             foreach (var protocol in protocols.Protocols)
             {
-                switch (protocol.ProtocolId)
+                if (MessageTypes.TrustPingMessageType.Contains(protocol.ProtocolId))
                 {
-                    case MessageTypes.TrustPingMessageType:
-                        transactions.Add(new TransactionItem()
+                    transactions.Add(new TransactionItem()
+                    {
+                        Title = "Trust Ping",
+                        Subtitle = "Version 1.0",
+                        PrimaryActionTitle = "Ping",
+                        PrimaryActionCommand = new Command(async () =>
                         {
-                            Title = "Trust Ping",
-                            Subtitle = "Version 1.0",
-                            PrimaryActionTitle = "Ping",
-                            PrimaryActionCommand = new Command(async () =>
-                            {
-                                await PingConnectionAsync();
-                            }, () => true),
-                            Type = TransactionItemType.Action.ToString("G")
-                        });
-                        break;
+                            await PingConnectionAsync();
+                        }, () => true),
+                        Type = TransactionItemType.Action.ToString("G")
+                    });
                 }
+
+                //switch (protocol.ProtocolId)
+                //{
+                //    case MessageTypes.TrustPingMessageType:
+                //        transactions.Add(new TransactionItem()
+                //        {
+                //            Title = "Trust Ping",
+                //            Subtitle = "Version 1.0",
+                //            PrimaryActionTitle = "Ping",
+                //            PrimaryActionCommand = new Command(async () =>
+                //            {
+                //                await PingConnectionAsync();
+                //            }, () => true),
+                //            Type = TransactionItemType.Action.ToString("G")
+                //        });
+                //        break;                    
+                //}
             }
 
             Transactions.InsertRange(transactions);
@@ -160,8 +209,9 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
         public async Task PingConnectionAsync()
         {
+            _agentContext = await _agentContextProvider.GetContextAsync();
             var dialog = UserDialogs.Instance.Loading("Pinging");
-            
+
             var message = new TrustPingMessage
             {
                 ResponseRequested = true
@@ -193,17 +243,25 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 );
         }
 
+        public async Task SelectCredential(CredentialViewModel credential) => await NavigationService.NavigateToAsync(credential, null, NavigationType.Modal);
+
         #region Bindable Command
         public ICommand NavigateBackCommand => new Command(async () =>
         {
             await NavigationService.NavigateBackAsync();
         });
 
+        public ICommand RequestProofCommand => new Command(async () => await NavigationService.NavigateToAsync<RequestIdentityProofViewModel>(_record));
+
+        public ICommand ConnectionDetailsCommand => new Command(async () => await NavigationService.NavigateToAsync<ConnectionDetailsViewModel>(_record.Id));
+
+        public ICommand SendTrustPingCommand => new Command(async () => await PingConnectionAsync());
+
         public ICommand DeleteConnectionCommand => new Command(async () =>
         {
             var dialog = DialogService.Loading("Deleting");
+            _agentContext = await _agentContextProvider.GetContextAsync();
 
-            
             await _connectionService.DeleteAsync(_agentContext, _record.Id);
 
             _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
@@ -223,7 +281,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             if (!string.IsNullOrEmpty(_textToSend))
             {
-                
+                _agentContext = await _agentContextProvider.GetContextAsync();
                 var sentTime = DateTime.UtcNow;
                 var messageRecord = new BasicMessageRecord
                 {
@@ -235,17 +293,31 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 };
                 var message = new BasicMessage
                 {
-                    Content = _textToSend,
+                    Content = TextToSend,
                     SentTime = sentTime.ToString("s", CultureInfo.InvariantCulture),
                     Type = MessageTypes.BasicMessageType
                 };
 
                 await _walletRecordSevice.AddAsync(_agentContext.Wallet, messageRecord);
                 await _messageService.SendAsync(_agentContext.Wallet, message, _record);
-                
+
                 //Messages.Insert(0, messageRecord);
-                _textToSend = string.Empty;
+                TextToSend = string.Empty;
             }
+        });
+
+        public ICommand SelectCredentialCommand => new Command(async (selectedRecord) =>
+        {
+            if (selectedRecord != null) 
+            {
+                if (selectedRecord is CredentialRecord)
+                {
+                    CredentialViewModel credential = _scope.Resolve<CredentialViewModel>(new NamedParameter("credential", selectedRecord),
+                                                                                     new NamedParameter("connection", _record));
+                    await SelectCredential(credential);
+                }                    
+            }
+
         });
         #endregion
 
@@ -312,6 +384,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             get => _textToSend;
             set => this.RaiseAndSetIfChanged(ref _textToSend, value);
         }
+        
         #endregion
     }
 }

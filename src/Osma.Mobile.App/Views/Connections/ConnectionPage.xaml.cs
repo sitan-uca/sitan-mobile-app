@@ -8,13 +8,13 @@ namespace Osma.Mobile.App.Views.Connections
 
         public ConnectionPage()
         {
-            NavigationPage.SetHasNavigationBar(this, false);
+            //NavigationPage.SetHasNavigationBar(this, false);
             InitializeComponent();
         }
 
         private void ToggleModalTapped(object sender, EventArgs e)
         {
-            moreModal.IsVisible = !moreModal.IsVisible;
+            //moreModal.IsVisible = !moreModal.IsVisible;
         }
 
         public void OnListTapped(object sender, ItemTappedEventArgs e)

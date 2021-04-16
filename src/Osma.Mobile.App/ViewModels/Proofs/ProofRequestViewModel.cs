@@ -134,8 +134,9 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                         new NamedParameter("referent", requestedAttribute.Key)
                     );
 
-                    RequestedAttributes.Add(attribute);
+                    RequestedAttributes.Add(attribute);                    
                 }
+                ActionRequired = proofRecord.State == ProofState.Requested;
 
                 //TODO: Implement Predicate and Restrictions related functionlity
             }
@@ -229,10 +230,42 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             }
         }
 
+        async Task VerifyProof()
+        {
+            var dialog = UserDialogs.Instance.Loading("Verifying");            
+            try
+            {                
+                var context = await agentContextProvider.GetContextAsync();
+                bool success = await proofService.VerifyProofAsync(context, proofRecord.Id);
+                if (dialog.IsShowing)
+                {
+                    dialog.Hide();
+                    dialog.Dispose();
+                }
+
+                DialogService.Alert(
+                        success ?
+                        "Verified" :
+                        "Failed"
+                    );
+            } 
+            catch (Exception ex)
+            {
+                if (dialog.IsShowing)
+                {
+                    dialog.Hide();
+                    dialog.Dispose();
+                }
+                
+                DialogService.Alert(ex.Message);
+            }                      
+        }
+
         #region Commands
 
         public ICommand PresentProofCommand => new Command(async () => await CreatePresentation());
         public ICommand DismissProofRequestCommand => new Command(async () => await DismissProofRequest());
+        public ICommand VerifyProofCommand => new Command(async () => await VerifyProof());
 
         public ICommand ViewAttributeDetailCommand => new Command<ProofRequestAttributeViewModel>(async (attribute) =>
         {
@@ -245,7 +278,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         #endregion
 
         #region Properties
-
+        
 
         string _connectionLogo;
         public string ConnectionLogo
@@ -273,6 +306,13 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         {
             get => _proofRequestName;
             set => this.RaiseAndSetIfChanged(ref _proofRequestName, value);
+        }
+
+        bool _actionRequired;
+        public bool ActionRequired
+        {
+            get => _actionRequired;
+            set => this.RaiseAndSetIfChanged(ref _actionRequired, value);
         }
 
         public ProofRequest ProofRequest { get; set; }

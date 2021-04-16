@@ -7,6 +7,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
 using Osma.Mobile.App.Services.Interfaces;
+using Plugin.Clipboard;
 using ReactiveUI;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
@@ -45,8 +46,7 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
                 var context = await _agentContextProvider.GetContextAsync();
                 var (invitation, _) = await _connectionService.CreateInvitationAsync(context, new InviteConfiguration
                 {
-                    TheirAlias = new ConnectionAlias { Name = "Invitation" }
-                    
+                    TheirAlias = new ConnectionAlias { Name = "Invitation" }                    
                 });
 
                 string barcodeValue = invitation.ServiceEndpoint + "?d_m=" + Uri.EscapeDataString(invitation.ToByteArray().ToBase64String());
@@ -80,6 +80,8 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
         #region Bindable Command
 
         public ICommand CreateInvitationCommand => new Command(async () => await CreateInvitation());
+
+        public ICommand CopyInvitation => new Command(() => CrossClipboard.Current.SetText(QrCodeValue));
 
         #endregion
 

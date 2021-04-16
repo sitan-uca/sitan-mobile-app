@@ -5,12 +5,22 @@
     xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:views="clr-namespace:Osma.Mobile.App.Views.Connections;assembly=Osma.Mobile.App"
     xmlns:converters="clr-namespace:Osma.Mobile.App.Converters;assembly=Osma.Mobile.App" 
+    xmlns:behaviours="clr-namespace:Osma.Mobile.App.Behaviors;assembly=Osma.Mobile.App"          
     xmlns:local="clr-namespace:Osma.Mobile.App.Utilities"
     xmlns:components="clr-namespace:Osma.Mobile.App.Views.Components;assembly=Osma.Mobile.App"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
     x:Class="Osma.Mobile.App.Views.Connections.ConnectionPage"
+    Title="{Binding ConnectionName}"
 >
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="RequestProof" Order="Primary" Text="Request" Priority="0" Command="{Binding RequestProofCommand}"/>
+        <ToolbarItem Name="Details" Order="Secondary" Text="Details" ios:NavigationPage.PrefersLargeTitles="true" Priority="1" Command="{Binding ConnectionDetailsCommand}" />
+        <ToolbarItem Name="TrustPing" Order="Secondary" Text="Send Trust Ping" ios:NavigationPage.PrefersLargeTitles="true" Priority="0" Command="{Binding SendTrustPingCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
+            <converters:SelecteditemEventArgsToSelectedItemConverter x:Key="SelectedItemConverter" />
             <converters:InverseBooleanConverter x:Key="BooleanInverse" />
             <DataTemplate x:Key="actionTemplate">
                 <ViewCell>
@@ -42,21 +52,21 @@
             <local:ChatTemplateSelector x:Key="MessageTemplateSelector"/>
         </ResourceDictionary>
     </ContentPage.Resources>
+    
+    
 
     <ContentPage.Content>
-        <AbsoluteLayout
-                BackgroundColor="{StaticResource NavigationBarColor}">
-            <StackLayout
-                Margin="0,0,0,0"
-                AbsoluteLayout.LayoutBounds="0,0,1,1"
-                AbsoluteLayout.LayoutFlags="SizeProportional"
-                BackgroundColor="{StaticResource NavigationBarColor}"
-            >
-                <Grid
+        <StackLayout>
+            <!--<StackLayout>-->
+                <!--AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="SizeProportional"-->
+                
+            
+                <!--<Grid
                     IsClippedToBounds="false"
                 >
                     <Grid.RowDefinitions>
-                        <!--<RowDefinition Height="32"/>-->
+                        --><!--<RowDefinition Height="32"/>--><!--
                         <RowDefinition Height="32" />
                         <RowDefinition Height="18" />
 
@@ -75,7 +85,7 @@
                         Command="{Binding NavigateBackCommand}"
                         Style="{StaticResource IconButtonStyle}"
                     />
-                    <!--<forms:CachedImage
+                    --><!--<forms:CachedImage
                         Grid.Row="0"
                         Grid.Column="1"
                         VerticalOptions="Center"
@@ -86,7 +96,7 @@
                         DownsampleUseDipUnits="true"
                         Source="{ Binding ConnectionImageUrl }"
                         Aspect="AspectFit"
-                    />-->
+                    />--><!--
                     <ImageButton
                         VerticalOptions="Center"
                         Grid.Row="0"
@@ -117,8 +127,8 @@
                         Text="{ Binding ConnectionSubtitle }"
                         HorizontalTextAlignment="Center"
                     />
-                </Grid>
-                <ListView
+                </Grid>-->
+                <!--<ListView
                     SelectionMode="None"
                     HasUnevenRows="true"
                     BackgroundColor="{StaticResource BasePageColor}"
@@ -127,8 +137,8 @@
                     IsPullToRefreshEnabled="True"
                     RefreshCommand="{Binding RefreshTransactionsCommand}"
                     ItemTemplate="{StaticResource connectionTransactionTemplateSelector}"
-                    SeparatorVisibility="None"
-                />
+                    SeparatorVisibility="Default"
+                />-->
                 <Grid RowSpacing="0" 
                         ColumnSpacing="0" BackgroundColor="{StaticResource BasePageColor}">
                     <Grid.RowDefinitions>
@@ -148,28 +158,38 @@
                          SeparatorColor="Transparent"
                          Rotation="180"
                          FlowDirection="RightToLeft" >
+                    <ListView.Behaviors>
+
+                        <behaviours:EventToCommandBehavior
+                            Command="{Binding SelectCredentialCommand}"
+                            Converter="{StaticResource SelectedItemConverter}"
+                            DeselectOnClick="True"
+                            EventName="ItemSelected" />
+
+                    </ListView.Behaviors>
                     </ListView>
                     <BoxView HorizontalOptions="FillAndExpand"
                          HeightRequest="1"
                          BackgroundColor="LightGray"
                          Grid.Row="1"/>
                     
-                    <components:ChatInputBarView x:Name="chatInput" Grid.Row="2" Margin="0,0,10,0" />
+                    <components:ChatInputBarView x:Name="chatInput" Grid.Row="2" Margin="0,0,0,0" />
                 </Grid>
 
-            </StackLayout>
-            <Frame
-                AbsoluteLayout.LayoutFlags="XProportional, WidthProportional, HeightProportional"
-                AbsoluteLayout.LayoutBounds="0, 96, 1, 1"
+            <!--</StackLayout>-->
+            <!--<Frame
+                
                 HasShadow="false"
                 BackgroundColor="Transparent"
                 x:Name="moreModal"
-                IsVisible="false"
+                IsVisible="true"
             >
+                --><!--AbsoluteLayout.LayoutFlags="XProportional, WidthProportional, HeightProportional"
+                AbsoluteLayout.LayoutBounds="0, 96, 1, 1"--><!--
                 <Frame
                     HasShadow="true"
-                    HorizontalOptions="End"
-                    VerticalOptions="Start"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
                 >
                     <StackLayout
                         Margin="0"
@@ -223,8 +243,8 @@
                         />
                     </StackLayout>
                 </Frame>    
-            </Frame>
+            </Frame>-->
             
-        </AbsoluteLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

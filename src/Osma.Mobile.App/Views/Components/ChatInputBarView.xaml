@@ -28,7 +28,8 @@
         <Label Text="Send"
                Grid.Row="0"
                Grid.Column="1"
-               VerticalTextAlignment="Center">
+               VerticalTextAlignment="Center"
+               Margin="5,5,5,5">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer
                     Command="{Binding SendMessageCommand}"

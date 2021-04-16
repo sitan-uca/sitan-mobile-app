@@ -32,11 +32,14 @@
                     ItemsSource="{Binding Connections}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
+                            
+                                
                             <components:DetailedCell
-                            Title="{Binding ConnectionName}"
-                            Subtitle="{Binding ConnectionSubtitle}"
-                            ImageURL="{Binding ConnectionImageUrl}"
-                        />
+                                Title="{Binding ConnectionName}"
+                                Subtitle="{Binding ConnectionSubtitle}"
+                                ImageURL="{Binding ConnectionImageUrl}"
+                             />
+                            
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.Behaviors>

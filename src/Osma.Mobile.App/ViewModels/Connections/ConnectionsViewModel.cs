@@ -114,7 +114,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
         public ICommand ScanInviteCommand => new Command(async () => await ScanInvite());
 
-        public ICommand CreateInvitationCommand => new Command(async () => await NavigationService.NavigateToAsync<CreateInvitationViewModel>());
+        public ICommand CreateInvitationCommand => new Command(async () => await NavigationService.NavigateToAsync<CreateInvitationViewModel>(null, NavigationType.Modal));
 
         public ICommand SelectConnectionCommand => new Command<ConnectionViewModel>(async (connection) =>
         {

@@ -42,10 +42,9 @@ namespace Osma.Mobile.App.ViewModels
             {
                 await _poolConfigurator.ConfigurePoolsAsync();
                 await _provisioningService.ProvisionAsync();
-                Preferences.Set(AppConstant.LocalWalletProvisioned, true);
-
-
+                
                 await NavigationService.NavigateToAsync<MainViewModel>();
+                Preferences.Set(AppConstant.LocalWalletProvisioned, true);
             }
             catch(Exception e)
             {

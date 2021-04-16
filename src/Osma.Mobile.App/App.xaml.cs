@@ -36,6 +36,7 @@ using Xamarin.Forms.Xaml;
 using Osma.Mobile.App.ViewModels.PinAuth;
 using Osma.Mobile.App.Views.PinAuth;
 using Osma.Mobile.App.Baksak;
+using Plugin.Connectivity;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Osma.Mobile.App
@@ -53,6 +54,7 @@ namespace Osma.Mobile.App
         {
             InitializeComponent();
 
+            //MainPage = new AppShell();
             timer = new Timer
             {
                 Enabled = false,
@@ -81,7 +83,8 @@ namespace Osma.Mobile.App
                                         path2: ".indy_client",
                                         path3: "wallets")
                                 };
-                            options.WalletConfiguration.Id = "MobileWallet";
+                            options.WalletConfiguration.Id = "BaksakMobileWallet";
+                            //TODO Ask user for a wallet key during provisioning
                             options.WalletCredentials.Key = "SecretWalletKey";
                             options.AgentName = "Mobile Agent";
                             options.RevocationRegistryDirectory = Path.Combine(
@@ -94,11 +97,13 @@ namespace Osma.Mobile.App
                             //   sovrin-staging
                             //   sovrin-builder
                             //   bcovrin-test
-                            options.PoolName = "sovrin-staging";
+                            //   baksak-main
+                            options.PoolName = "baksak-main";
+                            options.ProtocolVersion = 2;
                         },
 
                         delayProvisioning: true));
-
+                    
                     services.AddSingleton<IPoolConfigurator, PoolConfigurator>();
                     services.AddSingleton<IWalletRecordService, BaksakWalletRecordService>();
 
@@ -138,6 +143,9 @@ namespace Osma.Mobile.App
             _navigationService.AddPageViewModelBinding<ConfirmPinAuthViewModel, ConfirmPinAuthPage>();
 
             _navigationService.AddPageViewModelBinding<AcceptRequestViewModel, AcceptRequestPage>();
+            _navigationService.AddPageViewModelBinding<RequestIdentityProofViewModel, RequestIdentityProof>();
+            _navigationService.AddPageViewModelBinding<ConnectionDetailsViewModel, ConnectionDetailsPage>();
+            //_navigationService.AddPageViewModelBinding<ProofsViewModel, ProofsPage>();
 
             if (Preferences.Get(AppConstant.LocalWalletProvisioned, false))
             {
@@ -153,7 +161,7 @@ namespace Osma.Mobile.App
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             // Check for new messages with the mediator agent if successfully provisioned
-            if (Preferences.Get(AppConstant.LocalWalletProvisioned, false))
+            if (Preferences.Get(AppConstant.LocalWalletProvisioned, false) && CrossConnectivity.Current.IsConnected)
             {
                 Device.BeginInvokeOnMainThread(async () =>
                 {
@@ -164,7 +172,6 @@ namespace Osma.Mobile.App
                         
                         foreach(var item in unprocessedItems)
                         {
-                           
                             Debug.WriteLine("Failed to Process: " + item.Data);
                         }
                     }
@@ -174,6 +181,7 @@ namespace Osma.Mobile.App
                     }
                 });
             }
+            
         }
 
         private void pinAuthenticateIfEnabled()
