@@ -21,7 +21,8 @@ namespace Osma.Mobile.App.Services
             { "sovrin-staging", "pool_transactions_sandbox_genesis" },
             { "sovrin-live", "pool_transactions_live_genesis" },
             { "sovrin-builder", "pool_transactions_builder_genesis" },
-            { "bcovrin-test", "pool_transactions_bcovrin_test_genesis" }
+            { "bcovrin-test", "pool_transactions_bcovrin_test_genesis" },
+            { "baksak-main", "pool_transactions_baksak_genesis" }
         };
 
         public PoolConfigurator(
@@ -34,6 +35,7 @@ namespace Osma.Mobile.App.Services
 
         public async Task ConfigurePoolsAsync()
         {
+            
             foreach (var config in poolConfigs)
             {
                 try
@@ -62,6 +64,7 @@ namespace Osma.Mobile.App.Services
                     logger.LogCritical(e, "Couldn't create pool config");
                     //throw;
                 }
+                //await Pool.SetProtocolVersionAsync(2);
             }
         }
 

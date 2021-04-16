@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Osma.Mobile.App.ViewModels.Connections"
+             xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Class="Osma.Mobile.App.Views.Connections.ConnectionDetailsPage">
+  <ContentPage.Content>
+    <StackLayout>
+        <forms:CachedImage 
+            HorizontalOptions="FillAndExpand"
+            HeightRequest="200"
+            Aspect="AspectFit"
+            Source="account_icon.png" />
+        
+        <Frame
+            HasShadow="true"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+        >
+            <StackLayout
+                Margin="0"
+                Padding="0"
+                BackgroundColor="White"
+                Opacity="1"
+            >
+                <StackLayout Orientation="Horizontal">
+                    <!--<forms:CachedImage
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        HeightRequest="24"
+                        WidthRequest="24"
+                        FadeAnimationEnabled="true"
+                        DownsampleUseDipUnits="true"
+                        Source="{ Binding ConnectionImageUrl }"
+                        Aspect="AspectFit"
+                    />-->
+                    <Label
+                        Text="{Binding TheirDid, StringFormat='Their did:  {0}'}"
+                        TextColor="Black"
+                        FontSize="Small"
+                    />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <!--<forms:CachedImage
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Center"
+                        HeightRequest="24"
+                        WidthRequest="24"
+                        FadeAnimationEnabled="true"
+                        DownsampleUseDipUnits="true"
+                        Source="{ Binding ConnectionImageUrl }"
+                        Aspect="AspectFit"
+                    />-->
+                    <Label
+                        Text="{Binding MyDid, StringFormat='My did:  {0}'}"
+                        TextColor="Black"
+                        FontSize="Small"
+                    />
+                </StackLayout>
+                <Button
+                    HorizontalOptions="FillAndExpand"
+                    Text="Delete Connection"
+                    Command="{Binding DeleteConnectionCommand}"
+                    Style="{StaticResource ButtonStyleDestructive}"
+                />
+            </StackLayout>
+        </Frame>
+    </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

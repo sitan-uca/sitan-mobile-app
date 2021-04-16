@@ -1,18 +1,19 @@
 ﻿using Hyperledger.Aries.Features.BasicMessage;
+using Hyperledger.Aries.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Osma.Mobile.App.Extensions
 {
-    class MessageRecordComparator : IEqualityComparer<BasicMessageRecord>
+    class RecordComparator : IEqualityComparer<RecordBase>
     {
-        public bool Equals(BasicMessageRecord x, BasicMessageRecord y)
+        public bool Equals(RecordBase x, RecordBase y)
         {
             return x.Id.Equals(y.Id);
         }
 
-        public int GetHashCode(BasicMessageRecord obj)
+        public int GetHashCode(RecordBase obj)
         {
             return obj.Id.GetHashCode();
         }

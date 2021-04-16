@@ -185,7 +185,9 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\keyboard_down_icon.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\keyboard_down_icon.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidAsset Include="Assets\pool_transactions_baksak_genesis" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Osma.Mobile.App.Services\Osma.Mobile.App.Services.csproj">
       <Project>{e7fe6690-dc37-46ad-ae52-710028f17034}</Project>

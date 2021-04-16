@@ -7,11 +7,13 @@ using System.Windows.Input;
 using Acr.UserDialogs;
 using Autofac;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Storage;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Extensions;
 using Osma.Mobile.App.Services.Interfaces;
@@ -27,6 +29,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         private readonly IAgentProvider _agentContextProvider;
         private readonly IProofService _proofService;
         private readonly IEventAggregator eventAggregator;
+        private readonly IProvisioningService _provisioningService;
         private readonly ILifetimeScope _scope;
 
         public ProofRequestsViewModel(IUserDialogs userDialogs,
@@ -34,12 +37,14 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                                    IAgentProvider agentContextProvider,
                                    IProofService proofService,
                                    IConnectionService connectionService,
+                                   IProvisioningService provisioningService,
                                    IEventAggregator eventAggregator,
                                    ILifetimeScope scope) : base("Proof Requests", userDialogs, navigationService)
         {
             _connectionService = connectionService;
             _agentContextProvider = agentContextProvider;
             _proofService = proofService;
+            _provisioningService = provisioningService;
             this.eventAggregator = eventAggregator;
             _scope = scope;
         }
@@ -63,7 +68,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                 ProofRequests.Clear();
 
                 var agentContext = await _agentContextProvider.GetContextAsync();
-                IEnumerable<ProofRecord> proofRequests = (await _proofService.ListRequestedAsync(agentContext));
+                IEnumerable<ProofRecord> proofRequests = await _proofService.ListAsync(agentContext);
 
                 IList<ProofRequestViewModel> proofRequestVms = new List<ProofRequestViewModel>();
                 foreach (var proofReq in proofRequests)
@@ -78,7 +83,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             }
             catch (Exception xx)
             {
-
+                
             }
             finally
             {
@@ -136,9 +141,20 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             }
         }
 
+        public async Task CreateRequestPresentationBarcode()
+        {
+            var context = await _agentContextProvider.GetContextAsync();
+            var provisionedRecord = await _provisioningService.GetProvisioningAsync(context.Wallet);
+            var (requestMsg, _) = await _proofService.CreateRequestAsync(context, new ProofRequest { });
+
+            string barcodeValue = provisionedRecord.Endpoint.Uri + "?d_m=" + Uri.EscapeDataString(requestMsg.ToByteArray().ToBase64String());
+        }
+
         #region Bindable Command
 
         public ICommand ScanProofRequestCommand => new Command(async () => await ScanProofRequest());
+
+        public ICommand CreateRequestBarcodeCommand => new Command(async () => await CreateRequestPresentationBarcode());
 
         public ICommand SelectProofRequestCommand => new Command<ProofRequestViewModel>(async (proofRequest) =>
         {

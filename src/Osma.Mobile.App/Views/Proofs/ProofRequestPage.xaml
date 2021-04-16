@@ -15,10 +15,8 @@
     ios:Page.UseSafeArea="true">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <ResourceDictionary>
-                <converters:SelecteditemEventArgsToSelectedItemConverter x:Key="SelectedItemConverter" />
-                <converters:InverseBooleanConverter x:Key="BooleanInverse" />
-            </ResourceDictionary>
+            <converters:SelecteditemEventArgsToSelectedItemConverter x:Key="SelectedItemConverter" />
+            <converters:InverseBooleanConverter x:Key="BooleanInverse" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -66,6 +64,7 @@
                 </ListView.Behaviors>
             </ListView>
             <Grid
+                IsVisible="{Binding ActionRequired}"
                 Margin="0,0,0,0"
                 ColumnSpacing="0"
                 HeightRequest="70"
@@ -83,6 +82,20 @@
                     BackgroundColor="LightGreen"
                     Command="{Binding PresentProofCommand}"
                     Text="Present Proof" />
+            </Grid>
+            <Grid
+                IsVisible="{Binding ActionRequired, Converter={StaticResource BooleanInverse}}"
+                Margin="0,0,0,0"
+                ColumnSpacing="0"
+                HeightRequest="70"
+                VerticalOptions="End">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button                    
+                    BackgroundColor="LightGreen"
+                    Command="{Binding VerifyProofCommand}"
+                    Text="Verify Proof" />
             </Grid>
         </StackLayout>
     </ContentPage.Content>

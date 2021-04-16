@@ -1,0 +1,21 @@
+﻿using Osma.Mobile.App.Views;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
+namespace Osma.Mobile.App
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class AppShell : Shell, IRootView
+    {
+        public AppShell()
+        {
+            InitializeComponent();
+        }
+    }
+}

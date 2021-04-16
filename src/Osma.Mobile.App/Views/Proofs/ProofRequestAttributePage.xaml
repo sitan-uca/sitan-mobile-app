@@ -44,10 +44,12 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <!--<CheckBox
+                                <CheckBox
                                     Grid.Row="0"
                                     Grid.Column="0"
-                                    IsChecked="{Binding Selected}" CheckedChanged="CredentialSelected" />-->
+                                    IsChecked="{Binding Selected}" />
+                                    <!--CheckedChanged="CredentialSelected"--> 
+                                    
                                 <Label
                                     Grid.Row="0"
                                     Grid.Column="1"

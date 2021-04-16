@@ -20,10 +20,16 @@
             Order="Primary"
             Priority="0"
             Text="Scan" />
+        <ToolbarItem
+            Name="Scan Proof Request"
+            Command="{Binding CreateRequestBarcodeCommand}"
+            Order="Secondary"
+            Priority="0"
+            Text="Create Request" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout>
+            <StackLayout IsVisible="{Binding HasRequests}" >
                 <ListView
                     HasUnevenRows="True"
                     IsEnabled="{Binding RefreshingProofRequests, Converter={StaticResource BooleanInverse}}"
@@ -34,9 +40,9 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <components:DetailedCell
-                                Title="{Binding ProofType}"
-                                ImageURL="{Binding Logo}"
-                                Subtitle="{Binding ConnectionName}" />
+                                Title="{Binding ProofRequestName}"
+                                ImageURL="{Binding ConnectionLogo}"
+                                Subtitle="{Binding ConnectionName}"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.Behaviors>
@@ -48,19 +54,22 @@
                     </ListView.Behaviors>
                 </ListView>
             </StackLayout>
-            <!--<StackLayout IsVisible="{Binding HasRequests, Converter={StaticResource BooleanInverse}}" VerticalOptions="FillAndExpand">
+            <StackLayout IsVisible="{Binding HasRequests, Converter={StaticResource BooleanInverse}}" 
+                         VerticalOptions="FillAndExpand">
                 <StackLayout
                     HorizontalOptions="CenterAndExpand"
                     Orientation="Vertical"
                     VerticalOptions="CenterAndExpand">
-                    <ActivityIndicator IsRunning="{Binding RefreshingConnections}" IsVisible="{Binding RefreshingConnections}" />
+                    <ActivityIndicator 
+                        IsRunning="{Binding RefreshingProofRequests}" 
+                        IsVisible="{Binding RefreshingProofRequests}" />
                     <Label
                         HorizontalOptions="CenterAndExpand"
                         HorizontalTextAlignment="Center"
-                        IsVisible="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}"
-                        Text="You have no connections - Click connect to get started" />
+                        IsVisible="{Binding RefreshingProofRequests, Converter={StaticResource BooleanInverse}}"
+                        Text="You have no proof records" />
                 </StackLayout>
-            </StackLayout>-->
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

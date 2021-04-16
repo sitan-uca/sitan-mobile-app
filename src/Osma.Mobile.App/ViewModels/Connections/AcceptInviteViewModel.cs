@@ -62,8 +62,10 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
             try
             {
+                var provisioningRecord = await _provisioningService.GetProvisioningAsync(context.Wallet);
                 var (msg, rec) = await _connectionService.CreateRequestAsync(context, _invite);
-                msg.Label = "OSMA";
+                msg.Label = provisioningRecord.Owner.Name;                
+                msg.ImageUrl = provisioningRecord.Owner.ImageUrl;
                 await _messageService.SendAsync(context.Wallet, msg, rec);
 
                 _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });

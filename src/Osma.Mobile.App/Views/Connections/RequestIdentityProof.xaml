@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Osma.Mobile.App.ViewModels.Connections"
+             x:Class="Osma.Mobile.App.Views.Connections.RequestIdentityProof"
+             Title="Identity Request">
+    <ContentPage.Content>
+        <StackLayout Margin="20,20,20,20">
+            <Label Text="Select a Schema"
+                />
+            <Picker Title="Select Schema" 
+                    ItemsSource="{Binding Schemas}"
+                    ItemDisplayBinding="{Binding Name}" 
+                    SelectedItem="{Binding SelectedSchema}" />
+
+            <Label Text="Select Credential Definition"
+                />
+            <Picker Title="Select Credential Definition"
+                    ItemsSource="{Binding CredDefinitions}" 
+                    ItemDisplayBinding="{Binding Id}"
+                    SelectedItem="{Binding SelectedDefinition}" />
+
+            <Button Text="Send Request"                
+                HorizontalOptions="CenterAndExpand"
+                    WidthRequest="130"
+                    HeightRequest="50"
+                    Command="{Binding SendRequestCommand}"
+                />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

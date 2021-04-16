@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Osma.Mobile.App.Views.Connections.IncomingRecordViewCell">
+    <ContentView Padding="5" BackgroundColor="Transparent">
+        <StackLayout>
+            <Label 
+                Grid.Row="0" 
+                Rotation="180" 
+                FontSize="Small"
+                HorizontalTextAlignment="Start"
+                Margin="0,10,10,5"
+                Text="{Binding CreatedAtUtc}" />
+            <Frame OutlineColor="Aqua"
+                   Padding="10"
+                   HeightRequest="80"
+                   Margin="80,0,10,10"
+                   BackgroundColor="Aqua">
+                <StackLayout>
+
+                    <Label Text="{Binding State}"              
+                       Rotation="180" 
+                       FontSize="Small"
+                       HorizontalTextAlignment="Start"
+                       FlowDirection="RightToLeft"                   
+                       VerticalOptions="Center" />
+                    <Label Text="{Binding TypeName}"                   
+                       Rotation="180" 
+                       FontSize="Medium"
+                       HorizontalTextAlignment="Start"
+                       FlowDirection="RightToLeft"                   
+                       VerticalOptions="Center" />
+                    <Label Text="{Binding Name}"                   
+                       Rotation="180" 
+                       FontSize="Header"
+                       HorizontalTextAlignment="Start"
+                       FlowDirection="RightToLeft"                   
+                       VerticalOptions="Center" />
+                </StackLayout>
+            </Frame>
+
+        </StackLayout>
+
+    </ContentView>
+</ViewCell>

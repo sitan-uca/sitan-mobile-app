@@ -26,6 +26,8 @@ namespace Osma.Mobile.App.Droid
 
             Forms.Init(this, bundle);
 
+            
+
             PinItemViewRenderer.Init();
 
             Acr.UserDialogs.UserDialogs.Init(this);
