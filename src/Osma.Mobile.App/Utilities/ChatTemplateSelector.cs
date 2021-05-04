@@ -19,7 +19,7 @@ namespace Osma.Mobile.App.Utilities
         DataTemplate outgoingDataTemplate;
         DataTemplate outProofRecordDataTemplate;
         DataTemplate credentialRecordDataTemplate;
-        DataTemplate IncomingRecordDataTemplate;
+        DataTemplate incomingRecordDataTemplate;
 
         //public class Message
         //{
@@ -32,7 +32,7 @@ namespace Osma.Mobile.App.Utilities
             this.incomingDataTemplate = new DataTemplate(typeof(IncommingMsgViewCell));
             this.outgoingDataTemplate = new DataTemplate(typeof(OutgoingMsgViewCell));
             this.outProofRecordDataTemplate = new DataTemplate(typeof(OutProofRecordViewCell));
-            this.incomingDataTemplate = new DataTemplate(typeof(IncomingRecordViewCell));
+            this.incomingRecordDataTemplate = new DataTemplate(typeof(IncomingRecordViewCell));
             this.credentialRecordDataTemplate = new DataTemplate(typeof(CredentialRecordViewCell));
         }
 
@@ -56,7 +56,7 @@ namespace Osma.Mobile.App.Utilities
 
                 return (
                     proofVm.GetTag(TagConstants.Role).Equals(TagConstants.Requestor)
-                    ) ? outProofRecordDataTemplate : incomingDataTemplate;
+                    ) ? outProofRecordDataTemplate : incomingRecordDataTemplate;
             }
 
             return null;

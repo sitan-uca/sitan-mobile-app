@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
 
 namespace Osma.Mobile.App.Views.Components
 {
@@ -29,12 +30,21 @@ namespace Osma.Mobile.App.Views.Components
             {
                 var source = new HtmlWebViewSource();
                 string url = DependencyService.Get<IBaseUrl>().Get();
-                string TempUrl = Path.Combine(url, "Resources", "legal");
+                string TempUrl = string.Empty;
+                if (Device.RuntimePlatform == Device.Android)
+                    //TODO Fix the problem (Could not find a part of the path)
+                    TempUrl = Path.Combine(url, "legal.html");
+                    
+                else if (Device.RuntimePlatform == Device.iOS)
+                    TempUrl = Path.Combine(url, "Resources", "legal");
+
+                //var p = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                
                 source.BaseUrl = url;
                 string html;
                 try
                 {
-                    using (var sr = new StreamReader(TempUrl))
+                    using (var sr = new StreamReader(new Uri(TempUrl).LocalPath))
                     {
                         html = sr.ReadToEnd();
                         source.Html = html;

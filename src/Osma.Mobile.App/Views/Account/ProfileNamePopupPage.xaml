@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Osma.Mobile.App.Views.Account.ProfileNamePopupPage"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             Title="Please enter agent name">
+
+    <pages:PopupPage.Animation>
+        <animations:MoveAnimation PositionIn="Bottom" PositionOut="Bottom"/>
+    </pages:PopupPage.Animation>
+    <Frame CornerRadius="20" HorizontalOptions="FillAndExpand" 
+            VerticalOptions="End"
+           BackgroundColor="White">
+        <StackLayout>
+            <StackLayout>
+                <Label Text="Please enter name" FontSize="Medium" FontAttributes="Bold" />
+                <Entry Text="{Binding AgentName}" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                <Button BackgroundColor="DodgerBlue" 
+                        CornerRadius="5"
+                        Text="Save"
+                        TextColor="White" 
+                        Command="{Binding SaveAgentName}"/>
+                
+                <Button BackgroundColor="DodgerBlue" 
+                        CornerRadius="5"
+                        Text="Cancel"
+                        TextColor="White"
+                        Clicked="CancelClicked" />
+            </StackLayout>
+        </StackLayout>
+    </Frame>
+
+</pages:PopupPage>

@@ -9,7 +9,9 @@ namespace Osma.Mobile.App.Events
         ConnectionsUpdated,
         CredentialsUpdated,
         RefreshProofRequests,
-        WalletRecordsMessageUpdated
+        WalletRecordsMessageUpdated,
+        ProvisioningRecordUpdated,
+        ConnectionRequestReceived
     }
 
     public class ApplicationEvent

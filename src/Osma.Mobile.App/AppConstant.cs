@@ -11,5 +11,7 @@ namespace Osma.Mobile.App
         internal const string PinAuthEnabled = "pin-authentication-enabled";
 
         internal const string AppPin = "pin-authentication";
+
+        internal const string MediatorConnectionIdTagName = "MediatorConnectionId";
     }
 }

@@ -25,7 +25,7 @@
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="FillAndExpand">
             </zxing:ZXingBarcodeImageView>
-            <Entry IsReadOnly="True" Text="{Binding QrCodeValue}" />
+            <Entry IsReadOnly="True" Text="{Binding LinkValue}" />
             <StackLayout>
                 <Button Text="Copy" Command="{Binding CopyInvitation}"></Button>
             </StackLayout>

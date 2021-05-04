@@ -17,6 +17,6 @@ namespace Osma.Mobile.App.Views.Account
         {
             var vm = (AccountViewModel)BindingContext;
             vm.NotifySwitchToggle.Execute(null);
-        }
+        }        
     }
 }

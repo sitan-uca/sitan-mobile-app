@@ -119,6 +119,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
 
         async Task AcceptCredential()
         {
+            var dialog = UserDialogs.Instance.Loading("Requesting...");
             try
             {
                 IsBusy = true;
@@ -137,6 +138,8 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             finally
             {
                 IsBusy = false;
+                dialog?.Hide();
+                dialog?.Dispose();
             }
         }
 

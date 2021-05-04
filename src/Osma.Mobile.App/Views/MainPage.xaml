@@ -2,18 +2,19 @@
 <TabbedPage
     x:Class="Osma.Mobile.App.Views.MainPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"    
     xmlns:account="clr-namespace:Osma.Mobile.App.Views.Account;assembly=Osma.Mobile.App"
     xmlns:connections="clr-namespace:Osma.Mobile.App.Views.Connections;assembly=Osma.Mobile.App"
     xmlns:credentials="clr-namespace:Osma.Mobile.App.Views.Credentials;assembly=Osma.Mobile.App"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-    xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
-    android:TabbedPage.ToolbarPlacement="Bottom"
+    xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"    
+    android:TabbedPage.ToolbarPlacement="Bottom"    
     xmlns:proofRequests="clr-namespace:Osma.Mobile.App.Views.Proofs;assembly=Osma.Mobile.App"
     Appearing="Appearing"
     CurrentPageChanged="CurrentPageChanged">
+
     <connections:ConnectionsPage        
-        ios:NavigationPage.PrefersLargeTitles="true"
+        ios:NavigationPage.PrefersLargeTitles="true"        
         BindingContext="{Binding Connections}"
         Icon="connection_icon.png" />
     <credentials:CredentialsPage
@@ -28,4 +29,5 @@
         ios:NavigationPage.PrefersLargeTitles="true"
         BindingContext="{Binding Account}"
         Icon="account_icon.png" />
+
 </TabbedPage>

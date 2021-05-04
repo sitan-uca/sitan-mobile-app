@@ -1,5 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Acr.UserDialogs;
+using Hyperledger.Aries.Contracts;
+using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.ViewModels.Account;
@@ -10,14 +15,17 @@ using Osma.Mobile.App.ViewModels.PinAuth;
 using Osma.Mobile.App.ViewModels.Proofs;
 using ReactiveUI;
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace Osma.Mobile.App.ViewModels
 {
     public class MainViewModel : ABaseViewModel
-    {  
+    {
+        private readonly IEventAggregator _eventAggregator;
         public MainViewModel(
             IUserDialogs userDialogs,
             INavigationService navigationService,
+            IEventAggregator eventAggregator,
             ConnectionsViewModel connectionsViewModel,
             CredentialsViewModel credentialsViewModel,
             AccountViewModel accountViewModel,            
@@ -29,9 +37,10 @@ namespace Osma.Mobile.App.ViewModels
             Credentials = credentialsViewModel;
             Account = accountViewModel;
             CreateInvitation = createInvitationViewModel;
-            ProofRequests = proofRequestsViewModel;            
+            ProofRequests = proofRequestsViewModel;
+            _eventAggregator = eventAggregator;
             //for prompting dialog on connection events
-            WalletEventService.Init(navigationService);
+            //WalletEventService.Init(navigationService);
         }
 
         public override async Task InitializeAsync(object navigationData)
@@ -40,10 +49,25 @@ namespace Osma.Mobile.App.ViewModels
             await Credentials.InitializeAsync(null);
             await Account.InitializeAsync(null);
             await CreateInvitation.InitializeAsync(null);
-            await ProofRequests.InitializeAsync(null);            
+            await ProofRequests.InitializeAsync(null);
+            InitializeNotificationEventListeners();
             await base.InitializeAsync(navigationData);
             if (Preferences.Get(AppConstant.PinAuthEnabled, false))
-                await NavigationService.NavigateToAsync<PinAuthViewModel>();
+                await NavigationService.NavigateToAsync<PinAuthViewModel>();           
+        }
+
+        private void InitializeNotificationEventListeners()
+        {
+           _eventAggregator.GetEventByType<ApplicationEvent>()
+                        .Where(_ => _.Type == ApplicationEventType.ConnectionRequestReceived)
+                        .Subscribe(_ => TriggerNotification("Connection Request", "You recieved a new conection request"));
+        }
+
+
+        public void TriggerNotification(string title, string message)
+        {
+            INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
+            notificationManager.SendNotification(title, message);
         }
 
         #region Bindable Properties
