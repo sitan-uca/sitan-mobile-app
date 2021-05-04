@@ -7,7 +7,8 @@
     xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     x:Name="ParentViewCell">
     <ViewCell.View>                    
-            <Grid Padding="24">
+            <Grid Padding="20,5,5,5"
+                  RowSpacing="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
@@ -15,7 +16,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -39,14 +40,21 @@
                     Grid.Row="0"
                     Grid.RowSpan="2"
                     Grid.Column="1"
-                    FontSize="Medium"
+                    FontAttributes="Bold"
+                    CharacterSpacing="0.5"
+                    FontSize="18"
+                    Padding="10,0,0,0"
                     VerticalOptions="Center" />
                 <Label
                     x:Name="SubtitleLabel"
                     Grid.Row="1"
                     Grid.Column="1"
-                    FontSize="Small"
-                    VerticalOptions="Center" />
+                    FontSize="14"
+                    CharacterSpacing="0.5"
+                    FontAttributes="Italic"
+                    Padding="10,0,0,0"
+                    VerticalOptions="Center"
+                     />
                 <Frame
                     x:Name="NewLabelContainer"
                     Grid.Row="0"

@@ -5,25 +5,50 @@
              x:Class="Osma.Mobile.App.Views.Connections.RequestIdentityProof"
              Title="Identity Request">
     <ContentPage.Content>
-        <StackLayout Margin="20,20,20,20">
-            <Label Text="Select a Schema"
+        <StackLayout Margin="40,20,40,20"
+                     Padding="10,50,0,20">
+
+            <Image Source="renewable.png"
+                   WidthRequest="100"
+                   HeightRequest="100"/>
+
+            <Label Text="Schema"
+                   FontSize="20"
+                   CharacterSpacing="0.5"
+                   FontAttributes="Bold"
+                   Padding="0,30,0,0"
                 />
             <Picker Title="Select Schema" 
+                    FontAttributes="Italic"
+                    FontSize="14"
+                    TextColor="Green"
                     ItemsSource="{Binding Schemas}"
                     ItemDisplayBinding="{Binding Name}" 
                     SelectedItem="{Binding SelectedSchema}" />
 
-            <Label Text="Select Credential Definition"
+            <Label Text="Credential Definition"
+                   Padding="0,20,0,0"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   CharacterSpacing="0.5"
                 />
             <Picker Title="Select Credential Definition"
+                    FontAttributes="Italic"
+                    FontSize="14"
                     ItemsSource="{Binding CredDefinitions}" 
                     ItemDisplayBinding="{Binding Id}"
                     SelectedItem="{Binding SelectedDefinition}" />
 
-            <Button Text="Send Request"                
-                HorizontalOptions="CenterAndExpand"
-                    WidthRequest="130"
+            <Button Text="Send Request"  
+                    TextColor="#000"
+                    FontSize="14"
+                    CharacterSpacing="1"
+                    BackgroundColor="#00D974"
+                    HorizontalOptions="CenterAndExpand"
+                    WidthRequest="330"
                     HeightRequest="50"
+                    Margin="0,25,0,0"
+                    CornerRadius="6"
                     Command="{Binding SendRequestCommand}"
                 />
         </StackLayout>

@@ -61,6 +61,7 @@ namespace Osma.Mobile.App.Droid
                     System.Environment.SpecialFolder.Personal)).Build();     
 
             LoadApplication(host.Services.GetRequiredService<App>());
+            Window.SetStatusBarColor(Android.Graphics.Color.Argb(255, 0, 0, 0));
 #endif
 
             //Loading dependent libindy
