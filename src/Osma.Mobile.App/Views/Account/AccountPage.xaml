@@ -12,7 +12,8 @@
     Title="Account"
 >
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout
+            Padding="15,20,15,0">
             <TableView HasUnevenRows="true" Intent="Menu">
                 <TableSection>
                     <components:DetailedCell
@@ -46,7 +47,7 @@
                     <account:AccountMenuButtonView
                         Title="{Binding AppVersion, StringFormat='Version: {0}'}"
                         Subtitle="{Binding BuildVersion, StringFormat='Build: {0}'}"
-                        Image="info_icon.png"
+                        Image="information.png"
                         TappedCommand="{Binding NavigateToDebugCommand}"
                         NumberOfTapsRequired="8"
                     />

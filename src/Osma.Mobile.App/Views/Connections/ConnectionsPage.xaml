@@ -7,8 +7,9 @@
              x:Class="Osma.Mobile.App.Views.Connections.ConnectionsPage"
              Title="{Binding Name}"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-             ios:Page.LargeTitleDisplay="Always"
+             ios:Page.LargeTitleDisplay="Always"     
     >
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:SelecteditemEventArgsToSelectedItemConverter x:Key="SelectedItemConverter" />
@@ -16,11 +17,35 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Name="Add Connection" Order="Primary" Text="Connect" Priority="0" Command ="{Binding ScanInviteCommand}"/>
-        <ToolbarItem Name="CreateInvitation" Order="Secondary" Text="Create Invitation" ios:NavigationPage.PrefersLargeTitles="true" Priority="0" Command ="{Binding CreateInvitationCommand}"/>
+        <!--<ToolbarItem IconImageSource="add.png" Order="Primary" Priority="0" Command ="{Binding ScanInviteCommand}" ></ToolbarItem>-->
+        <!--<ToolbarItem IconImageSource="search.png" Order="Primary"  Priority="0" Command ="{Binding SearchTerm}" ></ToolbarItem>-->
+        <ToolbarItem IconImageSource="add_white.png" Order="Primary"  Priority="0" Command ="{Binding CreateInvitationCommand}" ></ToolbarItem>
+        <!--<ToolbarItem Name="Add Connection" Order="Primary" Text="Connect" Priority="0" Command ="{Binding ScanInviteCommand}"/>
+        <ToolbarItem Name="CreateInvitation" Order="Secondary" Text="Create Invitation" ios:NavigationPage.PrefersLargeTitles="true" Priority="0" Command ="{Binding CreateInvitationCommand}"/>-->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
+
+            <Grid
+                Padding="20,5,20,20"
+                BackgroundColor="#252738">
+                <Frame 
+                IsClippedToBounds="True"
+                    CornerRadius="25"
+                    Padding="0,0,20,0"
+                    >
+
+                    <SearchBar
+                BackgroundColor="#fff"
+                Placeholder="Search"
+                FontAttributes="Italic"
+                FontSize="14"
+                 Grid.Row="0" 
+                 Grid.Column="0"
+                Text="{Binding SearchTerm}" />
+                </Frame>
+            </Grid>
+
             <components:SegmentedBarControl 
                 x:Name="segmentedBarControl"                                
                 AutoScroll="False"
@@ -35,8 +60,10 @@
                 </components:SegmentedBarControl.Behaviors>
             </components:SegmentedBarControl>
 
+
             <StackLayout
-                IsVisible="{Binding HasConnections}">
+                    IsVisible="{Binding HasConnections}">
+                
                 <ListView
                     HasUnevenRows="True"
                     IsPullToRefreshEnabled="False"
@@ -57,6 +84,7 @@
                         </ListView.Behaviors>
                     </ListView>
                 </StackLayout>
+
             <StackLayout
                     VerticalOptions="FillAndExpand"
                     IsVisible="{Binding HasConnections, Converter={StaticResource BooleanInverse}}">

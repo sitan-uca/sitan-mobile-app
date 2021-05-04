@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+
 using System.Linq;
 using System.Windows.Input;
 using Acr.UserDialogs;
@@ -14,6 +14,7 @@ using Hyperledger.Aries.Storage;
 using Osma.Mobile.App.Events;
 using Hyperledger.Aries.Contracts;
 using Osma.Mobile.App.Extensions;
+using System.Collections.Generic;
 
 namespace Osma.Mobile.App.ViewModels.Credentials
 {
@@ -48,9 +49,48 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             this._credential = credential;
             this._connection = connection;
 
+#if DEBUG
+            _credentialName = "Credential Name";
+            _credentialImageUrl = "http://placekitten.com/g/200/200";
+            _credentialSubtitle = "10/22/2017";
+            _credentialType = "Bank Statement";
+            _qRImageUrl = "http://placekitten.com/g/100/100";
+
+            var attributes = new List<CredentialAttribute>(new CredentialAttribute[] {
+                new CredentialAttribute
+                {
+                    Type="Text",
+                    Name="First Name",
+                    Value="Jamie"
+                },
+                new CredentialAttribute
+                {
+                    Type="Text",
+                    Name="Last Name",
+                    Value="Doe"
+                },
+                new CredentialAttribute
+                {
+                    Type = "Text",
+                    Name = "Country of Residence",
+                    Value = "New Zealand"
+                },
+                new CredentialAttribute
+                {
+                    Type="File",
+                    Name="Statement",
+                    Value="Statement.pdf",
+                    FileExt="PDF",
+                    Date="05 Aug 2018"
+                }
+            });
+            //_attributes = attributes.OrderByDescending(o => o.Type).OrderBy(o => o.Date);
+            _attributes = attributes;
+#else
+
             CredentialName = _credential.SchemaId.ToCredentialName();
-            CredentialImageUrl = _connection.Alias.ImageUrl;
-            CredentialSubtitle = _connection.Alias.Name;
+            CredentialImageUrl = _connection?.Alias.ImageUrl;
+            CredentialSubtitle = _connection?.Alias.Name;
             CreatedAt = _credential.CreatedAtUtc?.ToLocalTime();
             CredentialState = _credential.State;
             _isNew = IsCredentialNew(_credential);
@@ -67,45 +107,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
                     Type = x.MimeType
                 }));
             }
-
-            //#if DEBUG
-            //_credentialName = "Credential Name";
-            //_credentialImageUrl = "http://placekitten.com/g/200/200";
-            //_credentialSubtitle = "10/22/2017";
-            //_credentialType = "Bank Statement";
-            //_qRImageUrl = "http://placekitten.com/g/100/100";
-
-            //var attributes = new List<CredentialAttribute>( new CredentialAttribute[] {
-            //    new CredentialAttribute
-            //    {
-            //        Type="Text",
-            //        Name="First Name",
-            //        Value="Jamie"
-            //    },
-            //    new CredentialAttribute
-            //    {
-            //        Type="Text",
-            //        Name="Last Name",
-            //        Value="Doe"
-            //    },
-            //    new CredentialAttribute
-            //    {
-            //        Type = "Text",
-            //        Name = "Country of Residence",
-            //        Value = "New Zealand"
-            //    },
-            //    new CredentialAttribute
-            //    {
-            //        Type="File",
-            //        Name="Statement",
-            //        Value="Statement.pdf",
-            //        FileExt="PDF",
-            //        Date="05 Aug 2018"
-            //    }
-            //});
-            //_attributes = attributes
-            //    .OrderByDescending(o=>o.Type).OrderBy(o=>o.Date);
-            //#endif
+#endif
         }
 
 
@@ -169,7 +171,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             }
         }
 
-        #region Bindable Command
+#region Bindable Command
 
         public ICommand NavigateBackCommand => new Command(async () =>
         {
@@ -179,9 +181,9 @@ namespace Osma.Mobile.App.ViewModels.Credentials
         public ICommand AcceptCredentialCommand => new Command(async () => await AcceptCredential());
         public ICommand RejectCredentialCommand => new Command(async () => await RejectCredential());
 
-        #endregion
+#endregion
 
-        #region Bindable Properties
+#region Bindable Properties
 
         private string _credentialName;
         public string CredentialName
@@ -246,6 +248,6 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             set => this.RaiseAndSetIfChanged(ref _credentialState, value);
         }
 
-        #endregion
+#endregion
     }
 }

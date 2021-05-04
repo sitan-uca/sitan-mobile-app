@@ -7,27 +7,35 @@
     xmlns:connections="clr-namespace:Osma.Mobile.App.Views.Connections;assembly=Osma.Mobile.App"
     xmlns:credentials="clr-namespace:Osma.Mobile.App.Views.Credentials;assembly=Osma.Mobile.App"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    android:TabbedPage.BarItemColor="#252738"
+    android:TabbedPage.BarSelectedItemColor="#00D974"
+    BarBackgroundColor="#F2F1F1"
+    android:TabbedPage.IsSwipePagingEnabled="True"
     xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"    
-    android:TabbedPage.ToolbarPlacement="Bottom"    
+    android:TabbedPage.ToolbarPlacement="Bottom"   
     xmlns:proofRequests="clr-namespace:Osma.Mobile.App.Views.Proofs;assembly=Osma.Mobile.App"
     Appearing="Appearing"
     CurrentPageChanged="CurrentPageChanged">
 
-    <connections:ConnectionsPage        
-        ios:NavigationPage.PrefersLargeTitles="true"        
-        BindingContext="{Binding Connections}"
-        Icon="connection_icon.png" />
-    <credentials:CredentialsPage
-        ios:NavigationPage.PrefersLargeTitles="true"
-        BindingContext="{Binding Credentials}"
-        Icon="credentials_icon.png" />
-    <proofRequests:ProofRequestsPage
-        ios:NavigationPage.PrefersLargeTitles="true"
-        BindingContext="{Binding ProofRequests}"
-        Icon="credentials_icon.png" />
-    <account:AccountPage
-        ios:NavigationPage.PrefersLargeTitles="true"
-        BindingContext="{Binding Account}"
-        Icon="account_icon.png" />
 
+    <connections:ConnectionsPage        
+        ios:NavigationPage.PrefersLargeTitles="True"        
+        BindingContext="{Binding Connections}"
+        Icon="connections_icon2.png" />
+    <credentials:CredentialsPage
+        ios:NavigationPage.PrefersLargeTitles="False"
+        BindingContext="{Binding Credentials}"
+        Icon="credential_icon2.png" />
+    <proofRequests:ProofRequestsPage
+        ios:NavigationPage.PrefersLargeTitles="False"
+        BindingContext="{Binding ProofRequests}"
+        Icon="Request_icon2.png" />
+    <account:AccountPage 
+        ios:NavigationPage.PrefersLargeTitles="False"
+        BindingContext="{Binding Account}"
+        Icon="scan_icon.png" />
+    <account:AccountPage
+        ios:NavigationPage.PrefersLargeTitles="False"
+        BindingContext="{Binding Account}"
+        Icon="account_icon2.png" />
 </TabbedPage>

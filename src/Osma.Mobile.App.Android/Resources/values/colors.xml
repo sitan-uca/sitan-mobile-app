@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<style name="MainTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="android:statusBarColor">#544054</item>
+	</style>
     <color name="launcher_background">#FFFFFF</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
