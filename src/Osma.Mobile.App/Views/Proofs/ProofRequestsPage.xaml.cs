@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hyperledger.Aries.Features.PresentProof;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,9 @@ namespace Osma.Mobile.App.Views.Proofs
         public ProofRequestsPage()
         {
             InitializeComponent();
+
+            var segmentedBarTabs = new List<string>() { nameof(ProofState.Requested), nameof(ProofState.Accepted), nameof(ProofState.Proposed)};
+            segmentedBarControl.Children = segmentedBarTabs;
         }
     }
 }

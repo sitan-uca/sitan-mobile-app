@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Android;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using FFImageLoading.Forms.Platform;
@@ -10,11 +11,13 @@ using FormsPinView.Droid;
 using Java.Lang;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Osma.Mobile.App.Services.Interfaces;
 using Xamarin.Forms;
 
 namespace Osma.Mobile.App.Droid
 {
-    [Activity(Label = "Osma", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Sitan", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, 
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]
     public partial/*GORILLA*/class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -23,19 +26,19 @@ namespace Osma.Mobile.App.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
-
+            Forms.SetFlags("IndicatorView_Experimental");
             Forms.Init(this, bundle);
-
             
-
             PinItemViewRenderer.Init();
 
             Acr.UserDialogs.UserDialogs.Init(this);
             // Initializing FFImageLoading
             CachedImageRenderer.Init(false);
-            //Rg.Plugins.Popup.Popup.Init(this, bundle);
+            Rg.Plugins.Popup.Popup.Init(this, bundle);
             // Initializing Xamarin Essentials
             Xamarin.Essentials.Platform.Init(this, bundle);
+
+            
 
             // Initializing QR Code Scanning support
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
@@ -64,7 +67,7 @@ namespace Osma.Mobile.App.Droid
             //Loading dependent libindy
             JavaSystem.LoadLibrary("c++_shared");
             JavaSystem.LoadLibrary("indy");
-
+            CreateNotificationFromIntent(Intent);
             CheckAndRequestRequiredPermissions();
         }
 
@@ -103,6 +106,26 @@ namespace Osma.Mobile.App.Droid
            
            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        public override void OnBackPressed()
+        {
+            Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed);
+        }
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            CreateNotificationFromIntent(intent);
+        }
+
+        void CreateNotificationFromIntent(Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                string title = intent.GetStringExtra(AndroidNotificationManager.TitleKey);
+                string message = intent.GetStringExtra(AndroidNotificationManager.MessageKey);
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+            }
         }
     }
 }

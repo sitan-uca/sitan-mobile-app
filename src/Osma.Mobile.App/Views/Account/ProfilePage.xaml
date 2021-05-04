@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Osma.Mobile.App.Views.Account.ProfilePage"
+             xmlns:account="clr-namespace:Osma.Mobile.App.Views.Account;assembly=Osma.Mobile.App"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             Title="Profile">
+    <ContentPage.Content>
+        <StackLayout>
+            <TableView HasUnevenRows="True">
+                <TableSection>
+                    <ViewCell Height="250">
+                        <ffimageloading:CachedImage
+                            x:Name="Image"                        
+                            Aspect="AspectFit"
+                            DownsampleUseDipUnits="true"
+                            FadeAnimationEnabled="true"
+                            HeightRequest="200"
+                            VerticalOptions="Center"
+                            Source="{Binding AgentImageUrl}"
+                        >
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:CircleTransformation />
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+                    </ViewCell>
+                </TableSection>
+                <TableSection>
+                    <TextCell Text="Agent Name" TextColor="DodgerBlue" Detail="{Binding AgentName}" Command="{Binding EditNameCommand}"/>
+                    <!--<ViewCell Tapped="">
+                        <ViewCell.View>
+                            <Grid Padding="15" ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <ffimageloading:CachedImage                                    
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="0"
+                                    Aspect="Fill"
+                                    DownsampleUseDipUnits="true"
+                                    FadeAnimationEnabled="true"
+                                    HeightRequest="50"
+                                    VerticalOptions="Center"                                    
+                                    WidthRequest="50"
+                                    Source="account_icon.png">
+
+                                    <ffimageloading:CachedImage.Transformations>
+                                        <fftransformations:CircleTransformation />
+                                    </ffimageloading:CachedImage.Transformations>
+                                </ffimageloading:CachedImage>
+
+                                <Label 
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Text="Agent Name"
+                                    FontSize="Body"
+                                    FontAttributes="Bold"/>
+
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Text="{Binding AgentName}"
+                                    FontSize="Medium"
+                                    VerticalOptions="Center"/>
+
+                                <ffimageloading:CachedImage                                    
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="2"
+                                    Aspect="Fill"
+                                    DownsampleUseDipUnits="true"
+                                    FadeAnimationEnabled="true"
+                                    HeightRequest="20"
+                                    VerticalOptions="Center"
+                                    WidthRequest="20"
+                                    Source="https://cdn0.iconfinder.com/data/icons/glyphpack/45/edit-alt-512.png" />
+
+                            </Grid>
+
+                        </ViewCell.View>
+
+                    </ViewCell>-->
+
+                </TableSection>
+                <TableSection>
+                    <!--<TextCell Text="Mediator Endpoint" Detail="Connected" />-->
+                    <ViewCell>
+                        <Grid Padding="15, 5" RowSpacing="3" ColumnSpacing="15">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Text="Mediator Endpoint" 
+                                FontSize="Default"
+                                TextColor="DodgerBlue" />
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="{Binding MediatorEndpointUrl}"
+                                FontSize="Default"/>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center"
+                                Text="{Binding MediatorConnectionState}" 
+                                FontSize="Default" />
+                        </Grid>
+                    </ViewCell>
+                </TableSection>
+            </TableView>
+            <Button 
+                Text="Change Profile Picture" 
+                TextColor="White"
+                Command="{Binding SelectProfileImage}" 
+                BackgroundColor="DodgerBlue" />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

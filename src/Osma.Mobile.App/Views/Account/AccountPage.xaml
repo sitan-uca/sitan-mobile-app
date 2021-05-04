@@ -18,7 +18,8 @@
                 <TableSection>
                     <components:DetailedCell
                         Title="{Binding FullName}"
-                        ImageURL="{Binding AvatarUrl}"
+                        ImageURL="{Binding AvatarUrl}" 
+                        TappedCommand="{Binding ProfileInfoTapped}"
                     />
                 </TableSection>
                 <TableSection>
@@ -32,7 +33,7 @@
                         Title="Authentication"
                         Subtitle="Because it's private"
                         Image="security_icon.png"
-                        TappedCommand="{Binding NavigateToAuthenticationCommand}"
+                        
                         SwitchToggledEvent="{Binding ToggleAuthentication}"
                         SwitchToggled="{Binding AuthSwitchToggled}"
                         SwitchToggleVisible="True"

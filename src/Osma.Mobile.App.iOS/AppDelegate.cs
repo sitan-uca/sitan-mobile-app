@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Osma.Mobile.App.Converters;
 using Osma.Mobile.App.Services;
 using UIKit;
+using UserNotifications;
 
 namespace Osma.Mobile.App.iOS
 {
@@ -28,9 +29,11 @@ namespace Osma.Mobile.App.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            Xamarin.Forms.Forms.SetFlags("IndicatorView_Experimental");
             Rg.Plugins.Popup.Popup.Init();
             Xamarin.Forms.Forms.Init();
 
+            UNUserNotificationCenter.Current.Delegate = new iOSNotificationReceiver();
             PinItemViewRenderer.Init();
 
             // Initializing FFImageLoading

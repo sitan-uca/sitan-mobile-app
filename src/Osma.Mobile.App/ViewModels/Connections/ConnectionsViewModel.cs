@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Acr.UserDialogs;
 using Autofac;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Utils;
@@ -18,8 +19,10 @@ using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.Utilities;
 using Osma.Mobile.App.ViewModels.CreateInvitation;
 using ReactiveUI;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
+using static Osma.Mobile.App.Views.Components.SegmentedBarControl;
 
 namespace Osma.Mobile.App.ViewModels.Connections
 {
@@ -28,6 +31,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
         private readonly IConnectionService _connectionService;
         private readonly IAgentProvider _agentContextProvider;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IProvisioningService _provisioningService;
         private readonly ILifetimeScope _scope;
 
         public ConnectionsViewModel(IUserDialogs userDialogs,
@@ -35,17 +39,19 @@ namespace Osma.Mobile.App.ViewModels.Connections
                                     IConnectionService connectionService,
                                     IAgentProvider agentContextProvider,
                                     IEventAggregator eventAggregator,
+                                    IProvisioningService provisioningService,
                                     ILifetimeScope scope) :
                                     base("Connections", userDialogs, navigationService)
         {
             _connectionService = connectionService;
             _agentContextProvider = agentContextProvider;
             _eventAggregator = eventAggregator;
-            _scope = scope;
+            _provisioningService = provisioningService;
+            _scope = scope;            
         }
 
         public override async Task InitializeAsync(object navigationData)
-        {
+        {            
             await RefreshConnections();
 
             _eventAggregator.GetEventByType<ApplicationEvent>()
@@ -56,16 +62,26 @@ namespace Osma.Mobile.App.ViewModels.Connections
         }
 
 
-        public async Task RefreshConnections()
+        public async Task RefreshConnections(string tab = null)
         {
             RefreshingConnections = true;
 
             var context = await _agentContextProvider.GetContextAsync();
-            var records = await _connectionService.ListAsync(context);
-            
             IList<ConnectionViewModel> connectionVms = new List<ConnectionViewModel>();
+            List<ConnectionRecord> records = null;
+            
+            if (tab == null || tab.Equals(nameof(ConnectionState.Connected)))
+                records = await _connectionService.ListConnectedConnectionsAsync(context);
+            else if (tab.Equals(nameof(ConnectionState.Negotiating)))
+                records = await _connectionService.ListNegotiatingConnectionsAsync(context);
+            else if (tab.Equals(nameof(ConnectionState.Invited)))
+                records = await _connectionService.ListInvitedConnectionsAsync(context);          
+
             foreach (var record in records)
             {
+                if (record.Id == Preferences.Get(AppConstant.MediatorConnectionIdTagName, string.Empty))
+                    continue;
+
                 var connection = _scope.Resolve<ConnectionViewModel>(new NamedParameter("record", record));
                 connectionVms.Add(connection);
             }
@@ -107,7 +123,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             });
         }
 
-        public async Task SelectConnection(ConnectionViewModel connection) => await NavigationService.NavigateToAsync(connection);
+        public async Task SelectConnection(ConnectionViewModel connection) => await NavigationService.NavigateToAsync(connection);       
 
         #region Bindable Command
         public ICommand RefreshCommand => new Command(async () => await RefreshConnections());
@@ -121,6 +137,13 @@ namespace Osma.Mobile.App.ViewModels.Connections
             if (connection != null)
                 await SelectConnection(connection);
         });
+
+        public ICommand ConnectionSubTabChange => new Command<object>(async (tab) =>
+        {
+            //await UserDialogs.Instance.AlertAsync($"{tab}");
+            await RefreshConnections(tab.ToString());
+        });        
+
         #endregion
 
         #region Bindable Properties
@@ -143,7 +166,8 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             get => _refreshingConnections;
             set => this.RaiseAndSetIfChanged(ref _refreshingConnections, value);
-        }
+        }       
+
         #endregion
     }
 }

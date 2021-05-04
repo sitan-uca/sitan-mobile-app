@@ -15,7 +15,7 @@
     <ScrollView>
         <StackLayout Padding="20">
             <StackLayout VerticalOptions="CenterAndExpand">
-                <zxing:ZXingBarcodeImageView x:Name="BarcodeImageView" BarcodeFormat="QR_CODE" IsVisible="false" BarcodeValue="{Binding QrCodeValue}">
+                <zxing:ZXingBarcodeImageView x:Name="BarcodeImageView" BarcodeFormat="QR_CODE" BarcodeValue="{Binding QrCodeValue}">
                     <zxing:ZXingBarcodeImageView.BarcodeOptions>
                         <zxcm:EncodingOptions Width="300" Height="300" />
                     </zxing:ZXingBarcodeImageView.BarcodeOptions>
@@ -24,7 +24,9 @@
                             BarcodeValue="{Binding QrCodeValue}"
                             BarcodeFormat="QR_CODE"
                             HeightRequest="250"
-                            WidthRequest="250">
+                            WidthRequest="250"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="FillAndExpand">
             </zxing:ZXingBarcodeImageView>-->
                 <!--<Entry IsReadOnly="True" Text="{Binding QrCodeValue}" />-->
                 <StackLayout>

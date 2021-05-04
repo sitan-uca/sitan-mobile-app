@@ -30,7 +30,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         private readonly IProofService _proofService;
         private readonly IEventAggregator eventAggregator;
         private readonly IProvisioningService _provisioningService;
-        private readonly ILifetimeScope _scope;
+        private readonly ILifetimeScope _scope;        
 
         public ProofRequestsViewModel(IUserDialogs userDialogs,
                                    INavigationService navigationService,
@@ -39,7 +39,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                                    IConnectionService connectionService,
                                    IProvisioningService provisioningService,
                                    IEventAggregator eventAggregator,
-                                   ILifetimeScope scope) : base("Proof Requests", userDialogs, navigationService)
+                                   ILifetimeScope scope) : base("Proofs", userDialogs, navigationService)
         {
             _connectionService = connectionService;
             _agentContextProvider = agentContextProvider;
@@ -60,7 +60,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             await base.InitializeAsync(navigationData);
         }
 
-        public async Task RefreshProofRequests()
+        public async Task RefreshProofRequests(string tab = null)
         {
             try
             {
@@ -68,14 +68,20 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                 ProofRequests.Clear();
 
                 var agentContext = await _agentContextProvider.GetContextAsync();
-                IEnumerable<ProofRecord> proofRequests = await _proofService.ListAsync(agentContext);
+                IEnumerable<ProofRecord> proofRequests = null;
+                if (tab == null || tab.Equals(nameof(ProofState.Requested)))
+                    proofRequests = await _proofService.ListRequestedAsync(agentContext);
+                else if (tab.Equals(nameof(ProofState.Accepted)))
+                    proofRequests = await _proofService.ListAcceptedAsync(agentContext);
+                else if (tab.Equals(nameof(ProofState.Proposed)))
+                    proofRequests = await _proofService.ListProposedAsync(agentContext);
 
                 IList<ProofRequestViewModel> proofRequestVms = new List<ProofRequestViewModel>();
                 foreach (var proofReq in proofRequests)
                 {
-                    var connection = await _connectionService.GetAsync(agentContext, proofReq.ConnectionId);
+                    var connection = (proofReq.ConnectionId == null) ? null : await _connectionService.GetAsync(agentContext, proofReq.ConnectionId);
                     var proofRequestViewModel = _scope.Resolve<ProofRequestViewModel>(new NamedParameter("proofRecord", proofReq), new NamedParameter("connection", connection));
-                    proofRequestVms.Add(proofRequestViewModel);
+                    proofRequestVms.Add(proofRequestViewModel);                                        
                 }
 
                 ProofRequests.InsertRange(proofRequestVms);
@@ -165,6 +171,11 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         });
 
         public ICommand RefreshCommand => new Command(async () => await RefreshProofRequests());
+
+        public ICommand ProofsSubTabChange => new Command<object>(async (tab) =>
+        {
+            await RefreshProofRequests(tab.ToString());
+        });
 
         #endregion
 

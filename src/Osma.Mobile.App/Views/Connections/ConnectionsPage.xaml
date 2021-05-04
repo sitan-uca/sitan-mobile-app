@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:components="clr-namespace:Osma.Mobile.App.Views.Components;assembly=Osma.Mobile.App"
              xmlns:converters="clr-namespace:Osma.Mobile.App.Converters;assembly=Osma.Mobile.App"
-             xmlns:behaviours="clr-namespace:Osma.Mobile.App.Behaviors;assembly=Osma.Mobile.App"
+             xmlns:behaviours="clr-namespace:Osma.Mobile.App.Behaviors;assembly=Osma.Mobile.App"             
              x:Class="Osma.Mobile.App.Views.Connections.ConnectionsPage"
              Title="{Binding Name}"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
@@ -25,6 +25,7 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
+
             <Grid
                 Padding="20,5,20,20"
                 BackgroundColor="#252738">
@@ -44,50 +45,63 @@
                 Text="{Binding SearchTerm}" />
                 </Frame>
             </Grid>
+
+            <components:SegmentedBarControl 
+                x:Name="segmentedBarControl"                                
+                AutoScroll="False"
+                TextColor="Black"
+                SelectedTextColor="DodgerBlue"
+                SelectedLineColor="DodgerBlue" >
+                <components:SegmentedBarControl.Behaviors>
+                    <behaviours:EventToCommandBehavior 
+                        EventName="SelectedItemChanged" 
+                        Command="{Binding ConnectionSubTabChange}"
+                        Converter="{StaticResource SelectedItemConverter}" />
+                </components:SegmentedBarControl.Behaviors>
+            </components:SegmentedBarControl>
+
+
             <StackLayout
                     IsVisible="{Binding HasConnections}">
                 
                 <ListView
-                        HasUnevenRows="True"
-                        IsPullToRefreshEnabled="True"
-                        IsRefreshing="{Binding RefreshingConnections}"
-                        RefreshCommand="{Binding RefreshCommand}"
-                        IsEnabled="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}"
-                        ItemsSource="{Binding Connections}">
+                    HasUnevenRows="True"
+                    IsPullToRefreshEnabled="False"
+                    IsRefreshing="{Binding RefreshingConnections}"
+                    RefreshCommand="{Binding RefreshCommand}"
+                    IsEnabled="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}"
+                    ItemsSource="{Binding Connections}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-
-
-                                <components:DetailedCell
-                                    Title="{Binding ConnectionName}"
-                                    Subtitle="{Binding ConnectionSubtitle}"
-                                    ImageURL="{Binding ConnectionImageUrl}"
-                                 />
-
-                            </DataTemplate>
+                            <components:DetailedCell
+                                Title="{Binding ConnectionName}"
+                                Subtitle="{Binding ConnectionSubtitle}"
+                                ImageURL="{Binding ConnectionImageUrl}" />
+                        </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.Behaviors>
                             <behaviours:EventToCommandBehavior EventName="ItemSelected" Command="{Binding SelectConnectionCommand}" Converter="{StaticResource SelectedItemConverter}" DeselectOnClick="true"/>
                         </ListView.Behaviors>
                     </ListView>
                 </StackLayout>
-                <StackLayout
+
+            <StackLayout
                     VerticalOptions="FillAndExpand"
                     IsVisible="{Binding HasConnections, Converter={StaticResource BooleanInverse}}">
-                    <StackLayout
+                <StackLayout
                         Orientation="Vertical"
                         VerticalOptions="CenterAndExpand"
                         HorizontalOptions="CenterAndExpand">
-                        <ActivityIndicator
+                    <ActivityIndicator
                             IsVisible="{Binding RefreshingConnections}"
                             IsRunning="{Binding RefreshingConnections}"/>
-                        <Label
+                    <Label
                             HorizontalOptions="CenterAndExpand"
                             HorizontalTextAlignment="Center"
                             IsVisible="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}" 
-                            Text="You have no connections - Click connect to get started" />
-                    </StackLayout>
+                            Text="You have no connections here" />
                 </StackLayout>
             </StackLayout>
-        </ContentPage.Content>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

@@ -62,12 +62,13 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             this.messageService = messageService;
             this.proofRecord = proofRecord;
             this.connection = connection;
-            ConnectionLogo = connection.Alias.ImageUrl;
-            ConnectionName = connection.Alias.Name;
+            ConnectionLogo = connection?.Alias.ImageUrl;
+            ConnectionName = connection?.Alias.Name ?? "Scanned Presentation Request";
             ProofRequest = JsonConvert.DeserializeObject<ProofRequest>(proofRecord.RequestJson);
             ProofRequestName = ProofRequest?.Name;
             RequestedAttributes = new ObservableCollection<ProofRequestAttributeViewModel>();
             HasLogo = !string.IsNullOrWhiteSpace(ConnectionLogo);
+            ActionRequired = proofRecord.State == ProofState.Requested;
         }
 
         /// <summary>
@@ -100,6 +101,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             ProofRequestName = ProofRequest?.Name;
             RequestedAttributes = new ObservableCollection<ProofRequestAttributeViewModel>();
             HasLogo = !string.IsNullOrWhiteSpace(ConnectionLogo);
+            ActionRequired = true;
         }
 
         public override async Task InitializeAsync(object navigationData)
@@ -135,8 +137,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                     );
 
                     RequestedAttributes.Add(attribute);                    
-                }
-                ActionRequired = proofRecord.State == ProofState.Requested;
+                }                
 
                 //TODO: Implement Predicate and Restrictions related functionlity
             }
@@ -152,7 +153,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         private async Task CreatePresentation()
         {
             base.IsBusy = true;
-
+            var dialog = UserDialogs.Instance.Loading("Presenting Proof...");
             try
             {
                 var requestedCredentials = new RequestedCredentials();
@@ -193,6 +194,8 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             finally
             {
                 base.IsBusy = false;
+                dialog?.Hide();
+                dialog?.Dispose();
             }
 
         }
