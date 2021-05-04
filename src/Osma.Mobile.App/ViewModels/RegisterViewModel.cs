@@ -16,14 +16,16 @@ namespace Osma.Mobile.App.ViewModels
     {
         private readonly IAgentProvider _agentContextProvider;
         private readonly IPoolConfigurator _poolConfigurator;
-        private readonly IEdgeProvisioningService _provisioningService;
+        private readonly IProvisioningService _provisioningService;
+        private readonly IEdgeProvisioningService _edgeProvisioningService;
 
         public RegisterViewModel(
             IUserDialogs userDialogs,
             INavigationService navigationService,
             IAgentProvider agentProvider,
             IPoolConfigurator poolConfigurator,
-            IEdgeProvisioningService provisioningService) : base(
+            IProvisioningService provisioningService,
+            IEdgeProvisioningService edgeProvisioningService) : base(
                 nameof(RegisterViewModel),
                 userDialogs,
                 navigationService)
@@ -31,6 +33,7 @@ namespace Osma.Mobile.App.ViewModels
             _agentContextProvider = agentProvider;
             _poolConfigurator = poolConfigurator;
             _provisioningService = provisioningService;
+            _edgeProvisioningService = edgeProvisioningService;
         }
 
         #region Bindable Commands
@@ -41,10 +44,14 @@ namespace Osma.Mobile.App.ViewModels
             try
             {
                 await _poolConfigurator.ConfigurePoolsAsync();
-                await _provisioningService.ProvisionAsync();
-                
-                await NavigationService.NavigateToAsync<MainViewModel>();
+                await _edgeProvisioningService.ProvisionAsync();
+
+                var context = await _agentContextProvider.GetContextAsync();
+                var provisioningRecord = await _provisioningService.GetProvisioningAsync(context.Wallet);
+                Preferences.Set(AppConstant.MediatorConnectionIdTagName, provisioningRecord.GetTag(AppConstant.MediatorConnectionIdTagName));
                 Preferences.Set(AppConstant.LocalWalletProvisioned, true);
+
+                await NavigationService.NavigateToAsync<MainViewModel>();                
             }
             catch(Exception e)
             {

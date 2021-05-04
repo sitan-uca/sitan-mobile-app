@@ -1,5 +1,4 @@
-﻿using Osma.Mobile.App.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +7,15 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Osma.Mobile.App
+namespace Osma.Mobile.App.Views.Account
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AppShell : Shell, IRootView
+    public partial class ProfilePage : ContentPage
     {
-        public AppShell()
+        public ProfilePage()
         {
             InitializeComponent();
         }
+        
     }
 }

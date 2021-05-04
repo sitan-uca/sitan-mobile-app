@@ -12,6 +12,11 @@ using System;
 using System.Diagnostics;
 using Osma.Mobile.App.Views.PinAuth;
 using System.ComponentModel;
+using Hyperledger.Aries.Configuration;
+using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Contracts;
+using Osma.Mobile.App.Events;
+using System.Reactive.Linq;
 
 namespace Osma.Mobile.App.ViewModels.Account
 {
@@ -19,10 +24,16 @@ namespace Osma.Mobile.App.ViewModels.Account
     public class AccountViewModel : ABaseViewModel, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        private readonly IProvisioningService _provisioningService;
+        private readonly IAgentProvider _agentContextProvider;
+        private readonly IEventAggregator _eventAggregator;
 
         public AccountViewModel(
             IUserDialogs userDialogs,
-            INavigationService navigationService
+            INavigationService navigationService,
+            IProvisioningService provisioningService,
+            IAgentProvider agentContextProvider,
+            IEventAggregator eventAggregator
         ) : base(
             "Account",
             userDialogs,
@@ -31,18 +42,34 @@ namespace Osma.Mobile.App.ViewModels.Account
         {
             _appVersion = AppInfo.VersionString;
             _buildVersion = AppInfo.BuildString;
-#if DEBUG
-            _fullName = "Jamie Doe";
-            _avatarUrl = "http://i.pravatar.cc/100";
-#endif
+            _provisioningService = provisioningService;
+            _agentContextProvider = agentContextProvider;
+            _eventAggregator = eventAggregator;
+                                    
+            //#if DEBUG
+            //            _fullName = "Jamie Doe";
+            //            _avatarUrl = "http://i.pravatar.cc/100";
+            //#endif
 
             _authSwitchToggled = Preferences.Get(AppConstant.PinAuthEnabled, false);
         }
 
         public override async Task InitializeAsync(object navigationData)
         {
-            
+            _eventAggregator.GetEventByType<ApplicationEvent>()
+                            .Where(_ => _.Type == ApplicationEventType.ProvisioningRecordUpdated)
+                            .Subscribe(async _ => await InitializeAgentInfo());
+
+            await InitializeAgentInfo();
             await base.InitializeAsync(navigationData);
+        }
+
+        public async Task InitializeAgentInfo()
+        {
+            var context = await _agentContextProvider.GetContextAsync();
+            var proviosioningAgent = await _provisioningService.GetProvisioningAsync(context.Wallet);
+            FullName = proviosioningAgent.Owner.Name;
+            AvatarUrl = proviosioningAgent.Owner.ImageUrl ?? "account_icon.png";
         }
 
         public async Task NavigateToBackup()
@@ -71,7 +98,7 @@ namespace Osma.Mobile.App.ViewModels.Account
             await DialogService.AlertAsync("Navigate to debug page");
         }
 
-        #region Bindable Command
+        #region Bindable Command        
 
         public ICommand NavigateToBackupCommand => new Command(async () => await NavigateToBackup());
 
@@ -99,6 +126,12 @@ namespace Osma.Mobile.App.ViewModels.Account
                 await NavigationService.NavigateToAsync<PinAuthViewModel>(nameof(AccountViewModel));
             }
         };
+
+        public EventHandler ProfileInfoTapped => async (sender, e) =>
+        {            
+            await NavigationService.NavigateToAsync<ProfileViewModel>();
+        };
+
         #endregion
 
         #region Bindable Properties
@@ -107,14 +140,22 @@ namespace Osma.Mobile.App.ViewModels.Account
         public string FullName
         {
             get => _fullName;
-            set => this.RaiseAndSetIfChanged(ref _fullName, value);
+            set 
+            { 
+                this.RaiseAndSetIfChanged(ref _fullName, value);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FullName"));
+            }
         }
 
         private string _avatarUrl;
         public string AvatarUrl
         {
             get => _avatarUrl;
-            set => this.RaiseAndSetIfChanged(ref _avatarUrl, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _avatarUrl, value);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AvatarUrl"));
+            }
         }
 
         private bool _showDebug;

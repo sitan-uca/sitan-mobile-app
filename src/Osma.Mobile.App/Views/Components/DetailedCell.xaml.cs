@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Osma.Mobile.App.Views.Components
@@ -95,6 +96,24 @@ namespace Osma.Mobile.App.Views.Components
                 cell.TitleLabel.FontAttributes = isNew ? FontAttributes.Bold : FontAttributes.None;
                 cell.View.BackgroundColor = isNew ? Color.FromHex("#f2f7ea") : Color.Transparent;
             });
+        }
+
+        
+
+        public static readonly BindableProperty TappedCommandProperty =
+           BindableProperty.Create("TappedCommand", typeof(EventHandler), typeof(DetailedCell), null, propertyChanged: TappedCommandPropertyChanged);
+
+        public EventHandler TappedCommand
+        {
+            get { return (EventHandler)GetValue(TappedCommandProperty); }
+            set { SetValue(TappedCommandProperty, value); }
+        }
+
+        static void TappedCommandPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            DetailedCell cell = (DetailedCell)bindable;
+            cell.ParentViewCell.Tapped += (EventHandler)newValue;
+            
         }
 
         public DetailedCell()

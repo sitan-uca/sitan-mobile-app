@@ -122,6 +122,8 @@ namespace Osma.Mobile.App
         {
             await Host.StartAsync();
 
+            //await Container.Resolve<IPoolConfigurator>().ConfigurePoolsAsync();
+
             // View models and pages mappings
             var _navigationService = Container.Resolve<INavigationService>();
             _navigationService.AddPageViewModelBinding<MainViewModel, MainPage>();
@@ -145,6 +147,8 @@ namespace Osma.Mobile.App
             _navigationService.AddPageViewModelBinding<AcceptRequestViewModel, AcceptRequestPage>();
             _navigationService.AddPageViewModelBinding<RequestIdentityProofViewModel, RequestIdentityProof>();
             _navigationService.AddPageViewModelBinding<ConnectionDetailsViewModel, ConnectionDetailsPage>();
+            _navigationService.AddPageViewModelBinding<ProfileViewModel, ProfilePage>();            
+            _navigationService.AddPopupViewModelBinding<ProfileNamePopupViewModel, ProfileNamePopupPage>();
             //_navigationService.AddPageViewModelBinding<ProofsViewModel, ProofsPage>();
 
             if (Preferences.Get(AppConstant.LocalWalletProvisioned, false))

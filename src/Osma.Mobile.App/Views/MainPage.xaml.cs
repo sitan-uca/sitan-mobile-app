@@ -5,11 +5,11 @@ using Xamarin.Forms.Xaml;
 namespace Osma.Mobile.App.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class MainPage : TabbedPage
+	public partial class MainPage : TabbedPage, IRootView
 	{
-		public MainPage ()
+		public MainPage()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 		}
 
         private new void CurrentPageChanged(object sender, System.EventArgs e) => Title = GetPageName(CurrentPage);

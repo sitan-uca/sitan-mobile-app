@@ -25,6 +25,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
         private ConnectionResponseMessage _responseMessage;
         private ConnectionRecord _record;
+        private string _connectionId;
 
         public AcceptRequestViewModel(IUserDialogs userDialogs,
                                      INavigationService navigationService,
@@ -49,8 +50,9 @@ namespace Osma.Mobile.App.ViewModels.Connections
             if (navigationData is List<object> dataList)
             {
                 var request = (ConnectionRequestMessage)dataList[0];
-                _responseMessage = (ConnectionResponseMessage)dataList[1];
-                _record = (ConnectionRecord)dataList[2];
+                _connectionId = (string)dataList[1];
+                //_responseMessage = (ConnectionResponseMessage)dataList[1];
+                //_record = (ConnectionRecord)dataList[2];
                 
                 RequestTitle = $"Trust {request.Label}?";
                 RequesterUrl = request.ImageUrl;
@@ -63,12 +65,18 @@ namespace Osma.Mobile.App.ViewModels.Connections
         public ICommand AcceptRequestCommand => new Command(async () =>
         {
             var loadingDialog = DialogService.Loading("Processing");
-            var context = await _contextProvider.GetContextAsync();
+            var context = await _contextProvider.GetContextAsync();                        
 
             try
             {
-                await _messageService.SendAsync(context.Wallet, _responseMessage, _record);
+                var (message, record) = await _connectionService.CreateResponseAsync(context, _connectionId);
+                //messageContext.ContextRecord = record;            
+                await _messageService.SendAsync(context.Wallet, message, record);          
                 _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
+            } 
+            catch (Exception ex)
+            {
+                DialogService.Alert(ex.Message);
             }
             finally
             {

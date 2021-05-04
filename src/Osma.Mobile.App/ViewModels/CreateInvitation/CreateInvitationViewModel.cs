@@ -44,13 +44,12 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
             try
             {
                 var context = await _agentContextProvider.GetContextAsync();
-                var (invitation, _) = await _connectionService.CreateInvitationAsync(context, new InviteConfiguration
-                {
-                    TheirAlias = new ConnectionAlias { Name = "Invitation" }                    
-                });
-
-                string barcodeValue = invitation.ServiceEndpoint + "?d_m=" + Uri.EscapeDataString(invitation.ToByteArray().ToBase64String());
+                var (invitation, _) = await _connectionService.CreateInvitationAsync(context);
+                //TODO Compare with web agent invitation generation and fix
+                string barcodeValue = invitation.ServiceEndpoint + "?c_i=" + Uri.EscapeDataString(invitation.ToByteArray().ToBase64String());
+                string linkValue = invitation.ServiceEndpoint + "?c_i=" + invitation.ToJson().ToBase64();
                 QrCodeValue = barcodeValue;
+                LinkValue = linkValue;
             }
             catch (Exception ex)
             {
@@ -81,18 +80,24 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
 
         public ICommand CreateInvitationCommand => new Command(async () => await CreateInvitation());
 
-        public ICommand CopyInvitation => new Command(() => CrossClipboard.Current.SetText(QrCodeValue));
+        public ICommand CopyInvitation => new Command(() => CrossClipboard.Current.SetText(LinkValue));
 
         #endregion
 
         #region Bindable Properties
 
         private string _qrCodeValue;
-
         public string QrCodeValue
         {
             get => _qrCodeValue;
             set => this.RaiseAndSetIfChanged(ref _qrCodeValue, value);
+        }
+
+        private string _linkValue;
+        public string LinkValue
+        {
+            get => _linkValue;
+            set => this.RaiseAndSetIfChanged(ref _linkValue, value);
         }
 
         #endregion
