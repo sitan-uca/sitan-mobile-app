@@ -74,6 +74,7 @@ namespace Osma.Mobile.App
                         options: options =>
                         {
                             options.EndpointUri = "https://mediatoragentwin.azurewebsites.net";
+                            //options.EndpointUri = "https://fast-warthog-93.loca.lt";
 
                             options.WalletConfiguration.StorageConfiguration =
                                 new WalletConfiguration.WalletStorageConfiguration
@@ -83,7 +84,7 @@ namespace Osma.Mobile.App
                                         path2: ".indy_client",
                                         path3: "wallets")
                                 };
-                            options.WalletConfiguration.Id = "BaksakMobileWallet";
+                            options.WalletConfiguration.Id = "BaksakMobileWalletAlyNa";
                             //TODO Ask user for a wallet key during provisioning
                             options.WalletCredentials.Key = "SecretWalletKey";
                             options.AgentName = "Mobile Agent";

@@ -5,24 +5,25 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <Color x:Key="BasePageColor">#EFEFF4</Color>
-            <Color x:Key="DarkPageColor">#F8F8F8</Color>
+            <Color x:Key="BasePageColor">#FFFDFD</Color>
+            <Color x:Key="DarkPageColor">#252738</Color>
             <Color x:Key="BaseContentViewColor">#FFFFFF</Color>
 
             <x:Double x:Key="BaseFontSize">16</x:Double>
-            <Color x:Key="BaseTextColor">#7b7b7b</Color>
-            <Color x:Key="LightTextColor">#FFFFFF</Color>
-            
-            <Color x:Key="BlueAccentColor">#3891D6</Color>
-            <Color x:Key="RedAccentColor">#EE3A24</Color>
-            <Color x:Key="GreenAccentColor">#73DA73</Color>
+            <Color x:Key="BaseTextColor">#252738</Color>
+            <Color x:Key="LightTextColor">#252738</Color>
 
-            <Color x:Key="NavigationBarColor">#2196f3</Color>
-            <Color x:Key="NavigationBarTextColor">#ffffff</Color>
+
+            <Color x:Key="BlueAccentColor">#252738</Color>
+            <Color x:Key="RedAccentColor">#EE3A24</Color>
+            <Color x:Key="GreenAccentColor">#00D974</Color>
+
+            <Color x:Key="NavigationBarColor">#252738</Color>
+            <Color x:Key="NavigationBarTextColor">#F2F1F1</Color>
 
             <Style
                 TargetType="NavigationPage"
-                ApplyToDerivedTypes="true">
+                ApplyToDerivedTypes="True">
                 <Setter
                     Property="BarBackgroundColor"
                     Value="{ StaticResource NavigationBarColor }" />
@@ -33,11 +34,12 @@
 
             <Style
                 TargetType="ContentPage"
-                ApplyToDerivedTypes="true">
+                ApplyToDerivedTypes="True">
                 <Setter
                     Property="BackgroundColor"
                     Value="{ StaticResource BasePageColor }" />
             </Style>
+
 
             <Style
                 TargetType="ContentView"
@@ -104,13 +106,14 @@
                 <Setter
                     Property="BackgroundColor"
                     Value="{StaticResource GreenAccentColor}" />
+                
             </Style>
             
             
             <Style
                 x:Key="ButtonStyleBase"
                 TargetType="Button">
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontSize" Value="11" />
                 <Setter Property="Margin" Value="23,12" />
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="VerticalOptions" Value="Center" />
@@ -148,6 +151,7 @@
             >
                 <Setter Property="TextColor" Value="{StaticResource LightTextColor}" />
                 <Setter Property="BackgroundColor" Value="{StaticResource RedAccentColor}" />
+                
             </Style>
             
             <Style

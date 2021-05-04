@@ -10,33 +10,38 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Entry x:Name="chatTextInput" 
-                 Text="{Binding TextToSend}" 
-                 Margin="1"  
+
+        <Frame IsClippedToBounds="True"
+               CornerRadius="25"
+               Padding="20,0,20,0">
+
+            <Entry x:Name="chatTextInput" 
+                 Text="{Binding TextToSend}"  
                  TextColor="Black" 
                  Keyboard="Chat"  
                  HorizontalOptions="FillAndExpand" 
-                 PlaceholderColor="LightGray"
-                 Placeholder="Type your message here"
                  Grid.Row="0" 
                  Grid.Column="0"
+                 BackgroundColor="#fff"
                />
-                 <!--Completed=""-->
+        </Frame>
+        <!--Completed=""-->
                
-        <Label Text="Send"
+        <Image Source="send_icon.png"
                Grid.Row="0"
                Grid.Column="1"
-               VerticalTextAlignment="Center"
-               Margin="5,5,5,5">
-            <Label.GestureRecognizers>
+               Margin="15,5,5,5"
+               HeightRequest="35"
+               WidthRequest="35">
+            <Image.GestureRecognizers>
                 <TapGestureRecognizer
                     Command="{Binding SendMessageCommand}"
                     Tapped="Handle_Completed"
                 />
 
-            </Label.GestureRecognizers>
-        </Label>
+            </Image.GestureRecognizers>
+        </Image>
     </Grid>
 </ContentView>

@@ -2,17 +2,24 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FormsPinView.Core;assembly=FormsPinView.Core"
-             x:Class="Osma.Mobile.App.Views.PinAuth.CreatePinAuthPage">
+             x:Class="Osma.Mobile.App.Views.PinAuth.CreatePinAuthPage"
+             BackgroundColor="#252738">
     <ContentPage.Content>
         <StackLayout
             Orientation="Vertical"
             VerticalOptions="CenterAndExpand"
             Padding="0">
             <Label
-                Text="Enter your new PIN" 
+                Text="CREATE NEW PIN" 
+                FontSize="25"
+                Padding="0,0,0,40"
+                CharacterSpacing="2"
+                FontAttributes="Bold"
                 HorizontalTextAlignment="Center"
-                TextColor="Black" />
+                TextColor="#fff" />
             <local:PinView
+                BorderColor="#fff"
+                Color="#00D974"
                 HorizontalOptions="CenterAndExpand"
                 VerticalOptions="CenterAndExpand"
                 PinLength="6"

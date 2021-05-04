@@ -122,6 +122,15 @@
     <Compile Remove="Views\Connections\ConnectionTransactionCell.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Colored.svg" />
+    <None Remove="Resources\account-icon.svg" />
+    <None Remove="Resources\add.png" />
+    <None Remove="Resources\connections-icon.svg" />
+    <None Remove="Resources\credentials-icon.svg" />
+    <None Remove="Resources\Request-icon.png" />
+    <None Remove="Resources\Request-icon.svg" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Views\Credentials\" />
     <Folder Include="ViewModels\Credentials\" />
   </ItemGroup>

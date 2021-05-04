@@ -1,12 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="Osma.Mobile.App.Views.Proofs.ProofRequestsPage"
-    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:behaviours="clr-namespace:Osma.Mobile.App.Behaviors;assembly=Osma.Mobile.App"
     xmlns:components="clr-namespace:Osma.Mobile.App.Views.Components;assembly=Osma.Mobile.App"
     xmlns:converters="clr-namespace:Osma.Mobile.App.Converters;assembly=Osma.Mobile.App"
-    Title="{Binding Name}">
+    xmlns:behaviours="clr-namespace:Osma.Mobile.App.Behaviors;assembly=Osma.Mobile.App"
+    Title="{Binding Name}"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    ios:Page.LargeTitleDisplay="Always" >
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:SelecteditemEventArgsToSelectedItemConverter x:Key="SelectedItemConverter" />
@@ -14,18 +17,14 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Name="Scan Proof Request"
-            Command="{Binding ScanProofRequestCommand}"
-            Order="Primary"
-            Priority="0"
-            Text="Scan" />
-        <ToolbarItem
+        <ToolbarItem IconImageSource="scan_white.png" Command="{Binding ScanProofRequestCommand}" Order="Primary" Priority="0" Text="Scan" ></ToolbarItem>
+        <ToolbarItem IconImageSource="add_white.png" Order="Primary"  Priority="0" Command ="{Binding CreateRequestBarcodeCommand}" ></ToolbarItem>
+        <!--<ToolbarItem
             Name="Scan Proof Request"
             Command="{Binding CreateRequestBarcodeCommand}"
             Order="Secondary"
             Priority="0"
-            Text="Create Request" />
+            Text="Create Request" />-->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
