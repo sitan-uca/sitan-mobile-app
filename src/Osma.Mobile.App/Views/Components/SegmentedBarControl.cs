@@ -142,7 +142,12 @@ namespace Osma.Mobile.App.Views.Components
                     HorizontalOptions = LayoutOptions.CenterAndExpand
                 };
 
-                var boxview = new BoxView() { BackgroundColor = Color.Transparent, HeightRequest = 2, HorizontalOptions = LayoutOptions.FillAndExpand };
+                var boxview = new BoxView() 
+                { 
+                    BackgroundColor = Color.Transparent, 
+                    HeightRequest = 2, 
+                    HorizontalOptions = LayoutOptions.FillAndExpand                    
+                };
                 var childrenLayout = new StackLayout() { Spacing = 5 };
 
                 childrenLayout.Children.Add(label);

@@ -17,17 +17,16 @@
     Appearing="Appearing"
     CurrentPageChanged="CurrentPageChanged">
 
-
     <connections:ConnectionsPage        
         ios:NavigationPage.PrefersLargeTitles="True"        
         BindingContext="{Binding Connections}"
         Icon="connections_icon2.png" />
     <credentials:CredentialsPage
-        ios:NavigationPage.PrefersLargeTitles="False"
+        ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding Credentials}"
         Icon="credential_icon2.png" />
     <proofRequests:ProofRequestsPage
-        ios:NavigationPage.PrefersLargeTitles="False"
+        ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding ProofRequests}"
         Icon="request_icon.png" />
     <!--<account:AccountPage 
@@ -35,7 +34,7 @@
         BindingContext="{Binding Account}"
         Icon="scan_icon.png" />-->
     <account:AccountPage
-        ios:NavigationPage.PrefersLargeTitles="False"
+        ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding Account}"
         Icon="account_icon2.png" />
 </TabbedPage>

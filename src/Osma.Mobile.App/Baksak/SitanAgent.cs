@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Osma.Mobile.App.Baksak
 {
-    public class CustomAgent : AgentBase
+    public class SitanAgent : AgentBase
     {
 
-        public CustomAgent(IServiceProvider provider) : base(provider)
+        public SitanAgent(IServiceProvider provider) : base(provider)
         {
         }
 
@@ -18,18 +18,15 @@ namespace Osma.Mobile.App.Baksak
         /// </summary>
         protected override void ConfigureHandlers()
         {
-            //AddConnectionHandler();
-            //AddBaksakConnectionHandler();
+            //AddConnectionHandler();            
             AddCredentialHandler();
             AddProofHandler();
             AddDiscoveryHandler();
             AddBasicMessageHandler();
             AddForwardHandler();
             AddTrustPingHandler();
-            AddHandler<BaksakConnectionHandler>();
-        }
-
-        //protected void AddBaksakConnectionHandler() => Handlers.Add(Provider.GetRequiredService<BaksakConnectionHandler>());
+            AddHandler<BaksakConnectionHandler>();            
+        }        
         
     }
 }

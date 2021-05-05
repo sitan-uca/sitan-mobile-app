@@ -98,14 +98,14 @@ namespace Osma.Mobile.App.ViewModels.Connections
             //await RefreshTransactions();
             await InitializeChat();
 
-            _eventAggregator.GetEventByType<ApplicationEvent>()
-                            .Where(_ => _.Type == ApplicationEventType.WalletRecordsMessageUpdated)
-                            .Subscribe(async _ => await InitializeChat());
+            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                            .Where(_ => _.MessageType == MessageTypes.BasicMessageType)
+                            .Subscribe(async _ => await UpdateChatAsync(_.RecordId));
 
             await base.InitializeAsync(navigationData);
         }
 
-        //TODO: Real time recieve messages
+        //TODO: Add just the message recieved rather than the whole list
         public async Task InitializeChat()
         {
             _agentContext = await _agentContextProvider.GetContextAsync();
@@ -113,18 +113,24 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
             List<BasicMessageRecord> msgs = await _walletRecordSevice
                 .SearchAsync<BasicMessageRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
-            List<CredentialRecord> credentials = await _walletRecordSevice
-                .SearchAsync<CredentialRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
-            List<ProofRecord> proofs = await _walletRecordSevice
-                .SearchAsync<ProofRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
+            //List<CredentialRecord> credentials = await _walletRecordSevice
+            //    .SearchAsync<CredentialRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
+            //List<ProofRecord> proofs = await _walletRecordSevice
+            //    .SearchAsync<ProofRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
 
             records.AddRange(msgs);
-            records.AddRange(credentials);
-            records.AddRange(proofs);
+            //records.AddRange(credentials);
+            //records.AddRange(proofs);
 
             records.Sort((a, b) => Nullable.Compare(a.CreatedAtUtc, b.CreatedAtUtc));
             records.Except(Messages, new RecordComparator()).ToList().ForEach(x => Messages.Insert(0, x));
 
+        }
+
+        public async Task UpdateChatAsync(string messageRecordId)
+        {
+            var messageRecord = await _walletRecordSevice.GetAsync<BasicMessageRecord>(_agentContext.Wallet, messageRecordId);
+            Messages.Insert(0, messageRecord);
         }
 
         public async Task RefreshTransactions()

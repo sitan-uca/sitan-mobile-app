@@ -1,5 +1,7 @@
-﻿using Hyperledger.Aries.Contracts;
+﻿using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.BasicMessage;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
 using Hyperledger.Indy.WalletApi;
 using Osma.Mobile.App.Events;
@@ -24,7 +26,12 @@ namespace Osma.Mobile.App.Baksak
             Task task = base.AddAsync(wallet, record);
             if (record is BasicMessageRecord)
             {
-                _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.WalletRecordsMessageUpdated });
+                //_eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.BasicMessageReceived });
+                _eventAggregator.Publish(new ServiceMessageProcessingEvent
+                {
+                    MessageType = MessageTypes.BasicMessageType,
+                    RecordId = record.Id
+                });
             }
 
             return task;

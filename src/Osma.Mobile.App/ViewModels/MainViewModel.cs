@@ -3,7 +3,12 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Acr.UserDialogs;
+using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.BasicMessage;
+using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Storage;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
@@ -22,10 +27,15 @@ namespace Osma.Mobile.App.ViewModels
     public class MainViewModel : ABaseViewModel
     {
         private readonly IEventAggregator _eventAggregator;
+        private readonly IWalletRecordService _walletRecordService;
+        private readonly IAgentProvider _agentContextProvider;
+
         public MainViewModel(
             IUserDialogs userDialogs,
             INavigationService navigationService,
             IEventAggregator eventAggregator,
+            IAgentProvider agentContextProvider,
+            IWalletRecordService walletRecordService,
             ConnectionsViewModel connectionsViewModel,
             CredentialsViewModel credentialsViewModel,
             AccountViewModel accountViewModel,            
@@ -39,6 +49,8 @@ namespace Osma.Mobile.App.ViewModels
             CreateInvitation = createInvitationViewModel;
             ProofRequests = proofRequestsViewModel;
             _eventAggregator = eventAggregator;
+            _walletRecordService = walletRecordService;
+            _agentContextProvider = agentContextProvider;             
             //for prompting dialog on connection events
             //WalletEventService.Init(navigationService);
         }
@@ -58,12 +70,39 @@ namespace Osma.Mobile.App.ViewModels
 
         private void InitializeNotificationEventListeners()
         {
-           _eventAggregator.GetEventByType<ApplicationEvent>()
-                        .Where(_ => _.Type == ApplicationEventType.ConnectionRequestReceived)
-                        .Subscribe(_ => TriggerNotification("Connection Request", "You recieved a new conection request"));
+            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                         .Where
+                         (_ => 
+                             _.MessageType == MessageTypes.BasicMessageType ||
+                             _.MessageType == MessageTypes.ConnectionRequest ||
+                             _.MessageType == MessageTypes.IssueCredentialNames.OfferCredential ||
+                             _.MessageType == MessageTypes.IssueCredentialNames.IssueCredential
+                         )
+                         .Subscribe(_ => BuildNotification(_.MessageType, _.RecordId));           
         }
 
-
+        private async void BuildNotification(string messageEvent, string recordId)
+        {
+            var context = await _agentContextProvider.GetContextAsync();
+            switch(messageEvent)
+            {
+                case MessageTypes.BasicMessageType:
+                case MessageTypesHttps.BasicMessageType:
+                    var msgRecord = await _walletRecordService.GetAsync<BasicMessageRecord>(context.Wallet, recordId);
+                    var connectionRecord = await _walletRecordService.GetAsync<ConnectionRecord>(context.Wallet, msgRecord.ConnectionId);
+                    TriggerNotification("New message", "New message from " + connectionRecord.Alias.Name);
+                    break;
+                case MessageTypes.ConnectionRequest:
+                case MessageTypesHttps.ConnectionRequest:
+                    TriggerNotification("New Connection Request", "You received a connectino request");
+                    break;
+                case MessageTypes.IssueCredentialNames.OfferCredential:
+                case MessageTypesHttps.IssueCredentialNames.OfferCredential:
+                    TriggerNotification("New Connection Request", "You received a connectino request");
+                    break;
+            }
+        }
+                
         public void TriggerNotification(string title, string message)
         {
             INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
