@@ -14,9 +14,9 @@
 >
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="renewable.png" Order="Primary" Priority="0" Command ="{Binding RequestProofCommand}" ></ToolbarItem>
+        <ToolbarItem IconImageSource="renewable_white.png" Order="Primary" Priority="0" Command ="{Binding RequestProofCommand}" ></ToolbarItem>
         <!--<ToolbarItem IconImageSource="trustping.png" Order="Primary"  Priority="0" Command ="{Binding SendTrustPingCommand}" ></ToolbarItem>/-->
-        <ToolbarItem IconImageSource="information.png" Order="Primary"  Priority="0" Command ="{Binding ConnectionDetailsCommand}" ></ToolbarItem>
+        <ToolbarItem IconImageSource="information_white.png" Order="Primary"  Priority="0" Command ="{Binding ConnectionDetailsCommand}" ></ToolbarItem>
         <!--<ToolbarItem Name="RequestProof" Order="Primary" Text="Request" Priority="0" Command="{Binding RequestProofCommand}"/>
         <ToolbarItem Name="Details" Order="Secondary" Text="Details" ios:NavigationPage.PrefersLargeTitles="true" Priority="1" Command="{Binding ConnectionDetailsCommand}" />
         <ToolbarItem Name="TrustPing" Order="Secondary" Text="Send Trust Ping" ios:NavigationPage.PrefersLargeTitles="true" Priority="0" Command="{Binding SendTrustPingCommand}" />-->
@@ -143,7 +143,7 @@
                     SeparatorVisibility="Default"
                 />-->
                 <Grid RowSpacing="0" 
-                        ColumnSpacing="0" BackgroundColor="#fff">
+                        ColumnSpacing="0" BackgroundColor="#E5DDD5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="1" />

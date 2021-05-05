@@ -10,13 +10,13 @@
             <Grid Padding="20,5,5,5"
                   RowSpacing="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -28,9 +28,9 @@
                     Aspect="Fill"
                     DownsampleUseDipUnits="true"
                     FadeAnimationEnabled="true"
-                    HeightRequest="50"
+                    HeightRequest="40"
                     VerticalOptions="Center"
-                    WidthRequest="50">
+                    WidthRequest="40">
                     <ffimageloading:CachedImage.Transformations>
                         <fftransformations:CircleTransformation />
                     </ffimageloading:CachedImage.Transformations>
@@ -41,18 +41,16 @@
                     Grid.RowSpan="2"
                     Grid.Column="1"
                     FontAttributes="Bold"
-                    CharacterSpacing="0.5"
-                    FontSize="18"
-                    Padding="10,0,0,0"
+                    FontSize="16"
+                    Padding="6,0,0,0"
                     VerticalOptions="Center" />
                 <Label
                     x:Name="SubtitleLabel"
                     Grid.Row="1"
                     Grid.Column="1"
-                    FontSize="14"
-                    CharacterSpacing="0.5"
+                    FontSize="12"
                     FontAttributes="Italic"
-                    Padding="10,0,0,0"
+                    Padding="6,0,0,0"
                     VerticalOptions="Center"
                      />
                 <Frame
