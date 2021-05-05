@@ -214,9 +214,6 @@
     <AndroidResource Include="Resources\drawable\Request_icon2.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\send_icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\trustping.png" />
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +261,12 @@
     <Content Include="Properties\AndroidManifest.xml" />
     <AndroidResource Include="Resources\xml\file_paths.xml" />
     <AndroidResource Include="Resources\values\dimens.xml" />
+    <AndroidResource Include="Resources\drawable\request_icon.png" />
+    <AndroidResource Include="Resources\drawable\search_white.png" />
+    <AndroidResource Include="Resources\drawable\filter_icon.png" />
+    <AndroidResource Include="Resources\drawable\renewable_white.png" />
+    <AndroidResource Include="Resources\drawable\information_white.png" />
+    <AndroidResource Include="Resources\drawable\send_icon.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

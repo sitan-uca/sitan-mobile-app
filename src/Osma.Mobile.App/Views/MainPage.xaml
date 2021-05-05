@@ -28,7 +28,7 @@
     <proofRequests:ProofRequestsPage
         ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding ProofRequests}"
-        Icon="Request_icon2.png" />
+        Icon="request_icon.png" />
     <!--<account:AccountPage 
         ios:NavigationPage.PrefersLargeTitles="False"
         BindingContext="{Binding Account}"

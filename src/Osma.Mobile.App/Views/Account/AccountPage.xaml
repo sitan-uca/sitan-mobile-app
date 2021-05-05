@@ -40,7 +40,7 @@
                     />
                     <account:AccountMenuButtonView
                         Title="Legal"
-                         Subtitle="All the cool tech we're using"
+                        Subtitle="All the cool tech we're using"
                         Image="legal_icon.png"
                         TappedCommand="{Binding NavigateToLegalPageCommand}"
                     />

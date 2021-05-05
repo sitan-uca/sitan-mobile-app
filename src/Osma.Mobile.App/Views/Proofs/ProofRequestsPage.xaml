@@ -17,20 +17,36 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem 
-            IconImageSource="scan_white.png" 
-            Command="{Binding ScanProofRequestCommand}" 
-            Order="Primary" 
-            Priority="0" 
-            Text="Scan" />
-        <ToolbarItem 
-            IconImageSource="add_white.png" 
-            Order="Primary" 
-            Priority="0" 
-            Command ="{Binding CreateRequestBarcodeCommand}" />       
+        <ToolbarItem IconImageSource="scan_white.png" Command="{Binding ScanProofRequestCommand}" Order="Primary" Priority="0" Text="Scan" />
+        <ToolbarItem IconImageSource="add_white.png" Order="Primary" Priority="0" Command ="{Binding CreateRequestBarcodeCommand}" />       
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
+            <StackLayout
+                Padding="0,8,0,0">
+                <Grid
+                    Padding="20,10,20,10"
+                    IsClippedToBounds="True"
+                    BackgroundColor="#C4C4C4">
+                    <Label
+                        Text="Text Binding for heading"
+                        FontSize="16"
+                        VerticalOptions="Center"
+                        FontAttributes="Bold"
+                        Grid.Column="0" />
+
+                    <Button 
+                           ImageSource="filter_icon.png"
+                           BackgroundColor="#C4C4C4"
+                           Grid.Column="1"
+                           HorizontalOptions="EndAndExpand"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           >
+                    </Button>
+                </Grid>
+            </StackLayout>
+            
             <components:SegmentedBarControl 
                 x:Name="segmentedBarControl"                                
                 AutoScroll="True"
@@ -44,33 +60,17 @@
                         Converter="{StaticResource SelectedItemConverter}" />
                 </components:SegmentedBarControl.Behaviors>
             </components:SegmentedBarControl>
-            
-            <Grid VerticalOptions="FillAndExpand">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Label               
-                    Grid.Row="1"
-                    HorizontalOptions="CenterAndExpand"
-                    HorizontalTextAlignment="Center" 
-                    VerticalTextAlignment="Center"                
-                    IsVisible="{Binding HasRequests, Converter={StaticResource BooleanInverse}}"
-                    Text="You have no proof records here" />
-                <ListView                
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.RowSpan="3"                
+
+            <StackLayout
+                IsVisible="{Binding HasRequests}">
+
+                <ListView
                     HasUnevenRows="True"
-                    IsEnabled="{Binding RefreshingProofRequests, Converter={StaticResource BooleanInverse}}"
                     IsPullToRefreshEnabled="False"
-                    IsRefreshing="{Binding RefreshingProofRequests}"    
-                    ItemsSource="{Binding ProofRequests}"
-                    RefreshCommand="{Binding RefreshCommand}">
+                    IsRefreshing="{Binding RefreshingProofRequests}"
+                    RefreshCommand="{Binding RefreshCommand}"
+                    IsEnabled="{Binding RefreshingProofRequests, Converter={StaticResource BooleanInverse}}"
+                    ItemsSource="{Binding ProofRequests}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <components:DetailedCell
@@ -96,17 +96,72 @@
                             EventName="ItemSelected" />
                     </ListView.Behaviors>
                 </ListView>
-            
+            </StackLayout>
 
-            <!--<StackLayout IsVisible="{Binding HasRequests, Converter={StaticResource BooleanInverse}}" 
+            <!--<Grid VerticalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label               
+                    Grid.Row="1"
+                    HorizontalOptions="CenterAndExpand"
+                    HorizontalTextAlignment="Center" 
+                    VerticalTextAlignment="Center"                
+                    IsVisible="{Binding HasRequests, Converter={StaticResource BooleanInverse}}"
+                    Text="You have no proof records here" />
+                    <ListView                
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.RowSpan="3"                
+                    HasUnevenRows="True"
+                    IsEnabled="{Binding RefreshingProofRequests, Converter={StaticResource BooleanInverse}}"
+                    IsPullToRefreshEnabled="False"
+                    IsRefreshing="{Binding RefreshingProofRequests}"    
+                    ItemsSource="{Binding ProofRequests}"
+                    RefreshCommand="{Binding RefreshCommand}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <components:DetailedCell
+                                Title="{Binding ProofRequestName}"
+                                ImageURL="{Binding ConnectionLogo}"
+                                Subtitle="{Binding ConnectionName}" >
+
+                                    <components:DetailedCell.ContextActions>
+                                        <MenuItem
+                                        Text="Delete" 
+                                        Command="{Binding DeleteProofRecord}" 
+                                        CommandParameter="{Binding .}" />
+                                    </components:DetailedCell.ContextActions>
+                                </components:DetailedCell>
+
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Behaviors>
+                            <behaviours:EventToCommandBehavior
+                            Command="{Binding SelectProofRequestCommand}"
+                            Converter="{StaticResource SelectedItemConverter}"
+                            DeselectOnClick="True"
+                            EventName="ItemSelected" />
+                        </ListView.Behaviors>
+                    </ListView>-->
+
+
+            <StackLayout IsVisible="{Binding HasRequests, Converter={StaticResource BooleanInverse}}" 
                          VerticalOptions="FillAndExpand">
                 <StackLayout
                     HorizontalOptions="CenterAndExpand"
                     Orientation="Vertical"                    
                     VerticalOptions="CenterAndExpand">
-                    --><!--<ActivityIndicator                        
+
+                    <ActivityIndicator                        
                         IsRunning="{Binding RefreshingProofRequests}" 
-                        IsVisible="{Binding RefreshingProofRequests}" />--><!--
+                        IsVisible="{Binding RefreshingProofRequests}" />
+
                     <Label                        
                         HorizontalOptions="CenterAndExpand"
                         HorizontalTextAlignment="Center"      
@@ -114,8 +169,7 @@
                         IsVisible="{Binding RefreshingProofRequests}"
                         Text="You have no proof records" />
                 </StackLayout>
-            </StackLayout>-->
-            </Grid>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
