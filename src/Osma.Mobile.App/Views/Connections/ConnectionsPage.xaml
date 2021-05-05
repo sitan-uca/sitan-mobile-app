@@ -19,14 +19,15 @@
     <ContentPage.ToolbarItems>
         <!--<ToolbarItem IconImageSource="add.png" Order="Primary" Priority="0" Command ="{Binding ScanInviteCommand}" ></ToolbarItem>-->
         <!--<ToolbarItem IconImageSource="search.png" Order="Primary"  Priority="0" Command ="{Binding SearchTerm}" ></ToolbarItem>-->
-        <ToolbarItem IconImageSource="add_white.png" Order="Primary"  Priority="0" Command ="{Binding CreateInvitationCommand}" ></ToolbarItem>
+        <ToolbarItem IconImageSource="add_white.png" Order="Primary"  Priority="0" Command ="{Binding CreateInvitationCommand }" ></ToolbarItem>
+        <ToolbarItem IconImageSource="search_white.png" Order="Primary" Command ="{Binding  SearchTerm }" ></ToolbarItem>
         <!--<ToolbarItem Name="Add Connection" Order="Primary" Text="Connect" Priority="0" Command ="{Binding ScanInviteCommand}"/>
         <ToolbarItem Name="CreateInvitation" Order="Secondary" Text="Create Invitation" ios:NavigationPage.PrefersLargeTitles="true" Priority="0" Command ="{Binding CreateInvitationCommand}"/>-->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
 
-            <Grid
+            <!--<Grid
                 Padding="20,5,20,20"
                 BackgroundColor="#252738">
                 <Frame 
@@ -44,14 +45,39 @@
                  Grid.Column="0"
                 Text="{Binding SearchTerm}" />
                 </Frame>
-            </Grid>
+            </Grid>-->
+
+            <StackLayout
+                Padding="0,8,0,0">
+                <Grid
+                    Padding="20,10,20,10"
+                    IsClippedToBounds="True"
+                    BackgroundColor="#C4C4C4">
+                    <Label
+                        Text="Text Binding for heading"
+                        FontSize="16"
+                        VerticalOptions="Center"
+                        FontAttributes="Bold"
+                        Grid.Column="0" />
+                    
+                    <Button ImageSource="filter_icon.png"
+                            BackgroundColor="#C4C4C4"
+                           Grid.Column="1"
+                           HorizontalOptions="EndAndExpand"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           >
+                    </Button>
+                </Grid>
+            </StackLayout>
 
             <components:SegmentedBarControl 
-                x:Name="segmentedBarControl"                                
+                Padding="0,20,0,0"
+                x:Name="segmentedBarControl"
                 AutoScroll="False"
                 TextColor="Black"
                 SelectedTextColor="DodgerBlue"
-                SelectedLineColor="DodgerBlue" >
+                SelectedLineColor="DodgerBlue">
                 <components:SegmentedBarControl.Behaviors>
                     <behaviours:EventToCommandBehavior 
                         EventName="SelectedItemChanged" 

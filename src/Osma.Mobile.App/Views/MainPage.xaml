@@ -29,11 +29,11 @@
     <proofRequests:ProofRequestsPage
         ios:NavigationPage.PrefersLargeTitles="False"
         BindingContext="{Binding ProofRequests}"
-        Icon="Request_icon2.png" />
-    <account:AccountPage 
+        Icon="request_icon.png" />
+    <!--<account:AccountPage 
         ios:NavigationPage.PrefersLargeTitles="False"
         BindingContext="{Binding Account}"
-        Icon="scan_icon.png" />
+        Icon="scan_icon.png" />-->
     <account:AccountPage
         ios:NavigationPage.PrefersLargeTitles="False"
         BindingContext="{Binding Account}"

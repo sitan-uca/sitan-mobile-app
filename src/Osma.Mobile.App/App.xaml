@@ -29,7 +29,7 @@
                     Value="{ StaticResource NavigationBarColor }" />
                 <Setter
                     Property="BarTextColor"
-                    Value="{ StaticResource NavigationBarTextColor }" />
+                    Value="{ StaticResource NavigationBarTextColor }"/>
             </Style>
 
             <Style

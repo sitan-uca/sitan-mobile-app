@@ -18,7 +18,7 @@
             FlowDirection="LeftToRight"
             HasShadow="False"
             HorizontalOptions="FillAndExpand"
-            Margin="20,0,180,0"
+            Margin="20,0,150,0"
             CornerRadius="6"
             >
             <Label Text="{Binding Text}"
@@ -30,7 +30,7 @@
             Rotation="180" 
             FontSize="Small"
             HorizontalTextAlignment="End"
-            Margin="20,10,0,0"
+            Margin="22,10,0,2"
             Text="{Binding CreatedAtUtc}" />
     </Grid>
 </ViewCell>
