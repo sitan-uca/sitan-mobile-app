@@ -73,7 +73,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 dialog.Dispose();
             }
 
-            //await NavigationService.RemoveLastFromBackStackAsync();
+            await NavigationService.RemoveLastFromBackStackAsync();
             await NavigationService.NavigateBackAsync();
         });
         #endregion

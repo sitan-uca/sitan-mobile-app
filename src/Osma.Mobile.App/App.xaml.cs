@@ -70,7 +70,7 @@ namespace Osma.Mobile.App
             XamarinHost.CreateDefaultBuilder<App>()
                 .ConfigureServices((_, services) =>
                 {
-                    services.AddAriesFramework(builder => builder.RegisterEdgeAgent<CustomAgent>(
+                    services.AddAriesFramework(builder => builder.RegisterEdgeAgent<SitanAgent>(
                         options: options =>
                         {
                             options.EndpointUri = "https://mediatoragentwin.azurewebsites.net";
@@ -84,7 +84,7 @@ namespace Osma.Mobile.App
                                         path2: ".indy_client",
                                         path3: "wallets")
                                 };
-                            options.WalletConfiguration.Id = "BaksakMobileWalletAlyNa";
+                            options.WalletConfiguration.Id = "BaksakMobileWallet";
                             //TODO Ask user for a wallet key during provisioning
                             options.WalletCredentials.Key = "SecretWalletKey";
                             options.AgentName = "Mobile Agent";
@@ -106,7 +106,8 @@ namespace Osma.Mobile.App
                         delayProvisioning: true));
                     
                     services.AddSingleton<IPoolConfigurator, PoolConfigurator>();
-                    services.AddSingleton<IWalletRecordService, BaksakWalletRecordService>();
+                    //services.AddSingleton<IWalletRecordService, BaksakWalletRecordService>();
+                    services.AddExtendedWalletRecordService<BaksakWalletRecordService>();
 
                     var containerBuilder = new ContainerBuilder();
                     containerBuilder.RegisterAssemblyModules(typeof(CoreModule).Assembly);

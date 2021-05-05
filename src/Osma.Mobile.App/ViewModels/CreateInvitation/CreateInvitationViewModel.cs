@@ -44,8 +44,7 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
             try
             {
                 var context = await _agentContextProvider.GetContextAsync();
-                var (invitation, _) = await _connectionService.CreateInvitationAsync(context);
-                //TODO Compare with web agent invitation generation and fix
+                var (invitation, _) = await _connectionService.CreateInvitationAsync(context);               
                 string barcodeValue = invitation.ServiceEndpoint + "?c_i=" + Uri.EscapeDataString(invitation.ToByteArray().ToBase64String());
                 string linkValue = invitation.ServiceEndpoint + "?c_i=" + invitation.ToJson().ToBase64();
                 QrCodeValue = barcodeValue;

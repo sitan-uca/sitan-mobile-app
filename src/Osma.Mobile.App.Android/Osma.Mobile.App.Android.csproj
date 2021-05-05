@@ -255,7 +255,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\scan_white.png" />
   </ItemGroup>
-
   <ItemGroup>
     <AndroidAsset Include="Assets\legal.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

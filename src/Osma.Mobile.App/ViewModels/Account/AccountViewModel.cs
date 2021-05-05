@@ -20,7 +20,7 @@ using System.Reactive.Linq;
 
 namespace Osma.Mobile.App.ViewModels.Account
 {
-    //TODO the image resources in the android package are missing. Populate them 
+    
     public class AccountViewModel : ABaseViewModel, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -86,7 +86,7 @@ namespace Osma.Mobile.App.ViewModels.Account
                 await NavigationService.NavigateToAsync<CreatePinAuthViewModel>();
         }
 
-        //TODO: this method crashes the app. Fix it
+        //TODO: the html page is not reteieved from resources
         public async Task NavigateToLegalPage()
         {
             var legalPage = new LegalPage();

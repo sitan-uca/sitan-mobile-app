@@ -90,12 +90,15 @@ namespace Osma.Mobile.App.Droid
             PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, PendingIntentFlags.UpdateCurrent);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
+                .SetAutoCancel(true)
                 .SetContentIntent(pendingIntent)
                 .SetContentTitle(title)
                 .SetContentText(message)
-                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.notification_icon_background))
-                .SetSmallIcon(Resource.Drawable.notification_icon_background)
-                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
+                .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.information))
+                .SetSmallIcon(Resource.Drawable.information)
+                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
+                .SetPriority((int)NotificationImportance.Max)
+                .SetCategory(NotificationCompat.CategoryMessage);
 
             Notification notification = builder.Build();
             manager.Notify(messageId++, notification);
@@ -108,7 +111,7 @@ namespace Osma.Mobile.App.Droid
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
                 var channelNameJava = new Java.Lang.String(channelName);
-                var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
+                var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Max)
                 {
                     Description = channelDescription
                 };

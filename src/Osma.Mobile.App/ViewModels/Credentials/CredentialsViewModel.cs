@@ -65,7 +65,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             var context = await _agentContextProvider.GetContextAsync();
             List<CredentialRecord> credentialsRecords = await _credentialService.ListAsync(context);
 
-#if DEBUG
+#if SMP_DEBUG
             credentialsRecords.Add(new CredentialRecord
             {
                 ConnectionId = Guid.NewGuid().ToString().ToLowerInvariant(),
@@ -97,7 +97,10 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             {
                 if (credentialRecord.State == CredentialState.Rejected)
                     continue;
-#if RELEASE
+#if SMP_DEBUG
+                CredentialViewModel credential = _scope.Resolve<CredentialViewModel>(new NamedParameter("credential", credentialRecord),
+                                                                                     new NamedParameter("connection", new ConnectionRecord()));
+#endif
                 var connection = await _connectionService.GetAsync(context, credentialRecord.ConnectionId);
                 if (connection == null)
                     continue;
@@ -105,10 +108,6 @@ namespace Osma.Mobile.App.ViewModels.Credentials
 
                 CredentialViewModel credential = _scope.Resolve<CredentialViewModel>(new NamedParameter("credential", credentialRecord),
                                                                                      new NamedParameter("connection", connection));
-#endif                                      
-                
-                CredentialViewModel credential = _scope.Resolve<CredentialViewModel>(new NamedParameter("credential", credentialRecord),
-                                                                                     new NamedParameter("connection", new ConnectionRecord()));
                 credentialsVms.Add(credential);
             }            
 

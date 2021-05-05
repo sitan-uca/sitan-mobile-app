@@ -21,10 +21,7 @@ namespace Osma.Mobile.App.Baksak
         private readonly IConnectionService _connectionService;
         private readonly IMessageService _messageService;
         private readonly IEventAggregator _eventAggregator;
-        private readonly INavigationService _navigationService;
-
-        private readonly WalletEventService _walletEventService = new WalletEventService();
-
+        private readonly INavigationService _navigationService;        
 
         /// <summary>Initializes a new instance of the <see cref="BaksakConnectionHandler"/> class.</summary>
         /// <param name="connectionService">The connection service.</param>
@@ -88,8 +85,7 @@ namespace Osma.Mobile.App.Baksak
                         else
                         {
                             //var (message, record) = await _connectionService.CreateResponseAsync(agentContext, connectionId);
-                            //messageContext.ContextRecord = record;
-                            _eventAggregator.Publish(new ApplicationEvent { Type = ApplicationEventType.ConnectionRequestReceived });                            
+                            //messageContext.ContextRecord = record;                            
                             
                             List<object> data = new List<object>();
                             data.Add(request);

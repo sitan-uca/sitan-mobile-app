@@ -92,13 +92,16 @@ namespace Osma.Mobile.App.ViewModels.Account
             }
 
             var mediaOptions = new PickMediaOptions { PhotoSize = PhotoSize.Medium };
-            var selectedImageFile = await CrossMedia.Current.PickPhotoAsync(mediaOptions);            
+            var selectedImageFile = await CrossMedia.Current.PickPhotoAsync(mediaOptions);
 
             //AgentImageSource = ImageSource.FromStream(() => selectedImageFile.GetStream());            
 
-            _provisioningRecord.Owner.ImageUrl = selectedImageFile.Path;
-            await _walletRecordService.UpdateAsync(context.Wallet, _provisioningRecord);
-            _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ProvisioningRecordUpdated });
+            if (selectedImageFile != null)
+            {
+                _provisioningRecord.Owner.ImageUrl = selectedImageFile.Path;
+                await _walletRecordService.UpdateAsync(context.Wallet, _provisioningRecord);
+                _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ProvisioningRecordUpdated });
+            }            
         }
 
         #region Bindable commands

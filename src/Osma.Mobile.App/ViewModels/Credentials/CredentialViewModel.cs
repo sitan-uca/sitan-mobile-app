@@ -49,7 +49,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             this._credential = credential;
             this._connection = connection;
 
-#if DEBUG
+#if SMP_DEBUG
             _credentialName = "Credential Name";
             _credentialImageUrl = "http://placekitten.com/g/200/200";
             _credentialSubtitle = "10/22/2017";
@@ -93,6 +93,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             CredentialSubtitle = _connection?.Alias.Name;
             CreatedAt = _credential.CreatedAtUtc?.ToLocalTime();
             CredentialState = _credential.State;
+            CredentialType = _credential.TypeName;
             _isNew = IsCredentialNew(_credential);
 
             if (_credential.CredentialAttributesValues != null)

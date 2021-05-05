@@ -16,11 +16,10 @@ using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(ScrollViewWithNotBar), typeof(ScrollViewWithNotBarRenderer))]
 namespace Osma.Mobile.App.Droid
-{
-    [Obsolete]
+{    
     public class ScrollViewWithNotBarRenderer : ScrollViewRenderer
 	{
-		//public ScrollViewWithNotBarRenderer() : base(Android.App.Application.Context) { }
+		public ScrollViewWithNotBarRenderer() : base(Android.App.Application.Context) { }
 
 		protected override void OnElementChanged(VisualElementChangedEventArgs e)
 		{
