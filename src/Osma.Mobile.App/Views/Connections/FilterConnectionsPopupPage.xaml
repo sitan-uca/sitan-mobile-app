@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Osma.Mobile.App.Views.Connections.FilterConnectionsPopupPage"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             x:Name="FilterPopupPage"
+             Title="Please enter agent name">
+
+    <pages:PopupPage.Animation>
+        <animations:MoveAnimation PositionIn="Bottom" PositionOut="Bottom"/>
+    </pages:PopupPage.Animation>
+    <Frame CornerRadius="20" HorizontalOptions="FillAndExpand" 
+            VerticalOptions="End"
+           BackgroundColor="White">
+        <StackLayout>
+            <StackLayout RadioButtonGroup.GroupName="connection-filters"
+                         RadioButtonGroup.SelectedValue="{Binding FilterValue, Source={Reference FilterPopupPage}}">
+                <Label Text="Filter Connections" FontSize="Medium" FontAttributes="Bold" />
+                <RadioButton Content="Connected" Value="Connected" />
+                <RadioButton Content="Invited" Value="Invited" />
+                <RadioButton Content="Negotiating" Value="Negotiating" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                <Button BackgroundColor="DodgerBlue" 
+                        CornerRadius="5"
+                        Text="Apply"
+                        TextColor="White" 
+                        Command="{Binding PrimaryCommand, Source={Reference FilterPopupPage}}"
+                        CommandParameter="{Binding FilterValue, Source={Reference FilterPopupPage}}"/>
+
+                <Button BackgroundColor="DodgerBlue" 
+                        CornerRadius="5"
+                        Text="Cancel"
+                        TextColor="White"
+                        Command="{Binding SecondaryCommand, Source={Reference FilterPopupPage}}" />
+            </StackLayout>
+        </StackLayout>
+        <Frame.GestureRecognizers>
+            <SwipeGestureRecognizer Direction="Down" Command="{Binding SecondaryCommand, Source={Reference FilterPopupPage}}" />
+        </Frame.GestureRecognizers>
+    </Frame>
+    
+</pages:PopupPage>

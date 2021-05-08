@@ -22,7 +22,7 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout
+            <!--<StackLayout
                 Padding="0,8,0,0">
                 <Grid
                     Padding="20,10,20,10"
@@ -45,9 +45,9 @@
                            >
                     </Button>
                 </Grid>
-            </StackLayout>
+            </StackLayout>-->
             
-            <components:SegmentedBarControl 
+            <!--<components:SegmentedBarControl 
                 x:Name="segmentedBarControl"                                
                 AutoScroll="True"
                 TextColor="Black"
@@ -59,14 +59,14 @@
                         Command="{Binding ProofsSubTabChange}"
                         Converter="{StaticResource SelectedItemConverter}" />
                 </components:SegmentedBarControl.Behaviors>
-            </components:SegmentedBarControl>
+            </components:SegmentedBarControl>-->
 
             <StackLayout
                 IsVisible="{Binding HasRequests}">
 
                 <ListView
                     HasUnevenRows="True"
-                    IsPullToRefreshEnabled="False"
+                    IsPullToRefreshEnabled="True"
                     IsRefreshing="{Binding RefreshingProofRequests}"
                     RefreshCommand="{Binding RefreshCommand}"
                     IsEnabled="{Binding RefreshingProofRequests, Converter={StaticResource BooleanInverse}}"
@@ -74,16 +74,17 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <components:DetailedCell
-                                Title="{Binding ProofRequestName}"
-                                ImageURL="{Binding ConnectionLogo}"
+                                Title="{Binding ProofRequestName}"         
+                                SwipeDeleteCommand="{Binding DeleteProofRequestCommand}"
+                                CellImageSource="{Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}"
                                 Subtitle="{Binding ConnectionName}" >
 
-                                <components:DetailedCell.ContextActions>
+                                <!--<components:DetailedCell.ContextActions>
                                     <MenuItem
                                         Text="Delete" 
                                         Command="{Binding DeleteProofRecord}" 
                                         CommandParameter="{Binding .}" />
-                                </components:DetailedCell.ContextActions>
+                                </components:DetailedCell.ContextActions>-->
                             </components:DetailedCell>
 
                         </DataTemplate>

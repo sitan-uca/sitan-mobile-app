@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
 
@@ -33,7 +34,7 @@ namespace Osma.Mobile.App.Views.Components
                 string TempUrl = string.Empty;
                 if (Device.RuntimePlatform == Device.Android)
                     //TODO Fix the problem (Could not find a part of the path)
-                    TempUrl = Path.Combine(url, "legal.html");
+                    TempUrl = Path.Combine(url, "Resources", "legal.html");
                     
                 else if (Device.RuntimePlatform == Device.iOS)
                     TempUrl = Path.Combine(url, "Resources", "legal");
@@ -44,7 +45,8 @@ namespace Osma.Mobile.App.Views.Components
                 string html;
                 try
                 {
-                    using (var sr = new StreamReader(new Uri(TempUrl).LocalPath))
+                    //using (var sr = new StreamReader(new Uri(TempUrl).LocalPath))
+                    using(var sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Osma.Mobile.App.Resources.legal.html")))
                     {
                         html = sr.ReadToEnd();
                         source.Html = html;

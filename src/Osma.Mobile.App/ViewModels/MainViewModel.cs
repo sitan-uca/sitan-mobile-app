@@ -3,14 +3,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Acr.UserDialogs;
+using Autofac;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
-using Osma.Mobile.App.Events;
-using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.ViewModels.Account;
 using Osma.Mobile.App.ViewModels.Connections;
@@ -29,6 +28,7 @@ namespace Osma.Mobile.App.ViewModels
         private readonly IEventAggregator _eventAggregator;
         private readonly IWalletRecordService _walletRecordService;
         private readonly IAgentProvider _agentContextProvider;
+        private readonly ILifetimeScope _lifetimeScope;
 
         public MainViewModel(
             IUserDialogs userDialogs,
@@ -36,11 +36,13 @@ namespace Osma.Mobile.App.ViewModels
             IEventAggregator eventAggregator,
             IAgentProvider agentContextProvider,
             IWalletRecordService walletRecordService,
+            ILifetimeScope lifetimeScope,
             ConnectionsViewModel connectionsViewModel,
             CredentialsViewModel credentialsViewModel,
             AccountViewModel accountViewModel,            
             CreateInvitationViewModel createInvitationViewModel,
-            ProofRequestsViewModel proofRequestsViewModel
+            ProofRequestsViewModel proofRequestsViewModel,
+            ScanInvitationViewModel scanInvitationViewModel
             ) : base(nameof(MainViewModel), userDialogs, navigationService)
         {
             Connections = connectionsViewModel;
@@ -48,9 +50,11 @@ namespace Osma.Mobile.App.ViewModels
             Account = accountViewModel;
             CreateInvitation = createInvitationViewModel;
             ProofRequests = proofRequestsViewModel;
+            ScanInvitation = scanInvitationViewModel;
             _eventAggregator = eventAggregator;
             _walletRecordService = walletRecordService;
-            _agentContextProvider = agentContextProvider;             
+            _agentContextProvider = agentContextProvider;
+            _lifetimeScope = lifetimeScope;
             //for prompting dialog on connection events
             //WalletEventService.Init(navigationService);
         }
@@ -62,10 +66,15 @@ namespace Osma.Mobile.App.ViewModels
             await Account.InitializeAsync(null);
             await CreateInvitation.InitializeAsync(null);
             await ProofRequests.InitializeAsync(null);
+            await ScanInvitation.InitializeAsync(null);
             InitializeNotificationEventListeners();
             await base.InitializeAsync(navigationData);
             if (Preferences.Get(AppConstant.PinAuthEnabled, false))
-                await NavigationService.NavigateToAsync<PinAuthViewModel>();           
+                await NavigationService.NavigateToAsync<PinAuthViewModel>();
+
+            //string[] passphrase = new string[] { "hello", "world", "this", "is", "the", "generated", "passphrase", "this", "is", "the" };
+            //var testVm = _lifetimeScope.Resolve<VerifyPasswordViewModel>(new NamedParameter("passwordArray", passphrase));
+            //await NavigationService.NavigateToAsync(testVm);
         }
 
         private void InitializeNotificationEventListeners()
@@ -78,7 +87,7 @@ namespace Osma.Mobile.App.ViewModels
                              _.MessageType == MessageTypes.IssueCredentialNames.OfferCredential ||
                              _.MessageType == MessageTypes.IssueCredentialNames.IssueCredential
                          )
-                         .Subscribe(_ => BuildNotification(_.MessageType, _.RecordId));           
+                         .Subscribe(_ => BuildNotification(_.MessageType, _.RecordId));            
         }
 
         private async void BuildNotification(string messageEvent, string recordId)
@@ -107,7 +116,7 @@ namespace Osma.Mobile.App.ViewModels
         {
             INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
             notificationManager.SendNotification(title, message);
-        }
+        }        
 
         #region Bindable Properties
 
@@ -144,6 +153,13 @@ namespace Osma.Mobile.App.ViewModels
         {
             get => _proofRequests;
             set => this.RaiseAndSetIfChanged(ref _proofRequests, value);
+        }
+
+        private ScanInvitationViewModel _scanInvitation;
+        public ScanInvitationViewModel ScanInvitation
+        {
+            get => _scanInvitation;
+            set => this.RaiseAndSetIfChanged(ref _scanInvitation, value);
         }
 
         #endregion

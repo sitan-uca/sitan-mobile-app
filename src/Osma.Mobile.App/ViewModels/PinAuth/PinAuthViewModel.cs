@@ -69,7 +69,7 @@ namespace Osma.Mobile.App.ViewModels.PinAuth
             }
             else
             {
-                await NavigationService.ExitAppAsync();
+                //await NavigationService.ExitAppAsync();
             }
             
         }

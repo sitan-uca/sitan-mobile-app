@@ -12,6 +12,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries;
+using Osma.Mobile.App.Converters;
 
 namespace Osma.Mobile.App.ViewModels.Connections
 {
@@ -48,6 +49,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             {
                 InviteTitle = $"Trust {invite.Label}?";
                 InviterUrl = invite.ImageUrl;
+                InviterImageSource = Base64StringToImageSource.Base64StringToImage(invite.ImageUrl);
                 InviteContents = $"{invite.Label} would like to establish a pairwise DID connection with you. This will allow secure communication between you and {invite.Label}.";
                 _invite = invite;
             }
@@ -66,7 +68,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 var (msg, rec) = await _connectionService.CreateRequestAsync(context, _invite);
                 //msg.Label = provisioningRecord.Owner.Name;                
                 //msg.ImageUrl = provisioningRecord.Owner.ImageUrl;
-                await _messageService.SendAsync(context.Wallet, msg, rec);
+                await _messageService.SendAsync(context, msg, rec);
 
                 _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
             }
@@ -101,6 +103,13 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             get => _inviterUrl;
             set => this.RaiseAndSetIfChanged(ref _inviterUrl, value);
+        }
+
+        private ImageSource _inviterImageSource;
+        public ImageSource InviterImageSource
+        {
+            get => _inviterImageSource;
+            set => this.RaiseAndSetIfChanged(ref _inviterImageSource, value);
         }
         #endregion
     }

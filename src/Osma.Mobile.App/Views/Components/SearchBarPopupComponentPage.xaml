@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                 x:Name="SearchPopupPage"                 
+                 x:Class="Osma.Mobile.App.Views.Components.SearchBarPopupComponentPage">
+    <pages:PopupPage.Animation>
+        <animations:MoveAnimation PositionIn="Top" PositionOut="Top"/>
+    </pages:PopupPage.Animation>
+    <Frame HorizontalOptions="FillAndExpand" 
+           VerticalOptions="Start"
+           Padding="0">
+        <Grid Padding="10,4,20,4"
+              BackgroundColor="#252738">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button ImageSource="left_arrow_white.png" 
+                    Grid.Column="0" 
+                    HeightRequest="30"
+                    WidthRequest="10"
+                    BackgroundColor="Transparent"
+                    Command="{Binding SecondaryCommand, Source={Reference SearchPopupPage}}" />
+            <Frame IsClippedToBounds="True"
+                   Grid.Column="1"
+                   CornerRadius="25"
+                   Padding="0,0,20,0">
+                <SearchBar x:Name="searchBar"
+                           BackgroundColor="#fff"
+                           Placeholder="Search"
+                           FontAttributes="Italic"
+                           FontSize="14"
+                           Grid.Row="0" 
+                           Grid.Column="0"
+                           Text="{Binding SearchTermAttr, Source={Reference SearchPopupPage}}" 
+                           
+                />
+            </Frame>
+            <!--<Button ImageSource="search_white.png" 
+                    Grid.Column="2" 
+                    BackgroundColor="Transparent"
+                    Command="{Binding PrimaryCommand, Source={Reference SearchPopupPage}}"
+                    CommandParameter="{Binding SearchTerm, Source={Reference SearchPopupPage}}"/>-->
+        </Grid>
+    </Frame>
+</pages:PopupPage>

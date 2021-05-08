@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:Osma.Mobile.App.Converters;assembly=Osma.Mobile.App"
              xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              x:Class="Osma.Mobile.App.Views.Connections.AcceptRequestPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -27,8 +28,12 @@
                     VerticalOptions="FillAndExpand"
                     FadeAnimationEnabled="true"
                     DownsampleUseDipUnits="true"
-                    Source="{ Binding RequesterUrl }"
-                    Aspect="Fill"/>
+                    Source="{Binding RequesterImageSource, TargetNullValue='profile_icon_grey.jpg'}"
+                    Aspect="Fill">
+                    <forms:CachedImage.Transformations>
+                        <fftransformations:CircleTransformation />
+                    </forms:CachedImage.Transformations>
+                </forms:CachedImage>
             </StackLayout>
             <StackLayout
                 Grid.Row="1"

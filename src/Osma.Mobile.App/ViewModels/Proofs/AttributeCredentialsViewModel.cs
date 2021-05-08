@@ -3,18 +3,20 @@ using Hyperledger.Aries.Features.IssueCredential;
 using Osma.Mobile.App.Extensions;
 using Osma.Mobile.App.Services.Interfaces;
 using ReactiveUI;
+using Xamarin.Forms;
 
 namespace Osma.Mobile.App.ViewModels.Proofs
 {
     public class AttributeCredentialsViewModel : ABaseViewModel
     {
         private readonly IUserDialogs userDialogs;
-        private readonly INavigationService navigationService;
-        private bool _selected;
-        string _credentialName;
-        string _credentialConnection = string.Empty;
+        private readonly INavigationService navigationService;                        
 
         public Credential Credential { get; }
+        public string Referent { get; }
+        public string AttributeName { get; set; }
+
+        string _credentialName;
         public string CredentialName
         {
             get => _credentialName;
@@ -24,6 +26,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             }
         }
 
+        string _credentialConnection = string.Empty;
         public string CredentialConnection
         {
             get => _credentialConnection;
@@ -32,8 +35,28 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                 this.RaiseAndSetIfChanged(ref _credentialConnection, value);
             }
         }
-        public string AttributeName { get; set; }
 
+        string _credentialConnectionImageUrl = string.Empty;
+        public string CredentialConnectionImageUrl
+        {
+            get => _credentialConnectionImageUrl;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _credentialConnectionImageUrl, value);
+            }
+        }
+
+        ImageSource _credentialConnectionImageSource;
+        public ImageSource CredentialConnectionImageSource
+        {
+            get => _credentialConnectionImageSource;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _credentialConnectionImageSource, value);
+            }
+        }
+
+        private bool _selected;
         public bool Selected
         {
             get => _selected;
@@ -43,8 +66,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             }
         }
 
-        public string Referent { get; }
-
+        
         public AttributeCredentialsViewModel(IUserDialogs userDialogs,
                                              INavigationService navigationService,
                                              Credential credential,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -89,7 +90,8 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             }
             catch (Exception xx)
             {
-                
+                await UserDialogs.Instance.AlertAsync(xx.Message);
+                Debug.WriteLine(xx.StackTrace);
             }
             finally
             {

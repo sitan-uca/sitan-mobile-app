@@ -1,13 +1,20 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ViewCell xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Osma.Mobile.App.Views.Connections.OutgoingMsgViewCell">
+          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+          xmlns:converters="clr-namespace:Osma.Mobile.App.Converters;assembly=Osma.Mobile.App" 
+          x:Class="Osma.Mobile.App.Views.Connections.OutgoingMsgViewCell">
+    
     <Grid RowSpacing="1">
+        <Grid.Resources>
+            <ResourceDictionary>
+                <converters:UtcToLocalDateTimeConverter x:Key="UtcToLocalDateTimeConverter" />
+            </ResourceDictionary>
+        </Grid.Resources>
         <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
            
         </Grid.ColumnDefinitions>-->
-            <Grid.RowDefinitions>
+        <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -17,9 +24,9 @@
             Rotation="180"
             FlowDirection="LeftToRight"
             HasShadow="False"
-            HorizontalOptions="FillAndExpand"
-            Margin="20,0,150,0"
-            CornerRadius="6"
+            HorizontalOptions="EndAndExpand"
+            Margin="20,0,100,0"
+            CornerRadius="6"               
             >
             <Label Text="{Binding Text}"
                   TextColor="#000"
@@ -31,6 +38,9 @@
             FontSize="Small"
             HorizontalTextAlignment="End"
             Margin="22,10,0,2"
-            Text="{Binding CreatedAtUtc}" />
+            Text="{Binding CreatedAtUtc, 
+                        StringFormat='{0:d MMMM, HH:mm}',
+                        Converter={StaticResource UtcToLocalDateTimeConverter}}" 
+            />
     </Grid>
 </ViewCell>

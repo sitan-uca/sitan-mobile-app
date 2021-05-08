@@ -23,12 +23,23 @@
                 HorizontalOptions="Center"
                 Text="UCA DIGITAL WALLET 2021"
                 TextColor="#C4C4C4"></Label>
+            
+            <Entry x:Name="nameEntry" Placeholder="Your Wallet Agent Name" />
             <Button 
                 BackgroundColor="#00d974"
                 VerticalOptions="Center"
                 Text="Create Wallet"
                 TextColor="#252738"
-                Command="{Binding CreateWalletCommand}"/>
+                IsEnabled="True"
+                Command="{Binding CreateWalletCommand}" >
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Source={x:Reference nameEntry}, Path=Text.Length}"                                
+                                 Value="0">
+                        <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
         </StackLayout>
     </ContentPage.Content> 
 </ContentPage>

@@ -13,14 +13,47 @@
 >
     <ContentPage.Content>
         <StackLayout
-            Padding="15,20,15,0">
+            Padding="15,0,15,0">
             <TableView HasUnevenRows="true" Intent="Menu">
                 <TableSection>
-                    <components:DetailedCell
-                        Title="{Binding FullName}"
-                        ImageURL="{Binding AvatarUrl}" 
+                    <!--<components:DetailedCell
+                        Title="{Binding FullName}"                  
+                        CellImageSource="{Binding AgentImageSource, TargetNullValue='profile_icon_grey.jpg'}"
                         TappedCommand="{Binding ProfileInfoTapped}"
-                    />
+                    />-->
+                    <ViewCell>
+                        <Grid Padding="10, 20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ffimageloading:CachedImage                                                                                                
+                                Grid.Column="0"
+                                Aspect="Fill"
+                                DownsampleUseDipUnits="true"
+                                FadeAnimationEnabled="False"
+                                HeightRequest="60"
+                                VerticalOptions="Center"
+                                WidthRequest="60"
+                                Source="{Binding AgentImageSource, TargetNullValue='profile_icon_grey.jpg'}">
+                                <ffimageloading:CachedImage.Transformations>
+                                    <fftransformations:CircleTransformation />
+                                </ffimageloading:CachedImage.Transformations>
+                            </ffimageloading:CachedImage>
+                            <Label                                                                                                
+                                Grid.Column="1"
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                Padding="6,0,0,0"
+                                VerticalOptions="Center" 
+                                Text="{Binding FullName}"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToProfile}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                        
+                    </ViewCell>
+                    
                 </TableSection>
                 <TableSection>
                     <account:AccountMenuButtonView

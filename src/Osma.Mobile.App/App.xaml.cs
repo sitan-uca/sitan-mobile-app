@@ -74,8 +74,6 @@ namespace Osma.Mobile.App
                         options: options =>
                         {
                             options.EndpointUri = "https://mediatoragentwin.azurewebsites.net";
-                            //options.EndpointUri = "https://fast-warthog-93.loca.lt";
-
                             options.WalletConfiguration.StorageConfiguration =
                                 new WalletConfiguration.WalletStorageConfiguration
                                 {
@@ -151,6 +149,8 @@ namespace Osma.Mobile.App
             _navigationService.AddPageViewModelBinding<ConnectionDetailsViewModel, ConnectionDetailsPage>();
             _navigationService.AddPageViewModelBinding<ProfileViewModel, ProfilePage>();            
             _navigationService.AddPopupViewModelBinding<ProfileNamePopupViewModel, ProfileNamePopupPage>();
+            _navigationService.AddPageViewModelBinding<VerifyPasswordViewModel, VerifyPasswordPage>();
+            _navigationService.AddPageViewModelBinding<ScanInvitationViewModel, ScanInvitationPage>();
             //_navigationService.AddPageViewModelBinding<ProofsViewModel, ProofsPage>();
 
             if (Preferences.Get(AppConstant.LocalWalletProvisioned, false))

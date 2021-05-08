@@ -1,4 +1,5 @@
-﻿using Osma.Mobile.App.ViewModels.Account;
+﻿using Osma.Mobile.App.Services.Interfaces;
+using Osma.Mobile.App.ViewModels.Account;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,6 @@ namespace Osma.Mobile.App.Views.Account
         {
             var vm = (AccountViewModel)BindingContext;
             vm.NotifySwitchToggle.Execute(null);
-        }        
+        }       
     }
 }

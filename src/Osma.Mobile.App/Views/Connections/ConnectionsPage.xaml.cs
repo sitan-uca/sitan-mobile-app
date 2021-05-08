@@ -12,8 +12,8 @@ namespace Osma.Mobile.App.Views.Connections
 		{
 			InitializeComponent();
 
-			var segmentedBarTabs = new List<string>() { nameof(ConnectionState.Connected), nameof(ConnectionState.Invited), nameof(ConnectionState.Negotiating) };
-			segmentedBarControl.Children = segmentedBarTabs;
+			//var segmentedBarTabs = new List<string>() { nameof(ConnectionState.Connected), nameof(ConnectionState.Invited), nameof(ConnectionState.Negotiating) };
+			//segmentedBarControl.Children = segmentedBarTabs;
 		}
 	}
 }

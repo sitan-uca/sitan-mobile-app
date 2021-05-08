@@ -1,8 +1,10 @@
 ﻿using Acr.UserDialogs;
 using Hyperledger.Aries.Agents;
+using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.Discovery;
+using Osma.Mobile.App.Converters;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Services.Interfaces;
 using ReactiveUI;
@@ -22,6 +24,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
         private readonly IEventAggregator _eventAggregator;
         private readonly IDiscoveryService _discoveryService;
         private readonly IConnectionService _connectionService;
+        private readonly IProvisioningService _provisioningService;
         private string _connectionId;
 
         public ConnectionDetailsViewModel(
@@ -31,7 +34,8 @@ namespace Osma.Mobile.App.ViewModels.Connections
             IMessageService messageService,
             IEventAggregator eventAggregator,
             IDiscoveryService discoveryService,
-            IConnectionService connectionService
+            IConnectionService connectionService,
+            IProvisioningService provisioningService
             ) : base(
                 nameof(ConnectionDetailsViewModel),
                 userDialogs,
@@ -43,6 +47,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             _discoveryService = discoveryService;
             _connectionService = connectionService;
             _eventAggregator = eventAggregator;
+            _provisioningService = provisioningService;
         }
 
         public override async Task InitializeAsync(object navigationData)
@@ -50,10 +55,9 @@ namespace Osma.Mobile.App.ViewModels.Connections
             _connectionId = navigationData.ToString();
             var context = await _agentContextProvider.GetContextAsync();
             var con = await _connectionService.GetAsync(context, _connectionId);
-
+            
             MyDid = con.MyDid;
-            TheirDid = con.TheirDid;
-
+            TheirDid = con.TheirDid;            
             await base.InitializeAsync(navigationData);
         }
 
@@ -106,6 +110,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             get => _connectionImageUrl;
             set => this.RaiseAndSetIfChanged(ref _connectionImageUrl, value);
         }
+        
         #endregion
     }
 }

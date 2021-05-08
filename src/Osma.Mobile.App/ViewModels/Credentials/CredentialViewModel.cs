@@ -15,6 +15,7 @@ using Osma.Mobile.App.Events;
 using Hyperledger.Aries.Contracts;
 using Osma.Mobile.App.Extensions;
 using System.Collections.Generic;
+using Osma.Mobile.App.Converters;
 
 namespace Osma.Mobile.App.ViewModels.Credentials
 {
@@ -90,6 +91,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
 
             CredentialName = _credential.SchemaId.ToCredentialName();
             CredentialImageUrl = _connection?.Alias.ImageUrl;
+            CredentialImageSource = Base64StringToImageSource.Base64StringToImage(_connection?.Alias.ImageUrl);
             CredentialSubtitle = _connection?.Alias.Name;
             CreatedAt = _credential.CreatedAtUtc?.ToLocalTime();
             CredentialState = _credential.State;
@@ -129,7 +131,7 @@ namespace Osma.Mobile.App.ViewModels.Credentials
                 var context = await agentContextProvider.GetContextAsync();
 
                 var (request, _) = await credentialService.CreateRequestAsync(context, _credential.Id);
-                await messageService.SendAsync(context.Wallet, request, _connection);
+                await messageService.SendAsync(context, request, _connection);
 
                 eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.CredentialsUpdated });
                 await NavigationService.PopModalAsync();
@@ -172,6 +174,27 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             }
         }
 
+        private async Task DeleteCredential()
+        {
+            var res = await UserDialogs.Instance
+                .ConfirmAsync($"You are about to delete '{CredentialName}'. Are you sure?", "Delete credential", "Delete", "Cancel");
+            if (res)
+            {
+                var dialog = DialogService.Loading("Deleting");
+                var context = await agentContextProvider.GetContextAsync();
+
+                await credentialService.DeleteCredentialAsync(context, _credential.Id);
+
+                eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.CredentialsUpdated });
+
+                if (dialog.IsShowing)
+                {
+                    dialog.Hide();
+                    dialog.Dispose();
+                }
+            }
+        }
+
 #region Bindable Command
 
         public ICommand NavigateBackCommand => new Command(async () =>
@@ -181,6 +204,8 @@ namespace Osma.Mobile.App.ViewModels.Credentials
 
         public ICommand AcceptCredentialCommand => new Command(async () => await AcceptCredential());
         public ICommand RejectCredentialCommand => new Command(async () => await RejectCredential());
+
+        public ICommand DeleteCredentialCommand => new Command(async () => await DeleteCredential());
 
 #endregion
 
@@ -205,6 +230,13 @@ namespace Osma.Mobile.App.ViewModels.Credentials
         {
             get => _credentialImageUrl;
             set => this.RaiseAndSetIfChanged(ref _credentialImageUrl, value);
+        }
+
+        private ImageSource _credentialImageSource;
+        public ImageSource CredentialImageSource
+        {
+            get => _credentialImageSource;
+            set => this.RaiseAndSetIfChanged(ref _credentialImageSource, value);
         }
 
         private string _credentialSubtitle;
