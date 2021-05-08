@@ -16,7 +16,7 @@ using Xamarin.Forms;
 
 namespace Osma.Mobile.App.Droid
 {
-    [Activity(Label = "Sitan", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, 
+    [Activity(Label = "Sitan", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = false, 
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]
     public partial/*GORILLA*/class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {

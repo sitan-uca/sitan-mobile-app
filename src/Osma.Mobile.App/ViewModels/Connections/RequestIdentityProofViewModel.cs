@@ -118,7 +118,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             };
 
             var (request, _) = await _proofService.CreateRequestAsync(context, proofRequestObject, _connectionRecord.Id);
-            await _messageService.SendAsync(context.Wallet, request, _connectionRecord);
+            await _messageService.SendAsync(context, request, _connectionRecord);
         }
 
         #region Bindable Command

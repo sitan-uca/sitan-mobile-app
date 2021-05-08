@@ -12,6 +12,7 @@ using ReactiveUI;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Osma.Mobile.App.Events;
+using Osma.Mobile.App.Converters;
 
 namespace Osma.Mobile.App.ViewModels.Connections
 {
@@ -23,8 +24,8 @@ namespace Osma.Mobile.App.ViewModels.Connections
         private readonly IAgentProvider _contextProvider;
         private readonly IEventAggregator _eventAggregator;
 
-        private ConnectionResponseMessage _responseMessage;
-        private ConnectionRecord _record;
+        //private ConnectionResponseMessage _responseMessage;
+        //private ConnectionRecord _record;
         private string _connectionId;
 
         public AcceptRequestViewModel(IUserDialogs userDialogs,
@@ -56,6 +57,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 
                 RequestTitle = $"Trust {request.Label}?";
                 RequesterUrl = request.ImageUrl;
+                RequesterImageSource = Base64StringToImageSource.Base64StringToImage(request.ImageUrl);
                 RequestContents = $"{request.Label} would like to establish a pairwise DID connection with you. This will allow secure communication between you and {request.Label}.";
             }   
             return base.InitializeAsync(navigationData);
@@ -71,7 +73,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             {
                 var (message, record) = await _connectionService.CreateResponseAsync(context, _connectionId);
                 //messageContext.ContextRecord = record;            
-                await _messageService.SendAsync(context.Wallet, message, record);          
+                await _messageService.SendAsync(context, message, record);          
                 _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
             } 
             catch (Exception ex)
@@ -109,6 +111,13 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             get => _requesterUrl;
             set => this.RaiseAndSetIfChanged(ref _requesterUrl, value);
+        }
+
+        private ImageSource _requesterImageSource;
+        public ImageSource RequesterImageSource
+        {
+            get => _requesterImageSource;
+            set => this.RaiseAndSetIfChanged(ref _requesterImageSource, value);
         }
         #endregion
     }

@@ -6,6 +6,7 @@ using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Features.PresentProof;
 using Newtonsoft.Json;
+using Osma.Mobile.App.Converters;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Extensions;
 using Osma.Mobile.App.Services.Interfaces;
@@ -63,11 +64,13 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             this.proofRecord = proofRecord;
             this.connection = connection;
             ConnectionLogo = connection?.Alias.ImageUrl;
+            ConnectionImageSource = Base64StringToImageSource.Base64StringToImage(connection?.Alias.ImageUrl);
             ConnectionName = connection?.Alias.Name ?? "Scanned Presentation Request";
             ProofRequest = JsonConvert.DeserializeObject<ProofRequest>(proofRecord.RequestJson);
             ProofRequestName = ProofRequest?.Name;
             RequestedAttributes = new ObservableCollection<ProofRequestAttributeViewModel>();
             HasLogo = !string.IsNullOrWhiteSpace(ConnectionLogo);
+            HasAttributes = ProofRequest.RequestedAttributes != null ? ProofRequest.RequestedAttributes.Any() : false;
             ActionRequired = proofRecord.State == ProofState.Requested;
         }
 
@@ -98,9 +101,10 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             this.requestPresentationMessage = requestPresentationMessage;
             ConnectionName = "Scanned Presentation Request";
             ProofRequest = proofRequest;
-            ProofRequestName = ProofRequest?.Name;
+            ProofRequestName = ProofRequest?.Name ?? requestPresentationMessage?.Type;
             RequestedAttributes = new ObservableCollection<ProofRequestAttributeViewModel>();
             HasLogo = !string.IsNullOrWhiteSpace(ConnectionLogo);
+            HasAttributes = proofRequest.RequestedAttributes != null ? proofRequest.RequestedAttributes.Any() : false;
             ActionRequired = true;
         }
 
@@ -136,14 +140,14 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                         new NamedParameter("referent", requestedAttribute.Key)
                     );
 
-                    RequestedAttributes.Add(attribute);                    
-                }                
+                    RequestedAttributes.Add(attribute);
+                }
 
                 //TODO: Implement Predicate and Restrictions related functionlity
             }
             catch (Exception xx)
             {
-
+                DialogService.Alert(xx.Message);
             }
         }
 
@@ -179,7 +183,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                     else
                     {
                         var (proofMsg, holderRecord) = await proofService.CreatePresentationAsync(context, proofRecord.Id, requestedCredentials);
-                        await messageService.SendAsync(context.Wallet, proofMsg, connection);
+                        await messageService.SendAsync(context, proofMsg, connection);
                     }
 
                 }
@@ -235,9 +239,9 @@ namespace Osma.Mobile.App.ViewModels.Proofs
 
         async Task VerifyProof()
         {
-            var dialog = UserDialogs.Instance.Loading("Verifying");            
+            var dialog = UserDialogs.Instance.Loading("Verifying");
             try
-            {                
+            {
                 var context = await agentContextProvider.GetContextAsync();
                 bool success = await proofService.VerifyProofAsync(context, proofRecord.Id);
                 if (dialog.IsShowing)
@@ -251,7 +255,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                         "Verified" :
                         "Failed"
                     );
-            } 
+            }
             catch (Exception ex)
             {
                 if (dialog.IsShowing)
@@ -259,9 +263,28 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                     dialog.Hide();
                     dialog.Dispose();
                 }
-                
+
                 DialogService.Alert(ex.Message);
-            }                      
+            }
+        }
+
+        private async Task DeleteProofRequest()
+        {
+            var res = await UserDialogs.Instance
+                .ConfirmAsync($"You are about to reject and delete '{ProofRequestName}'. Are you sure?", "Delete credential", "Reject and Delete", "Cancel");
+            if (res)
+            {                
+                IsBusy = true;
+                var agentContext = await agentContextProvider.GetContextAsync();
+                string id = proofRecord?.Id;
+                if (id != null)
+                {
+                    await proofService.RejectProofRequestAsync(agentContext, id);
+                    eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.RefreshProofRequests });
+                }
+
+                IsBusy = false;
+            }
         }
 
         #region Commands
@@ -277,6 +300,8 @@ namespace Osma.Mobile.App.ViewModels.Proofs
 
             await NavigationService.NavigateToAsync(attribute);
         });
+
+        public ICommand DeleteProofRequestCommand => new Command(async () => await DeleteProofRequest());
 
         #endregion
 
@@ -304,6 +329,13 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             set => this.RaiseAndSetIfChanged(ref _connectionName, value);
         }
 
+        private ImageSource _connectionImageSource;
+        public ImageSource ConnectionImageSource
+        {
+            get => _connectionImageSource;
+            set => this.RaiseAndSetIfChanged(ref _connectionImageSource, value);
+        }
+
         string _proofRequestName;
         public string ProofRequestName
         {
@@ -324,6 +356,13 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         {
             get => _requestedAttributes;
             set => this.RaiseAndSetIfChanged(ref _requestedAttributes, value);
+        }
+
+        private bool _hasAttributes;
+        public bool HasAttributes
+        {
+            get => _hasAttributes;
+            set => this.RaiseAndSetIfChanged(ref _hasAttributes, value);
         }
 
 

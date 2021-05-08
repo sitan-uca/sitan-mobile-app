@@ -18,7 +18,7 @@ namespace Osma.Mobile.App.Views.Proofs
             InitializeComponent();
 
             var segmentedBarTabs = new List<string>() { nameof(ProofState.Requested), nameof(ProofState.Accepted), nameof(ProofState.Proposed)};
-            segmentedBarControl.Children = segmentedBarTabs;
+            //segmentedBarControl.Children = segmentedBarTabs;
         }
     }
 }

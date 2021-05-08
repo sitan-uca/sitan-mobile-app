@@ -18,7 +18,10 @@ using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.Utilities;
 using Osma.Mobile.App.ViewModels.CreateInvitation;
+using Osma.Mobile.App.Views.Components;
+using Osma.Mobile.App.Views.Connections;
 using ReactiveUI;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
@@ -47,11 +50,17 @@ namespace Osma.Mobile.App.ViewModels.Connections
             _agentContextProvider = agentContextProvider;
             _eventAggregator = eventAggregator;
             _provisioningService = provisioningService;
-            _scope = scope;            
+            _scope = scope;
+            _selectedConnectionsFilter = nameof(ConnectionState.Connected);
+            _searchTermIsEmpty = string.IsNullOrWhiteSpace(_searchTerm) || string.IsNullOrEmpty(_searchTerm);
+
+            //this.WhenAnyValue(x => x.SearchTerm)
+            //            .Throttle(TimeSpan.FromMilliseconds(200))
+            //            .InvokeCommand(RefreshCommand);
         }
 
         public override async Task InitializeAsync(object navigationData)
-        {            
+        {
             await RefreshConnections();
 
             _eventAggregator.GetEventByType<ApplicationEvent>()
@@ -62,20 +71,25 @@ namespace Osma.Mobile.App.ViewModels.Connections
         }
 
 
-        public async Task RefreshConnections(string tab = null)
+        public async Task RefreshConnections()
         {
-            RefreshingConnections = true;
+            RefreshingConnections = true;            
 
             var context = await _agentContextProvider.GetContextAsync();
             IList<ConnectionViewModel> connectionVms = new List<ConnectionViewModel>();
             List<ConnectionRecord> records = null;
-            
-            if (tab == null || tab.Equals(nameof(ConnectionState.Connected)))
-                records = await _connectionService.ListConnectedConnectionsAsync(context);
-            else if (tab.Equals(nameof(ConnectionState.Negotiating)))
-                records = await _connectionService.ListNegotiatingConnectionsAsync(context);
-            else if (tab.Equals(nameof(ConnectionState.Invited)))
-                records = await _connectionService.ListInvitedConnectionsAsync(context);          
+            switch (SelectedConnectionsFilter)
+            {
+                case nameof(ConnectionState.Connected):
+                    records = await _connectionService.ListConnectedConnectionsAsync(context);
+                    break;
+                case nameof(ConnectionState.Negotiating):
+                    records = await _connectionService.ListNegotiatingConnectionsAsync(context);
+                    break;
+                case nameof(ConnectionState.Invited):
+                    records = await _connectionService.ListInvitedConnectionsAsync(context);
+                    break;
+            }
 
             foreach (var record in records)
             {
@@ -86,12 +100,25 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 connectionVms.Add(connection);
             }
 
+            IList<ConnectionViewModel> filteredConnectionsVms = FilterConnectionsSearchTerm(SearchTerm, connectionVms);
+
             //TODO need to compare with the currently displayed connections rather than disposing all of them
             Connections.Clear();
-            Connections.InsertRange(connectionVms);
-            HasConnections = connectionVms.Any();
+            Connections.InsertRange(filteredConnectionsVms);
+            HasConnections = filteredConnectionsVms.Any();
 
             RefreshingConnections = false;
+        }
+
+        private IList<ConnectionViewModel> FilterConnectionsSearchTerm(string term, IList<ConnectionViewModel> connections)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+            {
+                return connections;
+            }
+            // Basic search
+            var filtered = connections.Where(connectionViewModel => connectionViewModel.ConnectionName.ToLower().Contains(term.ToLower())).ToList();
+            return filtered;
         }
 
         public async Task ScanInvite()
@@ -123,7 +150,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             });
         }
 
-        public async Task SelectConnection(ConnectionViewModel connection) => await NavigationService.NavigateToAsync(connection);       
+        public async Task SelectConnection(ConnectionViewModel connection) => await NavigationService.NavigateToAsync(connection);
 
         #region Bindable Command
         public ICommand RefreshCommand => new Command(async () => await RefreshConnections());
@@ -138,10 +165,43 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 await SelectConnection(connection);
         });
 
-        public ICommand ConnectionSubTabChange => new Command<object>(async (tab) =>
+        //public ICommand ConnectionSubTabChange => new Command<object>(async (tab) =>
+        //{
+        //await UserDialogs.Instance.AlertAsync($"{tab}");
+        //await RefreshConnections(tab.ToString());
+        //});
+
+        public ICommand FilterConnections => new Command(async () =>
         {
-            //await UserDialogs.Instance.AlertAsync($"{tab}");
-            await RefreshConnections(tab.ToString());
+            await PopupNavigation.Instance.PushAsync(new FilterConnectionsPopupPage
+            {
+                FilterValue = SelectedConnectionsFilter,
+                PrimaryCommand = new Command(async (filterValue) =>
+                {
+                    SelectedConnectionsFilter = !string.IsNullOrEmpty(filterValue?.ToString()) ? filterValue.ToString() : _selectedConnectionsFilter;
+                    await RefreshConnections();
+                    await PopupNavigation.Instance.PopAsync();
+                }),
+                SecondaryCommand = new Command(async () => await PopupNavigation.Instance.PopAsync())
+            });
+        });
+
+        public ICommand ToolbarSearchCommand => new Command(async () =>
+        {
+            await PopupNavigation.Instance.PushAsync(new SearchBarPopupComponentPage
+            {
+                SearchTermAttr = SearchTerm,
+                //PrimaryCommand = new Command((searchTerm) =>
+                //{
+                //    SearchTerm = searchTerm?.ToString();
+                //}),
+                SecondaryCommand = new Command(async () => await PopupNavigation.Instance.PopAsync()),
+                OnTextChangedEvent = async (sender, e) => 
+                {
+                    SearchTerm = e.NewTextValue;
+                    await RefreshConnections();
+                }
+            });
         });        
 
         #endregion
@@ -166,7 +226,32 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             get => _refreshingConnections;
             set => this.RaiseAndSetIfChanged(ref _refreshingConnections, value);
-        }       
+        }
+
+        private string _selectedConnectionsFilter;
+        public string SelectedConnectionsFilter
+        {
+            get => _selectedConnectionsFilter;
+            set => this.RaiseAndSetIfChanged(ref _selectedConnectionsFilter, value);
+        }
+
+        private string _searchTerm;
+        public string SearchTerm
+        {
+            get => _searchTerm;
+            set 
+            {
+                this.RaiseAndSetIfChanged(ref _searchTerm, value);
+                SearchTermIsEmpty = string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value);
+            }
+        }
+
+        private bool _searchTermIsEmpty;
+        public bool SearchTermIsEmpty
+        {
+            get => _searchTermIsEmpty;
+            set => this.RaiseAndSetIfChanged(ref _searchTermIsEmpty, value);
+        }
 
         #endregion
     }

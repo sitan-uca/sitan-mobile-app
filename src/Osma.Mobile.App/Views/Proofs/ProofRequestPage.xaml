@@ -20,39 +20,77 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Padding="20, 10">
 
             <ffimageloading:CachedImage
                 Aspect="AspectFill"
                 HeightRequest="100"
                 HorizontalOptions="Center"
-                IsVisible="False"
-                Source="{Binding ConnectionLogo}"
+                IsVisible="True"
+                Source="{Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}"
                 VerticalOptions="Center"
                 WidthRequest="150">
-                <ffimageloading:CachedImage.Triggers>
+                <!--<ffimageloading:CachedImage.Triggers>
                     <DataTrigger
                         Binding="{Binding HasLogo}"
                         TargetType="ffimageloading:CachedImage"
                         Value="True">
                         <Setter Property="IsVisible" Value="True" />
                     </DataTrigger>
-                </ffimageloading:CachedImage.Triggers>
+                </ffimageloading:CachedImage.Triggers>-->
             </ffimageloading:CachedImage>
 
             <Label
                 FontAttributes="Bold"
                 FontSize="Medium"
                 HorizontalOptions="Center"
-                Text="{Binding ProofRequestName}" />
+                Text="{Binding ProofRequestName, TargetNullValue='Request Name missing'}" />
             <Label
                 FontSize="Default"
                 HorizontalOptions="Center"
                 Text="{Binding ConnectionName}" />
-            <ListView HasUnevenRows="True" ItemsSource="{Binding RequestedAttributes}">
+            <ListView HasUnevenRows="True" 
+                      IsVisible="{Binding HasAttributes}"
+                      ItemsSource="{Binding RequestedAttributes}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <components:DetailedCell Title="{Binding AttributeName}" Subtitle="{Binding AttributeReferent}" />
+                        <!--<components:DetailedCell Title="{Binding AttributeName}" Subtitle="{Binding AttributeReferent}" />-->
+                        <ViewCell>
+                            <Grid Padding="0, 10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       Text="{Binding AttributeName}"
+                                       />
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontAttributes="Italic"
+                                       FontSize="12"
+                                       Text="{Binding RevealedAttributeValue, TargetNullValue='Credential not selected'}"
+                                       />
+                                <ffimageloading:CachedImage Grid.Row="0"
+                                                            Grid.Column="1"
+                                                            Grid.RowSpan="2"
+                                                            HorizontalOptions="Center"
+                                                            Source="{Binding SelectedCredentialConnectionImageSource}"
+                                                            HeightRequest="15"
+                                                            WidthRequest="15"
+                                                            >
+                                    <ffimageloading:CachedImage.Transformations>
+                                        <fftransformations:CircleTransformation />
+                                    </ffimageloading:CachedImage.Transformations>
+                                </ffimageloading:CachedImage>
+                            </Grid>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.Behaviors>
@@ -63,11 +101,17 @@
                         EventName="ItemSelected" />
                 </ListView.Behaviors>
             </ListView>
+            <StackLayout IsVisible="{Binding HasAttributes, Converter={StaticResource BooleanInverse}}"
+                         HorizontalOptions="CenterAndExpand"
+                         VerticalOptions="CenterAndExpand">
+                <Label Text="No Requested attributes found :(" 
+                       VerticalOptions="Center"/>
+            </StackLayout>
             <Grid
                 IsVisible="{Binding ActionRequired}"
                 Margin="0,0,0,0"
                 ColumnSpacing="0"
-                HeightRequest="70"
+                HeightRequest="50"
                 VerticalOptions="End">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

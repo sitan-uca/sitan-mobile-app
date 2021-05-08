@@ -5,6 +5,7 @@ using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Storage;
+using Osma.Mobile.App.Converters;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.Views.Account;
@@ -13,6 +14,7 @@ using Plugin.Media.Abstractions;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,7 +73,7 @@ namespace Osma.Mobile.App.ViewModels.Account
             var context = await _agentContextProvider.GetContextAsync();
             _provisioningRecord = await _provisioningService.GetProvisioningAsync(context.Wallet);
             AgentName = _provisioningRecord.Owner.Name;
-            AgentImageUrl = _provisioningRecord.Owner.ImageUrl;
+            AgentImageSource = Base64StringToImageSource.Base64StringToImage(_provisioningRecord.Owner.ImageUrl);
             MediatorEndpointUrl = _provisioningRecord.Endpoint.Uri;
             if (Preferences.ContainsKey(AppConstant.MediatorConnectionIdTagName))
             {
@@ -91,17 +93,23 @@ namespace Osma.Mobile.App.ViewModels.Account
                 return;
             }
 
-            var mediaOptions = new PickMediaOptions { PhotoSize = PhotoSize.Medium };
+            var mediaOptions = new PickMediaOptions { PhotoSize = PhotoSize.MaxWidthHeight, CompressionQuality=50, MaxWidthHeight=85 };
             var selectedImageFile = await CrossMedia.Current.PickPhotoAsync(mediaOptions);
 
             //AgentImageSource = ImageSource.FromStream(() => selectedImageFile.GetStream());            
 
             if (selectedImageFile != null)
             {
-                _provisioningRecord.Owner.ImageUrl = selectedImageFile.Path;
+                _provisioningRecord.Owner.ImageUrl = ImageToBase64(selectedImageFile.Path);
                 await _walletRecordService.UpdateAsync(context.Wallet, _provisioningRecord);
                 _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ProvisioningRecordUpdated });
             }            
+        }
+
+        private string ImageToBase64(string imagePath)
+        {
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            return Convert.ToBase64String(imageBytes);
         }
 
         #region Bindable commands

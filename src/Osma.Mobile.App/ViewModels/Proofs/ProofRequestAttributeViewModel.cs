@@ -3,6 +3,7 @@ using Autofac;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
+using Osma.Mobile.App.Converters;
 using Osma.Mobile.App.Services.Interfaces;
 using ReactiveUI;
 using System;
@@ -15,28 +16,13 @@ using Xamarin.Forms;
 namespace Osma.Mobile.App.ViewModels.Proofs
 {
     public class ProofRequestAttributeViewModel : ABaseViewModel
-    {
-        AttributeCredentialsViewModel selectedCredential;
+    {        
         private readonly IUserDialogs userDialogs;
         private readonly INavigationService navigationService;
         private readonly IAgentProvider agentContextProvider;
         private readonly ICredentialService credentialService;
         private readonly IConnectionService connectionService;
-        private readonly ILifetimeScope scope;
-
-        public string AttributeName { get; set; }
-        public bool IsPredicate { get; internal set; }
-        public string AttributeReferent { get; set; }
-        public ObservableCollection<AttributeCredentialsViewModel> AttributeCredentials { get; set; }
-
-        public AttributeCredentialsViewModel SelectedCredential
-        {
-            get => selectedCredential;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref selectedCredential, value);
-            }
-        }
+        private readonly ILifetimeScope scope;        
 
         public ProofRequestAttributeViewModel(IUserDialogs userDialogs,
                                               INavigationService navigationService,
@@ -99,6 +85,8 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                         continue;
 
                     cred.CredentialConnection = connection.Alias?.Name;
+                    cred.CredentialConnectionImageUrl = connection.Alias?.ImageUrl;
+                    cred.CredentialConnectionImageSource = Base64StringToImageSource.Base64StringToImage(connection.Alias?.ImageUrl);
                 }
                 catch (Exception)
                 {
@@ -106,6 +94,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                 }
             }
         }
+        
 
         void SelectCredential(AttributeCredentialsViewModel attributeCredential)
         {
@@ -125,12 +114,62 @@ namespace Osma.Mobile.App.ViewModels.Proofs
             }
 
             SelectedCredential = attributeCredential.Selected ? attributeCredential : null;
+            if (SelectedCredential != null)
+            {
+                if (SelectedCredential.Credential.CredentialInfo.Attributes.TryGetValue(AttributeName, out var revealedValue))
+                    RevealedAttributeValue = revealedValue;
+
+                SelectedCredentialConnectionImageSource = SelectedCredential.CredentialConnectionImageSource;
+            }
+            else
+            {
+                RevealedAttributeValue = null;
+                SelectedCredentialConnectionImageSource = null;
+            }
         }
 
         #region Commands
 
         public ICommand SelectCredentialCommand => new Command<AttributeCredentialsViewModel>((credential) => SelectCredential(credential));
 
+        #endregion
+
+        #region Properties
+        public string AttributeName { get; set; }        
+        public bool IsPredicate { get; internal set; }
+        public string AttributeReferent { get; set; }
+        public ObservableCollection<AttributeCredentialsViewModel> AttributeCredentials { get; set; }
+        AttributeCredentialsViewModel selectedCredential;
+
+        public AttributeCredentialsViewModel SelectedCredential
+        {
+            get => selectedCredential;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref selectedCredential, value);
+            }
+        }
+
+        private string _revealedAttributeValue;
+        public string RevealedAttributeValue
+        {
+            get => _revealedAttributeValue;
+            set => this.RaiseAndSetIfChanged(ref _revealedAttributeValue, value);
+        }
+
+        private string _selectedCredentialConnectionImageUrl;
+        public string SelectedCredentialConnectionImageUrl
+        {
+            get => _selectedCredentialConnectionImageUrl;
+            set => this.RaiseAndSetIfChanged(ref _selectedCredentialConnectionImageUrl, value);
+        }
+
+        private ImageSource _selectedCredentialConnectionImageSource;
+        public ImageSource SelectedCredentialConnectionImageSource
+        {
+            get => _selectedCredentialConnectionImageSource;
+            set => this.RaiseAndSetIfChanged(ref _selectedCredentialConnectionImageSource, value);
+        }
         #endregion
     }
 }

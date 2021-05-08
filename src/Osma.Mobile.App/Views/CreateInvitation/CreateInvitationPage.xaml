@@ -13,42 +13,58 @@
             <converters:SelecteditemEventArgsToSelectedItemConverter x:Key="SelectedItemConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ScrollView>
-        <StackLayout Padding="20">
-            <StackLayout VerticalOptions="CenterAndExpand">
-                <zxing:ZXingBarcodeImageView 
-                    HeightRequest="300"
-                    WidthRequest="300"                    
-                    BarcodeFormat="QR_CODE" 
-                    BarcodeValue="{Binding QrCodeValue}"
-                    >
-                    <zxing:ZXingBarcodeImageView.BarcodeOptions>
-                        <zxcm:EncodingOptions Width="500" Height="500" />
-                    </zxing:ZXingBarcodeImageView.BarcodeOptions>
-                </zxing:ZXingBarcodeImageView>
-                <StackLayout>
-                    <Button Text="Create Invitation" Command="{Binding CreateInvitationCommand}"
-                            TextColor="#000"
-                            FontSize="14"
-                            CharacterSpacing="1"
-                            BackgroundColor="#00D974"
-                            HorizontalOptions="CenterAndExpand"
-                            WidthRequest="330"
-                            HeightRequest="50"
-                            Margin="0,25,0,0"
-                            CornerRadius="6"></Button>
-                </StackLayout>
-                <Button Text="Copy" Command="{Binding CopyInvitation}"
-                        TextColor="#fff"
-                            FontSize="14"
-                            CharacterSpacing="1"
-                            BackgroundColor="#252738"
-                            HorizontalOptions="CenterAndExpand"
-                            WidthRequest="330"
-                            HeightRequest="50"
-                            Margin="0,25,0,0"
-                            CornerRadius="6"></Button>
+    <StackLayout>
+        <ImageButton
+            Aspect="AspectFit"
+            BackgroundColor="Transparent"
+            Command="{Binding NavigateBackCommand}"
+            CornerRadius="0"
+            HeightRequest="32"
+            HorizontalOptions="FillAndExpand"
+            Source="keyboard_down_icon.png"
+            VerticalOptions="Center" />
+        <StackLayout VerticalOptions="CenterAndExpand"
+                     HorizontalOptions="CenterAndExpand"
+                     Padding="10, 20">
+            <zxing:ZXingBarcodeImageView 
+                HeightRequest="300"
+                WidthRequest="300"                
+                BarcodeFormat="QR_CODE"                 
+                IsVisible="{Binding HasQrCodeValue}"
+                BarcodeValue="{Binding QrCodeValue}"
+                >
+                <zxing:ZXingBarcodeImageView.BarcodeOptions>
+                    <zxcm:EncodingOptions Width="600" Height="600" />
+                </zxing:ZXingBarcodeImageView.BarcodeOptions>
+            </zxing:ZXingBarcodeImageView>
+            <ActivityIndicator IsVisible="{Binding IsBusy}" 
+                               IsRunning="{Binding IsBusy}" />
+            <StackLayout>
+                <Button Text="Create Invitation" 
+                        Command="{Binding CreateInvitationCommand}"
+                        TextColor="#000"
+                        FontSize="14"
+                        IsEnabled="{Binding HasQrCodeValue, Converter={StaticResource BooleanInverse}}"
+                        CharacterSpacing="1"
+                        BackgroundColor="#00D974"
+                        HorizontalOptions="CenterAndExpand"
+                        WidthRequest="330"
+                        HeightRequest="50"
+                        Margin="0,25,0,0"
+                        CornerRadius="6">
+                </Button>
             </StackLayout>
+            <Button Text="Copy" 
+                    Command="{Binding CopyInvitation}"
+                    TextColor="#fff"
+                    FontSize="14"
+                    CharacterSpacing="1"
+                    BackgroundColor="#252738"
+                    HorizontalOptions="CenterAndExpand"
+                    WidthRequest="330"
+                    HeightRequest="50"
+                    Margin="0,25,0,0"
+                    CornerRadius="6"></Button>
         </StackLayout>
-    </ScrollView>
+    </StackLayout>
 </ContentPage> 

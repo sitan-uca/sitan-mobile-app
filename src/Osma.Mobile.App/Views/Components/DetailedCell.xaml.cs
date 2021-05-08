@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -12,7 +13,6 @@ namespace Osma.Mobile.App.Views.Components
 
         public static readonly BindableProperty TitleProperty =
             BindableProperty.Create("Title", typeof(string), typeof(DetailedCell), "", propertyChanged: TitlePropertyChanged);
-
 
         public string Title
         {
@@ -75,6 +75,24 @@ namespace Osma.Mobile.App.Views.Components
             });
         }
 
+        public static readonly BindableProperty CellImageSourceProperty =
+            BindableProperty.Create(nameof(CellImageSource), typeof(ImageSource), typeof(DetailedCell), null, propertyChanged: CellImageSourcePropertyChanged);
+
+        public ImageSource CellImageSource
+        {
+            get { return (ImageSource)GetValue(CellImageSourceProperty); }
+            set { SetValue(CellImageSourceProperty, value); }
+        }
+
+        static void CellImageSourcePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            DetailedCell cell = (DetailedCell)bindable;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                cell.Image.Source = (ImageSource)newValue;
+            });
+        }
+
         public static readonly BindableProperty IsNewProperty =
             BindableProperty.Create("IsNew", typeof(bool), typeof(DetailedCell), false,
                 propertyChanged: IsNewPropertyChanged);
@@ -97,9 +115,7 @@ namespace Osma.Mobile.App.Views.Components
                 cell.View.BackgroundColor = isNew ? Color.FromHex("#f2f7ea") : Color.Transparent;
             });
         }
-
         
-
         public static readonly BindableProperty TappedCommandProperty =
            BindableProperty.Create("TappedCommand", typeof(EventHandler), typeof(DetailedCell), null, propertyChanged: TappedCommandPropertyChanged);
 
@@ -116,10 +132,25 @@ namespace Osma.Mobile.App.Views.Components
             
         }
 
+
+        public static readonly BindableProperty SwipeDeleteCommandProperty =
+            BindableProperty.Create(nameof(SwipeDeleteCommand), typeof(ICommand), typeof(DetailedCell), null, propertyChanged: SwipeDeleteCommandPropertyChanged);
+
+        public ICommand SwipeDeleteCommand
+        {
+            get { return (ICommand)GetValue(SwipeDeleteCommandProperty); }
+            set { SetValue(SwipeDeleteCommandProperty, value); }
+        }
+
+        static void SwipeDeleteCommandPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            DetailedCell cell = (DetailedCell)bindable;
+            cell.SwipeDelete.Command = (ICommand)newValue;
+        }
+
         public DetailedCell()
         {
             InitializeComponent();
-
-        }
+        }       
     }
 }

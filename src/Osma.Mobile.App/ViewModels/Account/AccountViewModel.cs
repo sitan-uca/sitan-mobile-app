@@ -17,6 +17,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
 using Osma.Mobile.App.Events;
 using System.Reactive.Linq;
+using Osma.Mobile.App.Converters;
 
 namespace Osma.Mobile.App.ViewModels.Account
 {
@@ -69,7 +70,9 @@ namespace Osma.Mobile.App.ViewModels.Account
             var context = await _agentContextProvider.GetContextAsync();
             var proviosioningAgent = await _provisioningService.GetProvisioningAsync(context.Wallet);
             FullName = proviosioningAgent.Owner.Name;
-            AvatarUrl = proviosioningAgent.Owner.ImageUrl ?? "account_icon.png";
+            AvatarUrl = proviosioningAgent.Owner.ImageUrl ?? "account_icon.png";            
+            AgentImageSource = Base64StringToImageSource.Base64StringToImage(proviosioningAgent.Owner.ImageUrl);
+     
         }
 
         public async Task NavigateToBackup()
@@ -127,10 +130,12 @@ namespace Osma.Mobile.App.ViewModels.Account
             }
         };
 
-        public EventHandler ProfileInfoTapped => async (sender, e) =>
-        {            
-            await NavigationService.NavigateToAsync<ProfileViewModel>();
-        };
+        //public EventHandler ProfileInfoTapped => async (sender, e) =>
+        //{
+        //    await NavigationService.NavigateToAsync<ProfileViewModel>();
+        //};
+
+        public ICommand NavigateToProfile => new Command(async () => await NavigationService.NavigateToAsync<ProfileViewModel>());
 
         #endregion
 
@@ -155,6 +160,17 @@ namespace Osma.Mobile.App.ViewModels.Account
             {
                 this.RaiseAndSetIfChanged(ref _avatarUrl, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AvatarUrl"));
+            }
+        }
+
+        private ImageSource _agentImageSource;
+        public ImageSource AgentImageSource
+        {
+            get => _agentImageSource;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _agentImageSource, value);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AgentImageSource"));
             }
         }
 

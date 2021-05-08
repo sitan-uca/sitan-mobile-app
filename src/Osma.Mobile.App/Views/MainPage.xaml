@@ -29,10 +29,10 @@
         ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding ProofRequests}"
         Icon="request_icon.png" />
-    <!--<account:AccountPage 
-        ios:NavigationPage.PrefersLargeTitles="False"
-        BindingContext="{Binding Account}"
-        Icon="scan_icon.png" />-->
+    <connections:ScanInvitationPage
+        ios:NavigationPage.PrefersLargeTitles="True"
+        BindingContext="{Binding ScanInvitation}"
+        Icon="scan_icon.png" />
     <account:AccountPage
         ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding Account}"

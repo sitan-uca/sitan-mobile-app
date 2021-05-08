@@ -14,13 +14,14 @@
         <ResourceDictionary>
             <converters:SelecteditemEventArgsToSelectedItemConverter x:Key="SelectedItemConverter" />
             <converters:InverseBooleanConverter x:Key="BooleanInverse" />
+            <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <!--<ToolbarItem IconImageSource="add.png" Order="Primary" Priority="0" Command ="{Binding ScanInviteCommand}" ></ToolbarItem>-->
         <!--<ToolbarItem IconImageSource="search.png" Order="Primary"  Priority="0" Command ="{Binding SearchTerm}" ></ToolbarItem>-->
         <ToolbarItem IconImageSource="add_white.png" Order="Primary"  Priority="0" Command ="{Binding CreateInvitationCommand }" ></ToolbarItem>
-        <ToolbarItem IconImageSource="search_white.png" Order="Primary" Command ="{Binding  SearchTerm }" ></ToolbarItem>
+        <ToolbarItem IconImageSource="search_white.png" Order="Primary" Command ="{Binding ToolbarSearchCommand }" ></ToolbarItem>
         <!--<ToolbarItem Name="Add Connection" Order="Primary" Text="Connect" Priority="0" Command ="{Binding ScanInviteCommand}"/>
         <ToolbarItem Name="CreateInvitation" Order="Secondary" Text="Create Invitation" ios:NavigationPage.PrefersLargeTitles="true" Priority="0" Command ="{Binding CreateInvitationCommand}"/>-->
     </ContentPage.ToolbarItems>
@@ -48,13 +49,14 @@
             </Grid>-->
 
             <StackLayout
-                Padding="0,8,0,0">
+                Padding="0,8,0,0"
+                HeightRequest="100">
                 <Grid
                     Padding="20,10,20,10"
                     IsClippedToBounds="True"
                     BackgroundColor="#C4C4C4">
                     <Label
-                        Text="Text Binding for heading"
+                        Text="{Binding SelectedConnectionsFilter}"
                         FontSize="16"
                         VerticalOptions="Center"
                         FontAttributes="Bold"
@@ -63,6 +65,7 @@
                     <Button ImageSource="filter_icon.png"
                             BackgroundColor="#C4C4C4"
                            Grid.Column="1"
+                            Command="{Binding FilterConnections}"
                            HorizontalOptions="EndAndExpand"
                            HeightRequest="50"
                            WidthRequest="50"
@@ -71,7 +74,7 @@
                 </Grid>
             </StackLayout>
 
-            <components:SegmentedBarControl 
+            <!--<components:SegmentedBarControl 
                 Padding="0,20,0,0"
                 x:Name="segmentedBarControl"
                 AutoScroll="False"
@@ -84,13 +87,15 @@
                         Command="{Binding ConnectionSubTabChange}"
                         Converter="{StaticResource SelectedItemConverter}" />
                 </components:SegmentedBarControl.Behaviors>
-            </components:SegmentedBarControl>
+            </components:SegmentedBarControl>-->
 
 
             <StackLayout
+                VerticalOptions="CenterAndExpand"                
                     IsVisible="{Binding HasConnections}">
                 
-                <ListView
+                <ListView                    
+                    VerticalOptions="CenterAndExpand"
                     HasUnevenRows="True"
                     IsPullToRefreshEnabled="False"
                     IsRefreshing="{Binding RefreshingConnections}"
@@ -98,21 +103,54 @@
                     IsEnabled="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}"
                     ItemsSource="{Binding Connections}">
                         <ListView.ItemTemplate>
-                            <DataTemplate>
+                        <DataTemplate>
                             <components:DetailedCell
-                                Title="{Binding ConnectionName}"
-                                Subtitle="{Binding ConnectionSubtitle}"
-                                ImageURL="{Binding ConnectionImageUrl}" />
+                                    Title="{Binding ConnectionName}"
+                                    Subtitle="{Binding ConnectionSubtitle}"
+                                    CellImageSource="{Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}" 
+                                    SwipeDeleteCommand="{Binding DeleteConnectionCommand}"  
+                                    /> 
+
+                            <!--<components:DetailedSwipeViewCell
+                                        Title="{Binding ConnectionName}"
+                                        Subtitle="{Binding ConnectionSubtitle}"
+                                        ImageURL="{Binding ConnectionImageUrl}" 
+                                        SwipeDeleteCommand="{Binding DeleteConnection}" />-->
+                            <!--<ViewCell>
+                                <SwipeView>
+                                    <SwipeView.LeftItems>
+                                        <SwipeItems>
+                                            <SwipeItem Text="Favorite"
+                                               IconImageSource="favorite.png"
+                                               BackgroundColor="LightGreen"
+                                                />
+                                            <SwipeItem Text="Delete"
+                                               IconImageSource="delete.png"
+                                               BackgroundColor="LightPink"
+                                                />
+                                        </SwipeItems>
+                                    </SwipeView.LeftItems>
+                                    <Grid HeightRequest="60"
+                                        WidthRequest="300"
+                                        BackgroundColor="LightGray">
+                                        <Label Text="Swipe right"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                    </Grid>
+                                </SwipeView>
+                            </ViewCell>-->
+
                         </DataTemplate>
-                        </ListView.ItemTemplate>
+                    </ListView.ItemTemplate>
                         <ListView.Behaviors>
                             <behaviours:EventToCommandBehavior EventName="ItemSelected" Command="{Binding SelectConnectionCommand}" Converter="{StaticResource SelectedItemConverter}" DeselectOnClick="true"/>
                         </ListView.Behaviors>
-                    </ListView>
-                </StackLayout>
+                </ListView>
+                
+            </StackLayout>
 
             <StackLayout
-                    VerticalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"                
                     IsVisible="{Binding HasConnections, Converter={StaticResource BooleanInverse}}">
                 <StackLayout
                         Orientation="Vertical"
@@ -121,11 +159,16 @@
                     <ActivityIndicator
                             IsVisible="{Binding RefreshingConnections}"
                             IsRunning="{Binding RefreshingConnections}"/>
-                    <Label
-                            HorizontalOptions="CenterAndExpand"
+                    <StackLayout IsVisible="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}">
+                        <Label  HorizontalOptions="CenterAndExpand"
                             HorizontalTextAlignment="Center"
-                            IsVisible="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}" 
+                            IsVisible="{Binding SearchTermIsEmpty}" 
                             Text="You have no connections here" />
+                    </StackLayout>
+                    <Label  IsVisible="{Binding SearchTermIsEmpty, Converter={StaticResource BooleanInverse}}"
+                            HorizontalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="Center"                             
+                            Text="{Binding SearchTerm, StringFormat='No results for search term: {0} &#10; &#10; Please update your search querry'}" />
                 </StackLayout>
             </StackLayout>
         </StackLayout>

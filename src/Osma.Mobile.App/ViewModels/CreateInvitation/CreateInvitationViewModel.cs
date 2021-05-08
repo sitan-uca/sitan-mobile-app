@@ -32,6 +32,7 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
         {
             _agentContextProvider = agentContextProvider;
             _connectionService = defaultConnectionService;
+            HasQrCodeValue = !string.IsNullOrEmpty(QrCodeValue);
         }
 
         public override async Task InitializeAsync(object navigationData)
@@ -41,18 +42,25 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
 
         private async Task CreateInvitation()
         {
+            IsBusy = true;
             try
             {
                 var context = await _agentContextProvider.GetContextAsync();
-                var (invitation, _) = await _connectionService.CreateInvitationAsync(context);               
+                var (invitation, _) = await _connectionService.CreateInvitationAsync(context);
+                //var len = invitation.ImageUrl.Length;
                 string barcodeValue = invitation.ServiceEndpoint + "?c_i=" + Uri.EscapeDataString(invitation.ToByteArray().ToBase64String());
                 string linkValue = invitation.ServiceEndpoint + "?c_i=" + invitation.ToJson().ToBase64();
                 QrCodeValue = barcodeValue;
                 LinkValue = linkValue;
+                HasQrCodeValue = !string.IsNullOrEmpty(QrCodeValue);
             }
             catch (Exception ex)
             {
                 DialogService.Alert(ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
@@ -79,7 +87,15 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
 
         public ICommand CreateInvitationCommand => new Command(async () => await CreateInvitation());
 
-        public ICommand CopyInvitation => new Command(() => CrossClipboard.Current.SetText(LinkValue));
+        public ICommand CopyInvitation => new Command(() => {
+            if (!string.IsNullOrEmpty(LinkValue))
+            {
+                CrossClipboard.Current.SetText(LinkValue);
+                UserDialogs.Instance.Toast($"Copied to Clipboard {LinkValue}", new TimeSpan(3));
+            }            
+        });
+
+        public ICommand NavigateBackCommand => new Command(async () => await NavigationService.PopModalAsync());
 
         #endregion
 
@@ -97,6 +113,13 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
         {
             get => _linkValue;
             set => this.RaiseAndSetIfChanged(ref _linkValue, value);
+        }
+
+        private bool _hasQrCodeValue;
+        public bool HasQrCodeValue
+        {
+            get => _hasQrCodeValue;
+            set => this.RaiseAndSetIfChanged(ref _hasQrCodeValue, value);
         }
 
         #endregion

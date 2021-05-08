@@ -18,7 +18,7 @@
                             FadeAnimationEnabled="true"
                             HeightRequest="200"
                             VerticalOptions="Center"
-                            Source="{Binding AgentImageUrl}"
+                            Source="{Binding AgentImageSource, TargetNullValue='profile_icon_grey.jpg'}}" 
                         >
                             <ffimageloading:CachedImage.Transformations>
                                 <fftransformations:CircleTransformation />

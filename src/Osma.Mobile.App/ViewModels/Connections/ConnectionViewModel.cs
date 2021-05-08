@@ -31,6 +31,7 @@ using Plugin.Connectivity;
 using Osma.Mobile.App.ViewModels.Credentials;
 using Osma.Mobile.App.Services;
 using Autofac;
+using Osma.Mobile.App.Converters;
 
 namespace Osma.Mobile.App.ViewModels.Connections
 {
@@ -76,17 +77,11 @@ namespace Osma.Mobile.App.ViewModels.Connections
             _record = record;
             MyDid = _record.MyDid;
             TheirDid = _record.TheirDid;
-            ConnectionName = _record.Alias?.Name;
+            ConnectionName = _record.Alias?.Name ?? _record.Id;
             ConnectionSubtitle = $"{_record.State:G}";
             ConnectionImageUrl = _record.Alias?.ImageUrl;
+            ConnectionImageSource = Base64StringToImageSource.Base64StringToImage(_record.Alias?.ImageUrl);
 
-            if (ConnectionImageUrl == null)
-            {
-                ConnectionImageUrl = "https://iconsgalore.com/wp-content/uploads/2018/10/cell-phone-1-featured-2.png";
-            }
-
-            //Messages.Add(new ChatTemplateSelector.Message() { Text = "Hi" });
-            //Messages.Add(new ChatTemplateSelector.Message() { Text = "How are you?" });
             Messages = new ObservableCollection<RecordBase>();
         }
 
@@ -116,7 +111,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             //List<CredentialRecord> credentials = await _walletRecordSevice
             //    .SearchAsync<CredentialRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
             //List<ProofRecord> proofs = await _walletRecordSevice
-            //    .SearchAsync<ProofRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
+            //    .SearchAsync<ProofRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));       
 
             records.AddRange(msgs);
             //records.AddRange(credentials);
@@ -151,7 +146,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
             try
             {
-                var response = await _messageService.SendReceiveAsync(_agentContext.Wallet, message, _record) as UnpackedMessageContext;
+                var response = await _messageService.SendReceiveAsync(_agentContext, message, _record) as UnpackedMessageContext;
                 protocols = response.GetMessage<DiscoveryDiscloseMessage>();
             }
             catch (Exception e)
@@ -226,7 +221,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             bool success = false;
             try
             {
-                var response = await _messageService.SendReceiveAsync(_agentContext.Wallet, message, _record) as UnpackedMessageContext;
+                var response = await _messageService.SendReceiveAsync(_agentContext, message, _record) as UnpackedMessageContext;
                 var trustPingResponse = response.GetMessage<TrustPingResponseMessage>();
                 success = true;
             }
@@ -265,20 +260,22 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
         public ICommand DeleteConnectionCommand => new Command(async () =>
         {
-            var dialog = DialogService.Loading("Deleting");
-            _agentContext = await _agentContextProvider.GetContextAsync();
-
-            await _connectionService.DeleteAsync(_agentContext, _record.Id);
-
-            _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
-
-            if (dialog.IsShowing)
+            var res = await UserDialogs.Instance.ConfirmAsync($"You are about to delete connection '{_record.Alias.Name ?? _record.Id}'. Are you sure?", "Delete connection", "Delete", "Cancel");
+            if (res)
             {
-                dialog.Hide();
-                dialog.Dispose();
-            }
+                var dialog = DialogService.Loading("Deleting");
+                _agentContext = await _agentContextProvider.GetContextAsync();
 
-            await NavigationService.NavigateBackAsync();
+                await _connectionService.DeleteAsync(_agentContext, _record.Id);
+
+                _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
+
+                if (dialog.IsShowing)
+                {
+                    dialog.Hide();
+                    dialog.Dispose();
+                }
+            }               
         });
 
         public ICommand RefreshTransactionsCommand => new Command(async () => await RefreshTransactions());
@@ -305,7 +302,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 };
 
                 await _walletRecordSevice.AddAsync(_agentContext.Wallet, messageRecord);
-                await _messageService.SendAsync(_agentContext.Wallet, message, _record);
+                await _messageService.SendAsync(_agentContext, message, _record);
 
                 //Messages.Insert(0, messageRecord);
                 TextToSend = string.Empty;
@@ -325,6 +322,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             }
 
         });
+        
         #endregion
 
         #region Bindable Properties
@@ -354,6 +352,13 @@ namespace Osma.Mobile.App.ViewModels.Connections
         {
             get => _connectionImageUrl;
             set => this.RaiseAndSetIfChanged(ref _connectionImageUrl, value);
+        }
+
+        private ImageSource _connectionImageSource;
+        public ImageSource ConnectionImageSource
+        {
+            get => _connectionImageSource;
+            set => this.RaiseAndSetIfChanged(ref _connectionImageSource, value);
         }
 
         private string _connectionSubtitle = "Lorem ipsum dolor sit amet";
