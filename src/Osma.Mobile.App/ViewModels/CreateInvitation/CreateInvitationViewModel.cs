@@ -47,7 +47,9 @@ namespace Osma.Mobile.App.ViewModels.CreateInvitation
             {
                 var context = await _agentContextProvider.GetContextAsync();
                 var (invitation, _) = await _connectionService.CreateInvitationAsync(context);
-                //var len = invitation.ImageUrl.Length;
+                // null because the base64 string of the image is too large to convert to qrcode, 
+                // so we don't send the image in this step
+                invitation.ImageUrl = null;
                 string barcodeValue = invitation.ServiceEndpoint + "?c_i=" + Uri.EscapeDataString(invitation.ToByteArray().ToBase64String());
                 string linkValue = invitation.ServiceEndpoint + "?c_i=" + invitation.ToJson().ToBase64();
                 QrCodeValue = barcodeValue;

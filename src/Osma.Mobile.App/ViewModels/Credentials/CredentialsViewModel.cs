@@ -10,6 +10,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.IssueCredential;
+using Hyperledger.Aries.Models.Events;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Extensions;
 using Osma.Mobile.App.Services;
@@ -55,7 +56,30 @@ namespace Osma.Mobile.App.ViewModels.Credentials
             _eventAggregator.GetEventByType<ApplicationEvent>()
                            .Where(_ => _.Type == ApplicationEventType.CredentialsUpdated)
                            .Subscribe(async _ => await RefreshCredentials());
+
+            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                .Where
+                (_ => 
+                    _.MessageType == MessageTypes.IssueCredentialNames.IssueCredential || 
+                    _.MessageType == MessageTypes.IssueCredentialNames.OfferCredential
+                )
+                .Subscribe(async _ => await NotifyAndRefresh(_));
+
             await base.InitializeAsync(navigationData);
+        }
+
+        private async Task NotifyAndRefresh(ServiceMessageProcessingEvent _event)
+        {
+            await RefreshCredentials();
+            switch (_event.MessageType)
+            {
+                case MessageTypes.IssueCredentialNames.OfferCredential:
+                    NotificationService.TriggerNotification("Credential Offer", "New credential offer received");                    
+                    break;
+                case MessageTypes.IssueCredentialNames.IssueCredential:
+                    NotificationService.TriggerNotification("Credential Received", "New credential received");
+                    break;
+            }                        
         }
 
         public async Task RefreshCredentials()

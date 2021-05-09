@@ -57,6 +57,9 @@
     <EmbeddedResource Include="Resources\legal.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Views\Account\EditProfilePicturePopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Account\ProfileNamePopupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -102,7 +105,7 @@
     <EmbeddedResource Update="Views\Connections\RequestIdentityProof.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\Connections\ScanInvitationPage.xaml">
+    <EmbeddedResource Update="Views\ScanQrCode\ScanQrCodePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\MainPage.xaml">
@@ -176,6 +179,9 @@
     </Compile>
     <Compile Update="Views\Components\DetailedCell.xaml.cs">
       <DependentUpon>DetailedCell.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ScanQrCode\ScanQrCodePage.xaml.cs">
+      <DependentUpon>ScanQrCodePage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

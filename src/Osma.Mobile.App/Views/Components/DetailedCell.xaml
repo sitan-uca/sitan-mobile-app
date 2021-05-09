@@ -7,17 +7,17 @@
     xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     x:Name="ParentViewCell">
     
-        <SwipeView>
-            <SwipeView.LeftItems>
-                <SwipeItems>
-                    <SwipeItem x:Name="SwipeDelete" 
-                               Text="Delete" 
-                               IconImageSource="trash_bin_icon.png" 
-                               BackgroundColor="IndianRed"
+    <SwipeView>
+        <SwipeView.LeftItems>
+            <SwipeItems>
+                <SwipeItem x:Name="SwipeDelete" 
+                           Text="Delete" 
+                           IconImageSource="trash_bin_icon.png" 
+                           BackgroundColor="IndianRed"                        
                     />
-                </SwipeItems>
-            </SwipeView.LeftItems>
-            <Grid Padding="20,5,5,5"
+            </SwipeItems>
+        </SwipeView.LeftItems>
+        <Grid Padding="20,5,5,5"
                   RowSpacing="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -83,7 +83,7 @@
                         TextColor="White"
                         VerticalOptions="Center" />
                 </Frame>
-            </Grid>
-        </SwipeView>
+        </Grid>
+    </SwipeView>
     
 </ViewCell>

@@ -14,9 +14,12 @@
 >
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="renewable_white.png" Order="Primary" Priority="0" Command ="{Binding RequestProofCommand}" ></ToolbarItem>
+        <!--<ToolbarItem IconImageSource="renewable_white.png" Order="Primary" Priority="0" Command ="{Binding RequestProofCommand}" ></ToolbarItem>-->
         <!--<ToolbarItem IconImageSource="trustping.png" Order="Primary"  Priority="0" Command ="{Binding SendTrustPingCommand}" ></ToolbarItem>/-->
-        <ToolbarItem IconImageSource="information_white.png" Order="Primary"  Priority="0" Command ="{Binding ConnectionDetailsCommand}" ></ToolbarItem>
+        <ToolbarItem IconImageSource="information_white.png" 
+                     Order="Primary"  
+                     Priority="0"                      
+                     Command="{Binding ConnectionDetailsCommand}" />
         <!--<ToolbarItem Name="RequestProof" Order="Primary" Text="Request" Priority="0" Command="{Binding RequestProofCommand}"/>
         <ToolbarItem Name="Details" Order="Secondary" Text="Details" ios:NavigationPage.PrefersLargeTitles="true" Priority="1" Command="{Binding ConnectionDetailsCommand}" />
         <ToolbarItem Name="TrustPing" Order="Secondary" Text="Send Trust Ping" ios:NavigationPage.PrefersLargeTitles="true" Priority="0" Command="{Binding SendTrustPingCommand}" />-->
@@ -163,7 +166,7 @@
                             SeparatorColor="Transparent"
                             Rotation="180"
                             FlowDirection="RightToLeft" 
-                              VerticalScrollBarVisibility="Never">
+                            VerticalScrollBarVisibility="Never">
                     <ListView.Behaviors>
 
                         <behaviours:EventToCommandBehavior

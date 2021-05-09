@@ -6,14 +6,15 @@
     xmlns:account="clr-namespace:Osma.Mobile.App.Views.Account;assembly=Osma.Mobile.App"
     xmlns:connections="clr-namespace:Osma.Mobile.App.Views.Connections;assembly=Osma.Mobile.App"
     xmlns:credentials="clr-namespace:Osma.Mobile.App.Views.Credentials;assembly=Osma.Mobile.App"
+    xmlns:proofRequests="clr-namespace:Osma.Mobile.App.Views.Proofs;assembly=Osma.Mobile.App" 
+    xmlns:scan="clr-namespace:Osma.Mobile.App.Views.ScanQrCode"
     xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
-    android:TabbedPage.BarItemColor="#252738"
-    android:TabbedPage.BarSelectedItemColor="#00D974"
-    BarBackgroundColor="#F2F1F1"
-    android:TabbedPage.IsSwipePagingEnabled="True"
     xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"    
     android:TabbedPage.ToolbarPlacement="Bottom"   
-    xmlns:proofRequests="clr-namespace:Osma.Mobile.App.Views.Proofs;assembly=Osma.Mobile.App"
+    android:TabbedPage.BarItemColor="#252738"
+    android:TabbedPage.BarSelectedItemColor="#00D974"
+    android:TabbedPage.IsSwipePagingEnabled="True"
+    BarBackgroundColor="#F2F1F1"
     Appearing="Appearing"
     CurrentPageChanged="CurrentPageChanged">
 
@@ -29,12 +30,12 @@
         ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding ProofRequests}"
         Icon="request_icon.png" />
-    <connections:ScanInvitationPage
-        ios:NavigationPage.PrefersLargeTitles="True"
-        BindingContext="{Binding ScanInvitation}"
-        Icon="scan_icon.png" />
     <account:AccountPage
         ios:NavigationPage.PrefersLargeTitles="True"
         BindingContext="{Binding Account}"
         Icon="account_icon2.png" />
+    <scan:ScanQrCodePage
+        ios:NavigationPage.PrefersLargeTitles="True"
+        BindingContext="{Binding ScanQrCode}"
+        Icon="scan_icon.png" />
 </TabbedPage>

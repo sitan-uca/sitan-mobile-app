@@ -37,6 +37,8 @@ using Osma.Mobile.App.ViewModels.PinAuth;
 using Osma.Mobile.App.Views.PinAuth;
 using Osma.Mobile.App.Baksak;
 using Plugin.Connectivity;
+using Osma.Mobile.App.ViewModels.ScanQrCode;
+using Osma.Mobile.App.Views.ScanQrCode;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Osma.Mobile.App
@@ -82,15 +84,11 @@ namespace Osma.Mobile.App
                                         path2: ".indy_client",
                                         path3: "wallets")
                                 };
-                            options.WalletConfiguration.Id = "BaksakMobileWallet";
-                            //TODO Ask user for a wallet key during provisioning
-                            options.WalletCredentials.Key = "SecretWalletKey";
-                            options.AgentName = "Mobile Agent";
+                            options.WalletConfiguration.Id = "SitanMobileWalletConf";                            
                             options.RevocationRegistryDirectory = Path.Combine(
                                 path1: FileSystem.AppDataDirectory,
                                 path2: ".indy_client",
-                                path3: "tails");
-
+                                path3: "tails");                            
                             // Available network configurations (see PoolConfigurator.cs):
                             //   sovrin-live
                             //   sovrin-staging
@@ -99,6 +97,9 @@ namespace Osma.Mobile.App
                             //   baksak-main
                             options.PoolName = "baksak-main";
                             options.ProtocolVersion = 2;
+
+                            if (Preferences.ContainsKey(AppConstant.WalletKey))
+                                options.WalletCredentials.Key = Preferences.Get(AppConstant.WalletKey, null);
                         },
 
                         delayProvisioning: true));
@@ -150,7 +151,7 @@ namespace Osma.Mobile.App
             _navigationService.AddPageViewModelBinding<ProfileViewModel, ProfilePage>();            
             _navigationService.AddPopupViewModelBinding<ProfileNamePopupViewModel, ProfileNamePopupPage>();
             _navigationService.AddPageViewModelBinding<VerifyPasswordViewModel, VerifyPasswordPage>();
-            _navigationService.AddPageViewModelBinding<ScanInvitationViewModel, ScanInvitationPage>();
+            _navigationService.AddPageViewModelBinding<ScanQrCodeViewModel, ScanQrCodePage>();
             //_navigationService.AddPageViewModelBinding<ProofsViewModel, ProofsPage>();
 
             if (Preferences.Get(AppConstant.LocalWalletProvisioned, false))

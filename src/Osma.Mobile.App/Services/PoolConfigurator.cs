@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Indy.PoolApi;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +15,7 @@ namespace Osma.Mobile.App.Services
     public class PoolConfigurator : IPoolConfigurator, IHostedService
     {
         private readonly IPoolService poolService;
-        private readonly ILogger<PoolConfigurator> logger;
+        private readonly ILogger<PoolConfigurator> logger;        
 
         private Dictionary<string, string> poolConfigs = new Dictionary<string, string>
         {
@@ -25,12 +26,12 @@ namespace Osma.Mobile.App.Services
             { "baksak-main", "pool_transactions_baksak_genesis" }
         };
 
-        public PoolConfigurator(
+        public PoolConfigurator(            
             IPoolService poolService,
             ILogger<PoolConfigurator> logger)
         {
             this.poolService = poolService;
-            this.logger = logger;
+            this.logger = logger;            
         }
 
         public async Task ConfigurePoolsAsync()
@@ -62,9 +63,8 @@ namespace Osma.Mobile.App.Services
                 catch (Exception e)
                 {
                     logger.LogCritical(e, "Couldn't create pool config");
-                    //throw;
-                }
-                //await Pool.SetProtocolVersionAsync(2);
+                    throw e;                    
+                }                
             }
         }
 

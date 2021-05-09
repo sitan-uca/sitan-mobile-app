@@ -13,6 +13,8 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Converters;
+using Hyperledger.Aries.Decorators.Attachments;
+using Osma.Mobile.App.Protocols;
 
 namespace Osma.Mobile.App.ViewModels.Connections
 {
@@ -67,12 +69,25 @@ namespace Osma.Mobile.App.ViewModels.Connections
         public ICommand AcceptRequestCommand => new Command(async () =>
         {
             var loadingDialog = DialogService.Loading("Processing");
-            var context = await _contextProvider.GetContextAsync();                        
-
+            var context = await _contextProvider.GetContextAsync();
+            var provisioning = await _provisioningService.GetProvisioningAsync(context.Wallet);
             try
             {
                 var (message, record) = await _connectionService.CreateResponseAsync(context, _connectionId);
                 //messageContext.ContextRecord = record;            
+                
+                message.AddAttachment(
+                    new Attachment
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        MimeType = ConnectionMimeTypes.TextMimeType,
+                        Nickname = "agent-profile-pic",
+                        Data = new AttachmentContent
+                        {
+                            Base64 = provisioning.Owner.ImageUrl
+                        }                       
+                    });
+
                 await _messageService.SendAsync(context, message, record);          
                 _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ConnectionsUpdated });
             } 

@@ -32,6 +32,7 @@ using Osma.Mobile.App.ViewModels.Credentials;
 using Osma.Mobile.App.Services;
 using Autofac;
 using Osma.Mobile.App.Converters;
+using System.Threading;
 
 namespace Osma.Mobile.App.ViewModels.Connections
 {
@@ -49,7 +50,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
         private IAgentContext _agentContext;
 
         public ObservableCollection<RecordBase> Messages { get; set; }
-        //private List<BasicMessageRecord> m;       
+        private string receivedMsgId = string.Empty;        
 
 
         public ConnectionViewModel(IUserDialogs userDialogs,
@@ -88,14 +89,13 @@ namespace Osma.Mobile.App.ViewModels.Connections
         //public event PropertyChangedEventHandler PropertyChanged;    
 
         public override async Task InitializeAsync(object navigationData)
-        {
-
+        {                        
             //await RefreshTransactions();
-            await InitializeChat();
-
+            await InitializeChat();            
             _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
                             .Where(_ => _.MessageType == MessageTypes.BasicMessageType)
                             .Subscribe(async _ => await UpdateChatAsync(_.RecordId));
+            
 
             await base.InitializeAsync(navigationData);
         }
@@ -107,7 +107,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             List<RecordBase> records = new List<RecordBase>();
 
             List<BasicMessageRecord> msgs = await _walletRecordSevice
-                .SearchAsync<BasicMessageRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
+                .SearchAsync<BasicMessageRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id), count: 100);
             //List<CredentialRecord> credentials = await _walletRecordSevice
             //    .SearchAsync<CredentialRecord>(_agentContext.Wallet, SearchQuery.Equal("ConnectionId", _record.Id));
             //List<ProofRecord> proofs = await _walletRecordSevice
@@ -125,7 +125,11 @@ namespace Osma.Mobile.App.ViewModels.Connections
         public async Task UpdateChatAsync(string messageRecordId)
         {
             var messageRecord = await _walletRecordSevice.GetAsync<BasicMessageRecord>(_agentContext.Wallet, messageRecordId);
-            Messages.Insert(0, messageRecord);
+            if (!messageRecordId.Equals(receivedMsgId) && messageRecord.ConnectionId == _record.Id)
+            {
+                receivedMsgId = messageRecordId;                
+                Messages.Insert(0, messageRecord);
+            }        
         }
 
         public async Task RefreshTransactions()
@@ -282,7 +286,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
 
         public ICommand SendMessageCommand => new Command(async () =>
         {
-            if (!string.IsNullOrEmpty(_textToSend))
+            if (!string.IsNullOrEmpty(TextToSend))
             {
                 _agentContext = await _agentContextProvider.GetContextAsync();
                 var sentTime = DateTime.UtcNow;
@@ -290,7 +294,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 {
                     Id = Guid.NewGuid().ToString(),
                     Direction = MessageDirection.Outgoing,
-                    Text = _textToSend,
+                    Text = TextToSend,
                     SentTime = sentTime,
                     ConnectionId = _record.Id
                 };
@@ -304,8 +308,8 @@ namespace Osma.Mobile.App.ViewModels.Connections
                 await _walletRecordSevice.AddAsync(_agentContext.Wallet, messageRecord);
                 await _messageService.SendAsync(_agentContext, message, _record);
 
-                //Messages.Insert(0, messageRecord);
-                TextToSend = string.Empty;
+                Messages.Insert(0, messageRecord);
+                Device.BeginInvokeOnMainThread(() => TextToSend = string.Empty);
             }
         });
 
@@ -322,7 +326,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
             }
 
         });
-        
+     
         #endregion
 
         #region Bindable Properties

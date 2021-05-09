@@ -37,14 +37,16 @@ namespace Osma.Mobile.App
                 .SingleInstance();
 
             builder
+              .RegisterAssemblyTypes(ThisAssembly)
+              .Where(x => x.Namespace.Contains("Osma.Mobile.App.Views"))
+              .InstancePerDependency();
+
+            builder
                 .RegisterAssemblyTypes(ThisAssembly)
                 .Where(x => x.Namespace.Contains("Osma.Mobile.App.ViewModels"))
                 .InstancePerDependency();
 
-            builder
-                .RegisterAssemblyTypes(ThisAssembly)
-                .Where(x => x.Namespace.Contains("Osma.Mobile.App.Views"))
-                .InstancePerDependency();
+          
 
             builder.RegisterType<Baksak.BaksakConnectionHandler>().AsSelf();
 

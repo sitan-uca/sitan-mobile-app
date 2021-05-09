@@ -9,6 +9,7 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Agents.Edge;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Storage;
+using Microsoft.Extensions.Options;
 using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
 using ReactiveUI;
@@ -24,6 +25,7 @@ namespace Osma.Mobile.App.ViewModels
         private readonly IProvisioningService _provisioningService;
         private readonly IEdgeProvisioningService _edgeProvisioningService;
         private readonly ILifetimeScope _scope;
+        private readonly AgentOptions _agentOptions;
         private string[] Passphrase;
 
         public RegisterViewModel(
@@ -32,6 +34,7 @@ namespace Osma.Mobile.App.ViewModels
             IAgentProvider agentProvider,
             IPoolConfigurator poolConfigurator,
             ILifetimeScope scope,
+            IOptions<AgentOptions> agentOptions,
             IProvisioningService provisioningService,
             IEdgeProvisioningService edgeProvisioningService) : base(
                 nameof(RegisterViewModel),
@@ -42,6 +45,7 @@ namespace Osma.Mobile.App.ViewModels
             _poolConfigurator = poolConfigurator;
             _provisioningService = provisioningService;
             _edgeProvisioningService = edgeProvisioningService;
+            _agentOptions = agentOptions.Value;
             _scope = scope;
         }
 
@@ -83,36 +87,17 @@ namespace Osma.Mobile.App.ViewModels
 
             try
             {
-                AgentOptions agentOptions = new AgentOptions
-                {
-                    EndpointUri = "https://mediatoragentwin.azurewebsites.net",
-                    AgentName = SitanAgentName,
-                    WalletConfiguration = new WalletConfiguration
-                    {
-                        StorageConfiguration = new WalletConfiguration.WalletStorageConfiguration
-                        {                            
-                            Path = Path.Combine(
-                                path1: FileSystem.AppDataDirectory,
-                                path2: ".indy_client",
-                                path3: "wallets")                    
-                        }, 
-                        Id = "SitanWalletConf"
-                    },
-                    WalletCredentials = new WalletCredentials { Key = GenerateStrongPassphrase() },
-                    RevocationRegistryDirectory = Path.Combine(
-                        path1: FileSystem.AppDataDirectory,
-                        path2: ".indy_client",
-                        path3: "tails"),
-                    PoolName = "baksak-main",
-                    ProtocolVersion=2                    
-            };
+                var pwd = GenerateStrongPassphrase();
+                _agentOptions.AgentName = SitanAgentName;
+                _agentOptions.WalletCredentials.Key = pwd;                               
 
                 await _poolConfigurator.ConfigurePoolsAsync();
-                await _edgeProvisioningService.ProvisionAsync(agentOptions);
+                await _edgeProvisioningService.ProvisionAsync();
 
                 var context = await _agentContextProvider.GetContextAsync();
                 var provisioningRecord = await _provisioningService.GetProvisioningAsync(context.Wallet);
                 Preferences.Set(AppConstant.MediatorConnectionIdTagName, provisioningRecord.GetTag(AppConstant.MediatorConnectionIdTagName));
+                Preferences.Set(AppConstant.WalletKey, pwd);
                 Preferences.Set(AppConstant.LocalWalletProvisioned, true);
 
                 //await NavigationService.NavigateToAsync<MainViewModel>(); 
