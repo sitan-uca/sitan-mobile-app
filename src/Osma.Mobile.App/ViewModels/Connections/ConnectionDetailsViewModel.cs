@@ -57,7 +57,9 @@ namespace Osma.Mobile.App.ViewModels.Connections
             var con = await _connectionService.GetAsync(context, _connectionId);
             
             MyDid = con.MyDid;
-            TheirDid = con.TheirDid;            
+            TheirDid = con.TheirDid;
+            Connection = con.Alias?.Name;
+            ConnectionImageSource = Base64StringToImageSource.Base64StringToImage(con.Alias?.ImageUrl);
             await base.InitializeAsync(navigationData);
         }
 
@@ -110,7 +112,13 @@ namespace Osma.Mobile.App.ViewModels.Connections
             get => _connectionImageUrl;
             set => this.RaiseAndSetIfChanged(ref _connectionImageUrl, value);
         }
-        
+
+        private ImageSource _connectionImageSource;
+        public ImageSource ConnectionImageSource
+        {
+            get => _connectionImageSource;
+            set => this.RaiseAndSetIfChanged(ref _connectionImageSource, value);
+        }
         #endregion
     }
 }

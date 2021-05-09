@@ -26,12 +26,15 @@ namespace Osma.Mobile.App.Baksak
             Task task = base.AddAsync(wallet, record);
             if (record is BasicMessageRecord)
             {
-                //_eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.BasicMessageReceived });
-                _eventAggregator.Publish(new ServiceMessageProcessingEvent
-                {
-                    MessageType = MessageTypes.BasicMessageType,
-                    RecordId = record.Id
-                });
+                var msgRecord = record as BasicMessageRecord;
+                if (msgRecord.Direction == MessageDirection.Incoming) 
+                {                    
+                    _eventAggregator.Publish(new ServiceMessageProcessingEvent
+                    {
+                        MessageType = MessageTypes.BasicMessageType,
+                        RecordId = record.Id
+                    });
+                }                
             }
 
             return task;

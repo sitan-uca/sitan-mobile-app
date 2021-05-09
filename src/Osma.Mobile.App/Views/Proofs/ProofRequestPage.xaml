@@ -81,9 +81,10 @@
                                                             Grid.Column="1"
                                                             Grid.RowSpan="2"
                                                             HorizontalOptions="Center"
-                                                            Source="{Binding SelectedCredentialConnectionImageSource}"
-                                                            HeightRequest="15"
-                                                            WidthRequest="15"
+                                                            IsVisible="{Binding IsCredentialSelected}"
+                                                            Source="{Binding SelectedCredentialConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}"
+                                                            HeightRequest="20"
+                                                            WidthRequest="20"
                                                             >
                                     <ffimageloading:CachedImage.Transformations>
                                         <fftransformations:CircleTransformation />
@@ -111,8 +112,8 @@
                 IsVisible="{Binding ActionRequired}"
                 Margin="0,0,0,0"
                 ColumnSpacing="0"
-                HeightRequest="50"
-                VerticalOptions="End">
+                HeightRequest="70"
+                VerticalOptions="EndAndExpand">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -120,11 +121,13 @@
                 <Button
                     BackgroundColor="OrangeRed"
                     Command="{Binding DismissProofRequestCommand}"
+                    TextColor="White"
                     Text="Reject" />
                 <Button
                     Grid.Column="1"
                     BackgroundColor="LightGreen"
                     Command="{Binding PresentProofCommand}"
+                    TextColor="White"
                     Text="Present Proof" />
             </Grid>
             <Grid

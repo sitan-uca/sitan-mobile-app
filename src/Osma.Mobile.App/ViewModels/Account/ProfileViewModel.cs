@@ -12,6 +12,7 @@ using Osma.Mobile.App.Views.Account;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using ReactiveUI;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -93,7 +94,7 @@ namespace Osma.Mobile.App.ViewModels.Account
                 return;
             }
 
-            var mediaOptions = new PickMediaOptions { PhotoSize = PhotoSize.MaxWidthHeight, CompressionQuality=50, MaxWidthHeight=85 };
+            var mediaOptions = new PickMediaOptions { PhotoSize = PhotoSize.MaxWidthHeight, CompressionQuality=50, MaxWidthHeight=200 };
             var selectedImageFile = await CrossMedia.Current.PickPhotoAsync(mediaOptions);
 
             //AgentImageSource = ImageSource.FromStream(() => selectedImageFile.GetStream());            
@@ -103,7 +104,8 @@ namespace Osma.Mobile.App.ViewModels.Account
                 _provisioningRecord.Owner.ImageUrl = ImageToBase64(selectedImageFile.Path);
                 await _walletRecordService.UpdateAsync(context.Wallet, _provisioningRecord);
                 _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ProvisioningRecordUpdated });
-            }            
+            }
+            PopupNavigation.Instance.PopAsync();
         }
 
         private string ImageToBase64(string imagePath)
@@ -112,12 +114,29 @@ namespace Osma.Mobile.App.ViewModels.Account
             return Convert.ToBase64String(imageBytes);
         }
 
+        private async Task DeleteProfilePicture()
+        {
+            var context = await _agentContextProvider.GetContextAsync();
+
+            _provisioningRecord.Owner.ImageUrl = null;
+            await _walletRecordService.UpdateAsync(context.Wallet, _provisioningRecord);
+            _eventAggregator.Publish(new ApplicationEvent() { Type = ApplicationEventType.ProvisioningRecordUpdated });
+            PopupNavigation.Instance.PopAsync();
+        }
+
         #region Bindable commands
         public ICommand EditNameCommand => 
             new Command(async () => await NavigationService
             .NavigateToPopupAsync(true, _scope.Resolve<ProfileNamePopupViewModel>(new NamedParameter("record", _provisioningRecord))));
 
-        public ICommand SelectProfileImage => new Command(async () => await SelectPictureFromGallery());
+        public ICommand EditProfileImage => new Command(async () =>
+        {
+            await PopupNavigation.Instance.PushAsync(new EditProfilePicturePopup
+            {
+                FromGalleryCommand = new Command(async () => await SelectPictureFromGallery()),
+                DeletePictureCommand = new Command(async () => await DeleteProfilePicture())
+            });                       
+        });
 
         //public async void GetEditAgentNameTapped(object sender, EventArgs e)
         //{

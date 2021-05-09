@@ -34,7 +34,7 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                                               bool isPredicate,
                                               IEnumerable<Credential> attributeCredentials,
                                               string referent
-                                              ) : base(nameof(ProofRequestAttributeViewModel), userDialogs, navigationService)
+                                              ) : base("Credentials for Attribute", userDialogs, navigationService)
         {
             this.userDialogs = userDialogs;
             this.navigationService = navigationService;
@@ -120,11 +120,13 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                     RevealedAttributeValue = revealedValue;
 
                 SelectedCredentialConnectionImageSource = SelectedCredential.CredentialConnectionImageSource;
+                IsCredentialSelected = true;
             }
             else
             {
                 RevealedAttributeValue = null;
                 SelectedCredentialConnectionImageSource = null;
+                IsCredentialSelected = false;
             }
         }
 
@@ -154,7 +156,14 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         public string RevealedAttributeValue
         {
             get => _revealedAttributeValue;
-            set => this.RaiseAndSetIfChanged(ref _revealedAttributeValue, value);
+            set => this.RaiseAndSetIfChanged(ref _revealedAttributeValue, value);            
+        }
+
+        private bool _isCredentialSelected;
+        public bool IsCredentialSelected
+        {
+            get => _isCredentialSelected;
+            set => this.RaiseAndSetIfChanged(ref _isCredentialSelected, value);
         }
 
         private string _selectedCredentialConnectionImageUrl;

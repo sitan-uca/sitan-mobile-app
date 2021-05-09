@@ -13,5 +13,7 @@ namespace Osma.Mobile.App
         internal const string AppPin = "pin-authentication";
 
         internal const string MediatorConnectionIdTagName = "MediatorConnectionId";
+
+        internal const string WalletKey = "wallet-key";
     }
 }

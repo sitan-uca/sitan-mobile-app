@@ -10,7 +10,10 @@ using Autofac;
 using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Configuration;
 using Hyperledger.Aries.Contracts;
+using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Models.Events;
+using Hyperledger.Aries.Storage;
 using Hyperledger.Aries.Utils;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Extensions;
@@ -32,6 +35,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
     public class ConnectionsViewModel : ABaseViewModel
     {
         private readonly IConnectionService _connectionService;
+        private readonly IWalletRecordService _walletRecordService;
         private readonly IAgentProvider _agentContextProvider;
         private readonly IEventAggregator _eventAggregator;
         private readonly IProvisioningService _provisioningService;
@@ -40,6 +44,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
         public ConnectionsViewModel(IUserDialogs userDialogs,
                                     INavigationService navigationService,
                                     IConnectionService connectionService,
+                                    IWalletRecordService walletRecordService,
                                     IAgentProvider agentContextProvider,
                                     IEventAggregator eventAggregator,
                                     IProvisioningService provisioningService,
@@ -47,6 +52,7 @@ namespace Osma.Mobile.App.ViewModels.Connections
                                     base("Connections", userDialogs, navigationService)
         {
             _connectionService = connectionService;
+            _walletRecordService = walletRecordService;
             _agentContextProvider = agentContextProvider;
             _eventAggregator = eventAggregator;
             _provisioningService = provisioningService;
@@ -67,9 +73,39 @@ namespace Osma.Mobile.App.ViewModels.Connections
                             .Where(_ => _.Type == ApplicationEventType.ConnectionsUpdated)
                             .Subscribe(async _ => await RefreshConnections());
 
+            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+                         .Where
+                         (_ =>
+                             _.MessageType == MessageTypes.BasicMessageType ||
+                             _.MessageType == MessageTypes.ConnectionRequest ||
+                             _.MessageType == MessageTypes.ConnectionResponse
+                         )
+                         .Subscribe(async _ => await NotifyAndRefresh(_));
+
             await base.InitializeAsync(navigationData);
         }
 
+        private async Task NotifyAndRefresh(ServiceMessageProcessingEvent _event)
+        {
+            var context = await _agentContextProvider.GetContextAsync();
+            ConnectionRecord connectionRecord;
+            switch (_event.MessageType)
+            {
+                case MessageTypes.BasicMessageType:                
+                    var msgRecord = await _walletRecordService.GetAsync<BasicMessageRecord>(context.Wallet, _event.RecordId);
+                    connectionRecord = await _walletRecordService.GetAsync<ConnectionRecord>(context.Wallet, msgRecord.ConnectionId);
+                    NotificationService.TriggerNotification(connectionRecord.Alias.Name, msgRecord.Text);
+                    break;
+                case MessageTypes.ConnectionRequest:
+                    await RefreshConnections();
+                    connectionRecord = await _walletRecordService.GetAsync<ConnectionRecord>(context.Wallet, _event.RecordId);
+                    NotificationService.TriggerNotification("Connection Request", connectionRecord.Alias.Name + "would like to establish pairwise connection with you");
+                    break;
+                case MessageTypes.ConnectionResponse:         
+                    await RefreshConnections();
+                    break;
+            }
+        }
 
         public async Task RefreshConnections()
         {

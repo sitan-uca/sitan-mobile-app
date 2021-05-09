@@ -3,72 +3,74 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Osma.Mobile.App.ViewModels.Connections"
              xmlns:forms="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              x:Class="Osma.Mobile.App.Views.Connections.ConnectionDetailsPage"
              Title="Connection Info">
   <ContentPage.Content>
-        <StackLayout
-        Margin="40,20,40,20"
-        Padding="10,50,0,20">
+        <StackLayout        
+            Padding="40,20">
 
-            <forms:CachedImage 
+            <!--<forms:CachedImage 
             HorizontalOptions="FillAndExpand"
             HeightRequest="100"
             WidthRequest="100"
             Aspect="AspectFit"
-            Source="information.png" />
+            Source="information.png" />-->
 
-            <forms:CachedImage
-               Grid.Row="0"
-               Grid.Column="1"
+            <forms:CachedImage              
                VerticalOptions="Center"
                HorizontalOptions="Center"
-               HeightRequest="24"
-               WidthRequest="24"
+               HeightRequest="200"
+               WidthRequest="200"
                FadeAnimationEnabled="true"
                DownsampleUseDipUnits="true"
-               Source="{ Binding ConnectionImageUrl }"
-               Aspect="AspectFit"/>
+               Source="{ Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg' }"
+               Aspect="AspectFit">
+                <forms:CachedImage.Transformations>
+                    <fftransformations:CircleTransformation />
+                </forms:CachedImage.Transformations>
+            </forms:CachedImage>
 
             <Label 
-            Text="Connections DID" 
-            FontSize="20"
-            CharacterSpacing="0.5"
-            FontAttributes="Bold"
-            Padding="0,30,0,0" />
+                Text="{Binding Connection, StringFormat='{0} DID'}" 
+                FontSize="20"                
+                CharacterSpacing="0.5"
+                FontAttributes="Bold"
+                Padding="0,30,0,0" />
 
             <Label
-             Text="{Binding TheirDid, StringFormat='{0}'}"
-             TextColor="Black"
-             FontSize="18" 
-             CharacterSpacing="1"
-             FontAttributes="Italic"/>
+                Text="{Binding TheirDid, StringFormat='{0}'}"
+                TextColor="Black"
+                FontSize="18"                
+                CharacterSpacing="1"
+                FontAttributes="Italic"/>
 
             <Label 
-            Text="My DID" 
-            FontSize="20"
-            CharacterSpacing="0.5"
-            FontAttributes="Bold"
-            Padding="0,30,0,0" />
+                Text="My DID" 
+                FontSize="20"
+                CharacterSpacing="0.5"
+                FontAttributes="Bold"
+                Padding="0,30,0,0" />
 
             <Label
-             Text="{Binding MyDid, StringFormat='{0}'}"
-             TextColor="Black"
-             FontSize="18"
-             CharacterSpacing="1"
-            FontAttributes="Italic"/>
+                Text="{Binding MyDid, StringFormat='{0}'}"
+                TextColor="Black"
+                FontSize="18"
+                CharacterSpacing="1"
+                FontAttributes="Italic"/>
 
             <Button
-                    TextColor="#000"
-                    FontSize="14"
-                    CharacterSpacing="1"
-                    HorizontalOptions="CenterAndExpand"
-                    WidthRequest="330"
-                    HeightRequest="50"
-                    Margin="0,25,0,0"
-                    CornerRadius="6"
-                    Text="Delete Connection"
-                    Command="{Binding DeleteConnectionCommand}"
-                    Style="{StaticResource ButtonStyleDestructive}" />
+                TextColor="#000"
+                FontSize="14"
+                CharacterSpacing="1"
+                HorizontalOptions="CenterAndExpand"
+                WidthRequest="330"
+                HeightRequest="50"
+                Margin="0,25,0,0"
+                CornerRadius="6"
+                Text="Delete Connection"
+                Command="{Binding DeleteConnectionCommand}"
+                Style="{StaticResource ButtonStyleDestructive}" />
         </StackLayout>
 
         <!--<Frame

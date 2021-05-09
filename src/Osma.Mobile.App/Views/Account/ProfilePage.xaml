@@ -11,19 +11,32 @@
             <TableView HasUnevenRows="True">
                 <TableSection>
                     <ViewCell Height="250">
-                        <ffimageloading:CachedImage
-                            x:Name="Image"                        
-                            Aspect="AspectFit"
-                            DownsampleUseDipUnits="true"
-                            FadeAnimationEnabled="true"
-                            HeightRequest="200"
-                            VerticalOptions="Center"
-                            Source="{Binding AgentImageSource, TargetNullValue='profile_icon_grey.jpg'}}" 
-                        >
-                            <ffimageloading:CachedImage.Transformations>
-                                <fftransformations:CircleTransformation />
-                            </ffimageloading:CachedImage.Transformations>
-                        </ffimageloading:CachedImage>
+                        <Grid>
+                            <ffimageloading:CachedImage
+                                x:Name="Image"                        
+                                Aspect="AspectFit"
+                                DownsampleUseDipUnits="true"
+                                FadeAnimationEnabled="true"
+                                HeightRequest="200"
+                                VerticalOptions="Center"
+                                Source="{Binding AgentImageSource, TargetNullValue='profile_icon_grey.jpg'}" 
+                            >
+                                <ffimageloading:CachedImage.Transformations>
+                                    <fftransformations:CircleTransformation />
+                                </ffimageloading:CachedImage.Transformations>
+                            </ffimageloading:CachedImage>
+                            <Button WidthRequest="80"
+                                    HeightRequest="80"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="End"
+                                    TranslationX="-90"
+                                    TranslationY="-20"
+                                    CornerRadius="40"
+                                    Text="Edit"
+                                    Command="{Binding EditProfileImage}"
+                                    TextColor="White"
+                                    BackgroundColor="DodgerBlue" />
+                        </Grid>
                     </ViewCell>
                 </TableSection>
                 <TableSection>
@@ -129,11 +142,11 @@
                     </ViewCell>
                 </TableSection>
             </TableView>
-            <Button 
+            <!--<Button 
                 Text="Change Profile Picture" 
                 TextColor="White"
                 Command="{Binding SelectProfileImage}" 
-                BackgroundColor="DodgerBlue" />
+                BackgroundColor="DodgerBlue" />-->
 
         </StackLayout>
     </ContentPage.Content>

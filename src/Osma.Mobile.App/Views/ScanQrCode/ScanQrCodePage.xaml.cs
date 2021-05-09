@@ -1,4 +1,5 @@
 ﻿using Osma.Mobile.App.ViewModels.Connections;
+using Osma.Mobile.App.ViewModels.ScanQrCode;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,15 @@ using ZXing;
 using ZXing.Mobile;
 using ZXing.Net.Mobile.Forms;
 
-namespace Osma.Mobile.App.Views.Connections
+namespace Osma.Mobile.App.Views.ScanQrCode
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ScanInvitationPage : ContentPage
+    public partial class ScanQrCodePage : ContentPage
     {
-        ScanInvitationViewModel _vm;
+        ScanQrCodeViewModel _vm;
         ZXingScannerView Scanner;
 
-        public ScanInvitationPage()
+        public ScanQrCodePage()
         {
             InitializeComponent();
             //_vm = BindingContext as ScanInvitationViewModel;
@@ -43,7 +44,7 @@ namespace Osma.Mobile.App.Views.Connections
         {
             //ScannerView.IsScanning = true;
             //ScannerView.IsAnalyzing = true;
-            _vm = BindingContext as ScanInvitationViewModel;
+            _vm = BindingContext as ScanQrCodeViewModel;
             //_vm?.PageAppearingCommand.Execute(null);
 
             CreateScannerView("QrCodeScanner", new List<BarcodeFormat> { BarcodeFormat.QR_CODE }, ZXingScannerView_OnScanResult);

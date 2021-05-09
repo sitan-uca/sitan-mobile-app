@@ -8,8 +8,10 @@ using Hyperledger.Aries.Agents;
 using Hyperledger.Aries.Contracts;
 using Hyperledger.Aries.Features.BasicMessage;
 using Hyperledger.Aries.Features.DidExchange;
+using Hyperledger.Aries.Features.IssueCredential;
 using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
+using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.ViewModels.Account;
 using Osma.Mobile.App.ViewModels.Connections;
@@ -17,6 +19,7 @@ using Osma.Mobile.App.ViewModels.CreateInvitation;
 using Osma.Mobile.App.ViewModels.Credentials;
 using Osma.Mobile.App.ViewModels.PinAuth;
 using Osma.Mobile.App.ViewModels.Proofs;
+using Osma.Mobile.App.ViewModels.ScanQrCode;
 using ReactiveUI;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -42,7 +45,7 @@ namespace Osma.Mobile.App.ViewModels
             AccountViewModel accountViewModel,            
             CreateInvitationViewModel createInvitationViewModel,
             ProofRequestsViewModel proofRequestsViewModel,
-            ScanInvitationViewModel scanInvitationViewModel
+            ScanQrCodeViewModel scanQrCodeViewModel
             ) : base(nameof(MainViewModel), userDialogs, navigationService)
         {
             Connections = connectionsViewModel;
@@ -50,7 +53,7 @@ namespace Osma.Mobile.App.ViewModels
             Account = accountViewModel;
             CreateInvitation = createInvitationViewModel;
             ProofRequests = proofRequestsViewModel;
-            ScanInvitation = scanInvitationViewModel;
+            ScanQrCode = scanQrCodeViewModel;
             _eventAggregator = eventAggregator;
             _walletRecordService = walletRecordService;
             _agentContextProvider = agentContextProvider;
@@ -66,57 +69,11 @@ namespace Osma.Mobile.App.ViewModels
             await Account.InitializeAsync(null);
             await CreateInvitation.InitializeAsync(null);
             await ProofRequests.InitializeAsync(null);
-            await ScanInvitation.InitializeAsync(null);
-            InitializeNotificationEventListeners();
+            await ScanQrCode.InitializeAsync(null);            
             await base.InitializeAsync(navigationData);
             if (Preferences.Get(AppConstant.PinAuthEnabled, false))
-                await NavigationService.NavigateToAsync<PinAuthViewModel>();
-
-            //string[] passphrase = new string[] { "hello", "world", "this", "is", "the", "generated", "passphrase", "this", "is", "the" };
-            //var testVm = _lifetimeScope.Resolve<VerifyPasswordViewModel>(new NamedParameter("passwordArray", passphrase));
-            //await NavigationService.NavigateToAsync(testVm);
+                await NavigationService.NavigateToAsync<PinAuthViewModel>();       
         }
-
-        private void InitializeNotificationEventListeners()
-        {
-            _eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
-                         .Where
-                         (_ => 
-                             _.MessageType == MessageTypes.BasicMessageType ||
-                             _.MessageType == MessageTypes.ConnectionRequest ||
-                             _.MessageType == MessageTypes.IssueCredentialNames.OfferCredential ||
-                             _.MessageType == MessageTypes.IssueCredentialNames.IssueCredential
-                         )
-                         .Subscribe(_ => BuildNotification(_.MessageType, _.RecordId));            
-        }
-
-        private async void BuildNotification(string messageEvent, string recordId)
-        {
-            var context = await _agentContextProvider.GetContextAsync();
-            switch(messageEvent)
-            {
-                case MessageTypes.BasicMessageType:
-                case MessageTypesHttps.BasicMessageType:
-                    var msgRecord = await _walletRecordService.GetAsync<BasicMessageRecord>(context.Wallet, recordId);
-                    var connectionRecord = await _walletRecordService.GetAsync<ConnectionRecord>(context.Wallet, msgRecord.ConnectionId);
-                    TriggerNotification("New message", "New message from " + connectionRecord.Alias.Name);
-                    break;
-                case MessageTypes.ConnectionRequest:
-                case MessageTypesHttps.ConnectionRequest:
-                    TriggerNotification("New Connection Request", "You received a connectino request");
-                    break;
-                case MessageTypes.IssueCredentialNames.OfferCredential:
-                case MessageTypesHttps.IssueCredentialNames.OfferCredential:
-                    TriggerNotification("New Connection Request", "You received a connectino request");
-                    break;
-            }
-        }
-                
-        public void TriggerNotification(string title, string message)
-        {
-            INotificationManager notificationManager = DependencyService.Get<INotificationManager>();
-            notificationManager.SendNotification(title, message);
-        }        
 
         #region Bindable Properties
 
@@ -155,11 +112,11 @@ namespace Osma.Mobile.App.ViewModels
             set => this.RaiseAndSetIfChanged(ref _proofRequests, value);
         }
 
-        private ScanInvitationViewModel _scanInvitation;
-        public ScanInvitationViewModel ScanInvitation
+        private ScanQrCodeViewModel _scanQrCode;
+        public ScanQrCodeViewModel ScanQrCode
         {
-            get => _scanInvitation;
-            set => this.RaiseAndSetIfChanged(ref _scanInvitation, value);
+            get => _scanQrCode;
+            set => this.RaiseAndSetIfChanged(ref _scanQrCode, value);
         }
 
         #endregion

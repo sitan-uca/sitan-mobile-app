@@ -90,33 +90,55 @@
             </components:SegmentedBarControl>-->
 
 
-            <StackLayout
-                VerticalOptions="CenterAndExpand"                
-                    IsVisible="{Binding HasConnections}">
-                
-                <ListView                    
-                    VerticalOptions="CenterAndExpand"
-                    HasUnevenRows="True"
-                    IsPullToRefreshEnabled="False"
-                    IsRefreshing="{Binding RefreshingConnections}"
-                    RefreshCommand="{Binding RefreshCommand}"
-                    IsEnabled="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}"
-                    ItemsSource="{Binding Connections}">
+            <Grid>
+
+                <StackLayout
+                    VerticalOptions="FillAndExpand"                
+                    IsVisible="{Binding HasConnections, Converter={StaticResource BooleanInverse}}">
+                    <StackLayout
+                        Orientation="Vertical"
+                        VerticalOptions="CenterAndExpand"
+                        HorizontalOptions="CenterAndExpand">
+                        <ActivityIndicator
+                            IsVisible="{Binding RefreshingConnections}"
+                            IsRunning="{Binding RefreshingConnections}"/>
+                        <StackLayout IsVisible="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}">
+                            <Label  HorizontalOptions="CenterAndExpand"
+                                    HorizontalTextAlignment="Center"
+                                    IsVisible="{Binding SearchTermIsEmpty}" 
+                                    Text="You have no connections here" />
+                        </StackLayout>
+                        <Label  IsVisible="{Binding SearchTermIsEmpty, Converter={StaticResource BooleanInverse}}"
+                                HorizontalOptions="CenterAndExpand"
+                                HorizontalTextAlignment="Center"                             
+                                Text="{Binding SearchTerm, StringFormat='No results for search term: {0} &#10; &#10; Please update your search querry'}" />
+                    </StackLayout>
+                </StackLayout>
+                <StackLayout
+                    VerticalOptions="CenterAndExpand">
+                    <ListView                    
+                        VerticalOptions="CenterAndExpand"
+                        HasUnevenRows="True"
+                        IsPullToRefreshEnabled="True"
+                        IsRefreshing="{Binding RefreshingConnections}"
+                        RefreshCommand="{Binding RefreshCommand}"
+                        IsEnabled="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}"
+                        ItemsSource="{Binding Connections}">
                         <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <components:DetailedCell
+                            <DataTemplate>
+                                <components:DetailedCell
                                     Title="{Binding ConnectionName}"
                                     Subtitle="{Binding ConnectionSubtitle}"
                                     CellImageSource="{Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}" 
                                     SwipeDeleteCommand="{Binding DeleteConnectionCommand}"  
-                                    /> 
+                                    />
 
-                            <!--<components:DetailedSwipeViewCell
+                                <!--<components:DetailedSwipeViewCell
                                         Title="{Binding ConnectionName}"
                                         Subtitle="{Binding ConnectionSubtitle}"
                                         ImageURL="{Binding ConnectionImageUrl}" 
                                         SwipeDeleteCommand="{Binding DeleteConnection}" />-->
-                            <!--<ViewCell>
+                                <!--<ViewCell>
                                 <SwipeView>
                                     <SwipeView.LeftItems>
                                         <SwipeItems>
@@ -140,37 +162,17 @@
                                 </SwipeView>
                             </ViewCell>-->
 
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
                         <ListView.Behaviors>
                             <behaviours:EventToCommandBehavior EventName="ItemSelected" Command="{Binding SelectConnectionCommand}" Converter="{StaticResource SelectedItemConverter}" DeselectOnClick="true"/>
                         </ListView.Behaviors>
-                </ListView>
-                
-            </StackLayout>
-
-            <StackLayout
-                    VerticalOptions="FillAndExpand"                
-                    IsVisible="{Binding HasConnections, Converter={StaticResource BooleanInverse}}">
-                <StackLayout
-                        Orientation="Vertical"
-                        VerticalOptions="CenterAndExpand"
-                        HorizontalOptions="CenterAndExpand">
-                    <ActivityIndicator
-                            IsVisible="{Binding RefreshingConnections}"
-                            IsRunning="{Binding RefreshingConnections}"/>
-                    <StackLayout IsVisible="{Binding RefreshingConnections, Converter={StaticResource BooleanInverse}}">
-                        <Label  HorizontalOptions="CenterAndExpand"
-                            HorizontalTextAlignment="Center"
-                            IsVisible="{Binding SearchTermIsEmpty}" 
-                            Text="You have no connections here" />
-                    </StackLayout>
-                    <Label  IsVisible="{Binding SearchTermIsEmpty, Converter={StaticResource BooleanInverse}}"
-                            HorizontalOptions="CenterAndExpand"
-                            HorizontalTextAlignment="Center"                             
-                            Text="{Binding SearchTerm, StringFormat='No results for search term: {0} &#10; &#10; Please update your search querry'}" />
+                    </ListView>
                 </StackLayout>
-            </StackLayout>
+
+                
+        
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

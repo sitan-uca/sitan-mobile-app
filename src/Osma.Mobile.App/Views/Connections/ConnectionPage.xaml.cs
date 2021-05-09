@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Osma.Mobile.App.ViewModels.Connections;
+using System;
 using Xamarin.Forms;
 
 namespace Osma.Mobile.App.Views.Connections
@@ -7,8 +8,7 @@ namespace Osma.Mobile.App.Views.Connections
     {
 
         public ConnectionPage()
-        {
-            //NavigationPage.SetHasNavigationBar(this, false);
+        {            
             InitializeComponent();
         }
 
@@ -21,5 +21,6 @@ namespace Osma.Mobile.App.Views.Connections
         {
             chatInput.UnFocusEntry();
         }
+       
     }
 }

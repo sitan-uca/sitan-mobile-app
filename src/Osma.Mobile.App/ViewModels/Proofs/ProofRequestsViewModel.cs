@@ -14,9 +14,11 @@ using Hyperledger.Aries.Decorators.Attachments;
 using Hyperledger.Aries.Extensions;
 using Hyperledger.Aries.Features.DidExchange;
 using Hyperledger.Aries.Features.PresentProof;
+using Hyperledger.Aries.Models.Events;
 using Hyperledger.Aries.Storage;
 using Osma.Mobile.App.Events;
 using Osma.Mobile.App.Extensions;
+using Osma.Mobile.App.Services;
 using Osma.Mobile.App.Services.Interfaces;
 using Osma.Mobile.App.Utilities;
 using ReactiveUI;
@@ -58,7 +60,25 @@ namespace Osma.Mobile.App.ViewModels.Proofs
                           .Where(_ => _.Type == ApplicationEventType.RefreshProofRequests)
                           .Subscribe(async _ => await RefreshProofRequests());
 
+            eventAggregator.GetEventByType<ServiceMessageProcessingEvent>()
+               .Where
+               (_ =>
+                   _.MessageType == MessageTypes.PresentProofNames.RequestPresentation                   
+               )
+               .Subscribe(async _ => await NotifyAndRefresh(_));
+
             await base.InitializeAsync(navigationData);
+        }
+
+        private async Task NotifyAndRefresh(ServiceMessageProcessingEvent _event)
+        {
+            await RefreshProofRequests();
+            switch (_event.MessageType)
+            {
+                case MessageTypes.PresentProofNames.RequestPresentation:
+                    NotificationService.TriggerNotification("Presentation request", "New presentation request received");
+                    break;
+            }
         }
 
         public async Task RefreshProofRequests(string tab = null)
@@ -153,9 +173,9 @@ namespace Osma.Mobile.App.ViewModels.Proofs
         {
             var context = await _agentContextProvider.GetContextAsync();
             var provisionedRecord = await _provisioningService.GetProvisioningAsync(context.Wallet);
-            var (requestMsg, _) = await _proofService.CreateRequestAsync(context, new ProofRequest { });
+            //var (requestMsg, _) = await _proofService.CreateRequestAsync(context, new ProofRequest { });
 
-            string barcodeValue = provisionedRecord.Endpoint.Uri + "?d_m=" + Uri.EscapeDataString(requestMsg.ToByteArray().ToBase64String());
+            //string barcodeValue = provisionedRecord.Endpoint.Uri + "?d_m=" + Uri.EscapeDataString(requestMsg.ToByteArray().ToBase64String());
         }
 
         #region Bindable Command
