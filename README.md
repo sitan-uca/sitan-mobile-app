@@ -1,6 +1,6 @@
 # Sitan Mobile App
 
-This repository is the home of Sitan Mobile App, an open source mobile agent initialy forked from [Aries MobileAgent Xamarin]() which is a monbile agent for achieving self sovereign identity (SSI). 
+This repository is the home of Sitan Mobile App, an open source mobile agent initialy forked from [Aries MobileAgent Xamarin](https://github.com/hyperledger/aries-mobileagent-xamarin) which is a monbile agent for achieving self sovereign identity (SSI) from the Hyperledger Project. 
 
 
 ## ToDo Complete the readme
