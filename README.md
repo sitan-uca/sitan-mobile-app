@@ -1,10 +1,9 @@
-# Aries MobileAgent Xamarin
+# Sitan Mobile App
 
-This repository is the home of Aries MobileAgent Xamarin, an open source mobile agent for achieving self sovereign identity (SSI). This project was formerly known as Osma (Open Source Mobile Agent). Commits previous can be found in the [archived original repository](https://github.com/mattrglobal/osma).
+This repository is the home of Sitan Mobile App, an open source mobile agent initialy forked from [Aries MobileAgent Xamarin]() which is a monbile agent for achieving self sovereign identity (SSI). 
 
-This original commit in this repository contains all contributions from the original repo, including contributions from @tplooker, @Liam-Tait, @burdettadam, @tmarkovski, @sukalpomitra, and @TelegramSam.
 
-Note: Not all references to osma have been changed. Please change them as you find them, PRs accepted.
+## ToDo Complete the readme
 
 The primary goals of this project is to provide a common project to progress emerging community standards around mobile agents. In addition, a basic mediator agent in ASP.NET Core is included in this repo. This mediator agent can be run separately and can be configured as public access point for the mobile application. Please check the instructions below or watch the instructuonal video.
 
