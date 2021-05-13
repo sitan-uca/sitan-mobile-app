@@ -20,12 +20,15 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Padding="20, 10">
-            <Label HorizontalOptions="Center">
+            <Label HorizontalOptions="Center"
+                   FontSize="20"
+                   CharacterSpacing="0.5">
                 <Label.FormattedText>
                     <FormattedString>
                         <Span Text="Credentials for " />
                         <Span
                             FontAttributes="Bold"
+                            FontSize="20"
                             Text="{Binding AttributeName}"
                             TextDecorations="Underline" />
                     </FormattedString>

@@ -6,12 +6,12 @@
                  x:Name="SearchPopupPage"                 
                  x:Class="Osma.Mobile.App.Views.Components.SearchBarPopupComponentPage">
     <pages:PopupPage.Animation>
-        <animations:MoveAnimation PositionIn="Top" PositionOut="Top"/>
+        <animations:MoveAnimation PositionIn="Right" PositionOut="Right"/>
     </pages:PopupPage.Animation>
-    <Frame HorizontalOptions="FillAndExpand" 
+    <Frame HorizontalOptions="Center" 
            VerticalOptions="Start"
            Padding="0">
-        <Grid Padding="10,4,20,4"
+        <Grid Padding="10,10,20,10"
               BackgroundColor="#252738">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30" />
@@ -20,7 +20,7 @@
 
             <Button ImageSource="left_arrow_white.png" 
                     Grid.Column="0" 
-                    HeightRequest="30"
+                    HeightRequest="5"
                     WidthRequest="10"
                     BackgroundColor="Transparent"
                     Command="{Binding SecondaryCommand, Source={Reference SearchPopupPage}}" />
@@ -35,6 +35,7 @@
                            FontSize="14"
                            Grid.Row="0" 
                            Grid.Column="0"
+                           HeightRequest="35"
                            Text="{Binding SearchTermAttr, Source={Reference SearchPopupPage}}" 
                            
                 />

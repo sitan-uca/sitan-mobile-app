@@ -15,7 +15,7 @@
 
         <Frame IsClippedToBounds="True"
                CornerRadius="25"
-               Padding="20,0,20,0">
+               Padding="10,0,20,0">
 
             <Entry x:Name="chatTextInput" 
                  Text="{Binding TextToSend}"  

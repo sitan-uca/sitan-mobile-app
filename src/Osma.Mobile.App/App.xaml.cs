@@ -84,7 +84,9 @@ namespace Osma.Mobile.App
                                         path2: ".indy_client",
                                         path3: "wallets")
                                 };
-                            options.WalletConfiguration.Id = "SitanMobileWalletConf";                            
+                            //options.WalletConfiguration.Id = "SitanMobileWalletConf";
+                            //options.WalletConfiguration.Id = "BaksakMobileWalletAlyNa";
+                            //options.WalletCredentials.Key = "SecretWalletKey";
                             options.RevocationRegistryDirectory = Path.Combine(
                                 path1: FileSystem.AppDataDirectory,
                                 path2: ".indy_client",
