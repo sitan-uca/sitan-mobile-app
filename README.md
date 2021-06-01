@@ -2,7 +2,7 @@
 
 This repository is the home of Sitan Mobile App, an open source mobile agent initialy forked from [Aries MobileAgent Xamarin](https://github.com/hyperledger/aries-mobileagent-xamarin) which is a monbile agent for achieving self sovereign identity (SSI) from the [Hyperledger Project](https://github.com/hyperledger). 
 
-This repository was created as part of a thesis project at University of Central Asia. The aim of the project is to provide underlying technology to enable digital verifiable credentials(identity, certificates, proofs, and etc.). 
+This repository was created as part of a thesis project at University of Central Asia. The aim of the project is to provide underlying technology to enable digital verifiable credentials(identity, certificates, proofs, and etc.) for the UCA community. 
 
 In addition to the mobile agent a basic mediator agent in ASP.NET Core is included in this repo. This mediator agent can be run separately and can be configured as public access point for the mobile application. Please check the instructions below or watch the instructuonal video.
 
