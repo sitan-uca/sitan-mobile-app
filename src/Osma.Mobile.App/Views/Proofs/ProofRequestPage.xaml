@@ -24,12 +24,15 @@
 
             <ffimageloading:CachedImage
                 Aspect="AspectFill"
-                HeightRequest="100"
+                HeightRequest="150"
                 HorizontalOptions="Center"
                 IsVisible="True"
                 Source="{Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}"
                 VerticalOptions="Center"
                 WidthRequest="150">
+                <ffimageloading:CachedImage.Transformations>
+                    <fftransformations:CircleTransformation />
+                </ffimageloading:CachedImage.Transformations>
                 <!--<ffimageloading:CachedImage.Triggers>
                     <DataTrigger
                         Binding="{Binding HasLogo}"
@@ -42,21 +45,23 @@
 
             <Label
                 FontAttributes="Bold"
-                FontSize="Medium"
+                FontSize="18"
                 HorizontalOptions="Center"
                 Text="{Binding ProofRequestName, TargetNullValue='Request Name missing'}" />
             <Label
-                FontSize="Default"
+                FontSize="16"
                 HorizontalOptions="Center"
                 Text="{Binding ConnectionName}" />
-            <ListView HasUnevenRows="True" 
+            <ListView HasUnevenRows="True"
+                      SeparatorColor="#000"
                       IsVisible="{Binding HasAttributes}"
                       ItemsSource="{Binding RequestedAttributes}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <!--<components:DetailedCell Title="{Binding AttributeName}" Subtitle="{Binding AttributeReferent}" />-->
                         <ViewCell>
-                            <Grid Padding="0, 10">
+                            <Grid Padding="10,20,10,0"
+                                  RowSpacing="0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -68,13 +73,13 @@
                                 <Label Grid.Row="0"
                                        Grid.Column="0"
                                        FontAttributes="Bold"
-                                       FontSize="16"
+                                       FontSize="18"
                                        Text="{Binding AttributeName}"
                                        />
                                 <Label Grid.Row="1"
                                        Grid.Column="0"
                                        FontAttributes="Italic"
-                                       FontSize="12"
+                                       FontSize="14"
                                        Text="{Binding RevealedAttributeValue, TargetNullValue='Credential not selected'}"
                                        />
                                 <ffimageloading:CachedImage Grid.Row="0"
@@ -112,10 +117,10 @@
                 IsVisible="{Binding ActionRequired}"
                 Margin="0,0,0,0"
                 ColumnSpacing="0"
-                HeightRequest="70"
+                HeightRequest="100"
                 VerticalOptions="EndAndExpand">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="120" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Button

@@ -8,19 +8,19 @@
     <pages:PopupPage.Animation>
         <animations:MoveAnimation PositionIn="Bottom" PositionOut="Bottom"/>
     </pages:PopupPage.Animation>
-    <Frame CornerRadius="20" 
+    <Frame CornerRadius="2" 
            HorizontalOptions="FillAndExpand" 
            VerticalOptions="End"
            BackgroundColor="White">
         <StackLayout Spacing="10">
             <Button Text="Choose from Gallery"
-                    BackgroundColor="DodgerBlue"
+                    BackgroundColor="#00D974"
                     TextColor="White"                    
                     Command="{Binding FromGalleryCommand, Source={Reference EditProfilePicPopup}}" />
             <!--<Button Text="Camera"
                     Command="{Binding SelectPicture, Source={Reference EditProfilePicPopup}}" />-->
             <Button Text="Delete"
-                    BackgroundColor="DodgerBlue"
+                    BackgroundColor="OrangeRed"
                     TextColor="White"
                     Command="{Binding DeletePictureCommand, Source={Reference EditProfilePicPopup}}" />
         </StackLayout>

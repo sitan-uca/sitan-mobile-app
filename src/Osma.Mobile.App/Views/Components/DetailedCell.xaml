@@ -17,7 +17,7 @@
                     />
             </SwipeItems>
         </SwipeView.LeftItems>
-        <Grid Padding="20,5,5,5"
+        <Grid Padding="20,5,20,5"
                   RowSpacing="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -76,7 +76,7 @@
                     VerticalOptions="Center">
                     <Label
                         x:Name="NewLabel"
-                        FontSize="Medium"
+                        FontSize="Small"
                         HorizontalTextAlignment="Center"
                         IsVisible="false"
                         Text="New"

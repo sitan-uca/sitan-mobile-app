@@ -21,7 +21,7 @@
         <ToolbarItem IconImageSource="add_white.png" Order="Primary" Priority="0" Command ="{Binding CreateRequestBarcodeCommand}" />       
     </ContentPage.ToolbarItems>-->
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Padding="0,20,0,0">
             <!--<StackLayout
                 Padding="0,8,0,0">
                 <Grid
@@ -83,6 +83,8 @@
                 </StackLayout>
                 <StackLayout>
                     <ListView
+                        SeparatorColor="#000"
+                        SeparatorVisibility="Default"
                         HasUnevenRows="True"
                         IsPullToRefreshEnabled="True"
                         IsRefreshing="{Binding RefreshingProofRequests}"
@@ -95,6 +97,7 @@
                                     Title="{Binding ProofRequestName}"         
                                     SwipeDeleteCommand="{Binding DeleteProofRequestCommand}"
                                     CellImageSource="{Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}"
+                                    IsNew="{Binding IsNew}"
                                     Subtitle="{Binding ConnectionName}" >
 
                                     <!--<components:DetailedCell.ContextActions>

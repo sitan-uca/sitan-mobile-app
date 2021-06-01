@@ -6,9 +6,13 @@
     <ContentPage.Content>
         <StackLayout 
             BackgroundColor="#252738"
-            Spacing="36"
-            Padding="30,200,30,0"
+            Spacing="20"
+            Padding="30,100,30,0"
             VerticalOptions="Fill">
+            <Image
+                Source="logo.png"
+                HeightRequest="50"
+                WidthRequest="50"></Image>
             <Label
                 FontSize="30"
                 FontFamily="Raleway"
@@ -22,12 +26,18 @@
                 FontFamily="Raleway"
                 HorizontalOptions="Center"
                 Text="UCA DIGITAL WALLET 2021"
+                Padding="0,0,0,40"
                 TextColor="#C4C4C4"></Label>
             
             <Entry x:Name="nameEntry" 
                    Text="{Binding SitanAgentName}"
-                   BackgroundColor="White"
-                   Placeholder="Your Wallet Agent Name" />
+                   PlaceholderColor="#C4C4C4"
+                   TextColor="#C4C4C4"
+                   FontAttributes="Italic"
+                   CharacterSpacing="0.5"
+                   WidthRequest="300"
+                   HorizontalOptions="Center"
+                   Placeholder="Enter your Wallet Agent Name" />
             <Button 
                 BackgroundColor="#00d974"
                 VerticalOptions="Center"

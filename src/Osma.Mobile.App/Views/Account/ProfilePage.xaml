@@ -25,22 +25,26 @@
                                     <fftransformations:CircleTransformation />
                                 </ffimageloading:CachedImage.Transformations>
                             </ffimageloading:CachedImage>
-                            <Button WidthRequest="80"
-                                    HeightRequest="80"
+                            <Button 
+                                    ImageSource="edit_icon.png"
+                                    
+                                    WidthRequest="50"
+                                    HeightRequest="50"
                                     HorizontalOptions="End"
                                     VerticalOptions="End"
-                                    TranslationX="-90"
-                                    TranslationY="-20"
+                                    TranslationX="-110"
+                                    TranslationY="-30"
                                     CornerRadius="40"
-                                    Text="Edit"
+                                    
                                     Command="{Binding EditProfileImage}"
-                                    TextColor="White"
-                                    BackgroundColor="DodgerBlue" />
+                                    
+                                    BackgroundColor="#00D974" />
                         </Grid>
                     </ViewCell>
                 </TableSection>
                 <TableSection>
-                    <TextCell Text="Agent Name" TextColor="DodgerBlue" Detail="{Binding AgentName}" Command="{Binding EditNameCommand}"/>
+                    <TextCell Text="Agent Name" 
+                              TextColor="#000" Detail="{Binding AgentName}" Command="{Binding EditNameCommand}"/>
                     <!--<ViewCell Tapped="">
                         <ViewCell.View>
                             <Grid Padding="15" ColumnSpacing="10">
@@ -122,12 +126,13 @@
                                 Grid.Column="0"
                                 Text="Mediator Endpoint" 
                                 FontSize="Default"
-                                TextColor="DodgerBlue" />
+                                TextColor="#000" />
 
                             <Label
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Text="{Binding MediatorEndpointUrl}"
+                                TextColor="Gray"
                                 FontSize="Default"/>
 
                             <Label
@@ -137,7 +142,8 @@
                                 HorizontalTextAlignment="Center"
                                 VerticalTextAlignment="Center"
                                 Text="{Binding MediatorConnectionState}" 
-                                FontSize="Default" />
+                                FontSize="Default"
+                                TextColor="#00D974"/>
                         </Grid>
                     </ViewCell>
                 </TableSection>

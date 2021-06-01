@@ -49,26 +49,26 @@
             </Grid>-->
 
             <StackLayout
-                Padding="0,8,0,0"
-                HeightRequest="100">
+                Padding="0,8,0,10"
+                HeightRequest="70">
                 <Grid
                     Padding="20,10,20,10"
                     IsClippedToBounds="True"
                     BackgroundColor="#C4C4C4">
                     <Label
                         Text="{Binding SelectedConnectionsFilter}"
-                        FontSize="16"
+                        FontSize="18"
                         VerticalOptions="Center"
                         FontAttributes="Bold"
                         Grid.Column="0" />
                     
                     <Button ImageSource="filter_icon.png"
                             BackgroundColor="#C4C4C4"
-                           Grid.Column="1"
+                            Grid.Column="1"
                             Command="{Binding FilterConnections}"
-                           HorizontalOptions="EndAndExpand"
-                           HeightRequest="50"
-                           WidthRequest="50"
+                            HorizontalOptions="EndAndExpand"
+                            HeightRequest="50"
+                            WidthRequest="50"
                            >
                     </Button>
                 </Grid>
@@ -109,14 +109,16 @@
                                     Text="You have no connections here" />
                         </StackLayout>
                         <Label  IsVisible="{Binding SearchTermIsEmpty, Converter={StaticResource BooleanInverse}}"
-                                HorizontalOptions="CenterAndExpand"
+                                HorizontalOptions="CenterAndExpand" 
                                 HorizontalTextAlignment="Center"                             
                                 Text="{Binding SearchTerm, StringFormat='No results for search term: {0} &#10; &#10; Please update your search querry'}" />
                     </StackLayout>
                 </StackLayout>
                 <StackLayout
                     VerticalOptions="CenterAndExpand">
-                    <ListView                    
+                    <ListView   
+                        SeparatorColor="#000"
+                        SeparatorVisibility="Default"
                         VerticalOptions="CenterAndExpand"
                         HasUnevenRows="True"
                         IsPullToRefreshEnabled="True"
@@ -126,10 +128,11 @@
                         ItemsSource="{Binding Connections}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <components:DetailedCell
+                                <components:DetailedCell 
                                     Title="{Binding ConnectionName}"
                                     Subtitle="{Binding ConnectionSubtitle}"
                                     CellImageSource="{Binding ConnectionImageSource, TargetNullValue='profile_icon_grey.jpg'}" 
+                                    IsNew="{Binding IsNew}"
                                     SwipeDeleteCommand="{Binding DeleteConnectionCommand}"  
                                     />
 
