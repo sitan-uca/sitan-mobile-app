@@ -1,11 +1,10 @@
 # Sitan Mobile App
 
-This repository is the home of Sitan Mobile App, an open source mobile agent initialy forked from [Aries MobileAgent Xamarin](https://github.com/hyperledger/aries-mobileagent-xamarin) which is a monbile agent for achieving self sovereign identity (SSI) from the Hyperledger Project. 
+This repository is the home of Sitan Mobile App, an open source mobile agent initialy forked from [Aries MobileAgent Xamarin](https://github.com/hyperledger/aries-mobileagent-xamarin) which is a monbile agent for achieving self sovereign identity (SSI) from the [Hyperledger Project](https://github.com/hyperledger). 
 
+This repository was created as part of a thesis project at University of Central Asia. The aim of the project is to provide underlying technology to enable digital verifiable credentials(identity, certificates, proofs, and etc.). 
 
-## ToDo Complete the readme
-
-The primary goals of this project is to provide a common project to progress emerging community standards around mobile agents. In addition, a basic mediator agent in ASP.NET Core is included in this repo. This mediator agent can be run separately and can be configured as public access point for the mobile application. Please check the instructions below or watch the instructuonal video.
+In addition to the mobile agent a basic mediator agent in ASP.NET Core is included in this repo. This mediator agent can be run separately and can be configured as public access point for the mobile application. Please check the instructions below or watch the instructuonal video.
 
 This repository contains a cross platform mobile app (iOS/Android) built using the Xamarin framework in C#. More specifically the two platform specific projects share a common UI through the use of Xamarin.Forms.
 
@@ -52,4 +51,4 @@ This mobile apps primary dependency is upon the open source project [Aries Frame
 
 ### Indy
 
-Much of the emerging standards AMA-X and Aries Framework implement are born out of the [Indy-Agent]() community.
+Much of the emerging standards AMA-X and Aries Framework implement are born out of the [Hyperledger Indy](https://hyperledger-indy.readthedocs.io/en/latest/index.html) community.
